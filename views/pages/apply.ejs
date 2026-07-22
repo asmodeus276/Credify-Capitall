@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Apply for a Loan | Credify Capital</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block"
+    rel="stylesheet">
+  
+  <meta charset="utf-8">
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/tailwind-built.css">
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var menuBtn = document.getElementById('mobile-menu-btn');
+  var menuPanel = document.getElementById('mobile-menu-panel');
+  var menuIcon = document.getElementById('mobile-menu-icon');
+  if (menuBtn && menuPanel) {
+    menuBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var isOpen = !menuPanel.classList.contains('hidden');
+      menuPanel.classList.toggle('hidden');
+      menuBtn.setAttribute('aria-expanded', String(!isOpen));
+      if (menuIcon) menuIcon.textContent = isOpen ? 'close' : 'menu';
+    });
+    document.addEventListener('click', function(e) {
+      if (!menuPanel.classList.contains('hidden') && !menuBtn.contains(e.target) && !menuPanel.contains(e.target)) {
+        menuPanel.classList.add('hidden');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        if (menuIcon) menuIcon.textContent = 'menu';
+      }
+    });
+  }
+});
+</script>
+
+</head>
+
+<body class="bg-background text-on-background font-body-md pt-[64px] lg:pt-[116px]">
+  <!-- TopAppBar Navigation -->
+  <%- include('../partials/header') %>
+
+  <main class="pt-28 pb-xl">
+    <div class="px-margin-mobile md:px-margin-desktop w-full max-w-5xl mx-auto">
+
+      <!-- Progress Header -->
+      <div class="text-center space-y-xs mb-xl">
+        <h1 class="font-headline-lg text-headline-lg font-bold text-primary">Loan Application</h1>
+        <p class="font-body-md text-on-surface-variant">One form, all banks. Takes about 2 minutes.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-xl items-start">
+
+        <!-- Form Card -->
+        <div class="lg:col-span-2 bg-white p-xl rounded-xl shadow-xl border border-outline-variant">
+          <form id="apply-form" class="space-y-md" novalidate="">
+
+            <div class="space-y-xs">
+              <label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider"
+                for="loanType">Loan Type</label>
+              <select id="loanType" name="loanType"
+                class="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                required="">
+                <option value="">Select a loan type</option>
+                <option value="Personal Loan">Personal Loan</option>
+                <option value="Business Loan">Business Loan</option>
+                <option value="Professional Loan">Professional Loan</option>
+                <option value="Working Capital">Working Capital</option>
+                <option value="Machinery Loan">Machinery Loan</option>
+                <option value="Medical Equipment">Medical Equipment</option>
+                <option value="Car Loan">Car Loan</option>
+                <option value="Loan Against Property">Loan Against Property</option>
+              </select>
+              <p class="text-body-sm text-error hidden" data-error-for="loanType">Please select a loan type.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+              <div class="space-y-xs">
+                <label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider"
+                  for="fullName">Full Name</label>
+                <input id="fullName" name="fullName"
+                  class="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                  placeholder="Enter your full name" type="text" required="">
+                <p class="text-body-sm text-error hidden" data-error-for="fullName">Please enter your name.</p>
+              </div>
+              <div class="space-y-xs">
+                <label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider"
+                  for="phone">Mobile Number</label>
+                <input id="phone" name="phone"
+                  class="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                  placeholder="10-digit mobile number" type="tel" inputmode="numeric" required="">
+                <p class="text-body-sm text-error hidden" data-error-for="phone">Enter a valid 10-digit mobile number.
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-xs">
+              <label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider"
+                for="email">Email Address</label>
+              <input id="email" name="email"
+                class="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                placeholder="you@example.com" type="email" required="">
+              <p class="text-body-sm text-error hidden" data-error-for="email">Enter a valid email address.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+              <div class="space-y-xs">
+                <label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider"
+                  for="monthlyIncome">Monthly Income (₹)</label>
+                <input id="monthlyIncome" name="monthlyIncome"
+                  class="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                  placeholder="e.g. 50000" type="number" min="0" required="">
+                <p class="text-body-sm text-error hidden" data-error-for="monthlyIncome">Enter your monthly income.</p>
+              </div>
+              <div class="space-y-xs">
+                <label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider"
+                  for="loanAmount">Required Loan Amount (₹)</label>
+                <input id="loanAmount" name="loanAmount"
+                  class="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                  placeholder="e.g. 500000" type="number" min="0" required="">
+                <p class="text-body-sm text-error hidden" data-error-for="loanAmount">Enter the loan amount you need.
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-xs">
+              <label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider"
+                for="city">City</label>
+              <input id="city" name="city"
+                class="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                placeholder="Enter your city" type="text" required="">
+              <p class="text-body-sm text-error hidden" data-error-for="city">Please enter your city.</p>
+            </div>
+
+            <label class="flex items-start gap-2 text-body-sm text-on-surface-variant">
+              <input id="consent" name="consent" type="checkbox" class="mt-1" required="">
+              <span>I authorize Credify Capital and its lending partners to contact me regarding this application and to
+                run indicative eligibility checks.</span>
+            </label>
+            <p class="text-body-sm text-error hidden" data-error-for="consent">Please provide consent to continue.</p>
+
+            <button type="submit"
+              class="w-full bg-secondary text-white py-4 rounded-lg font-label-md text-label-md hover:brightness-110 transition-all mt-lg shadow-md active:scale-95">
+              Submit Application
+            </button>
+            <p id="form-status" class="text-body-sm text-on-surface-variant text-center hidden"></p>
+          </form>
+        </div>
+
+        <!-- Summary / Confirmation Panel -->
+        <div class="space-y-md">
+          <div id="summary-card" class="bg-white p-lg rounded-xl shadow-md border border-outline-variant space-y-sm">
+            <h3 class="font-headline-md text-headline-md text-primary">Your Snapshot</h3>
+            <div class="flex justify-between text-body-sm border-b border-outline-variant pb-2">
+              <span class="text-on-surface-variant">Loan Type</span>
+              <span id="summary-loanType" class="font-semibold text-primary">—</span>
+            </div>
+            <div class="flex justify-between text-body-sm border-b border-outline-variant pb-2">
+              <span class="text-on-surface-variant">Indicative APR</span>
+              <span id="summary-apr" class="font-semibold text-primary">—</span>
+            </div>
+            <div class="flex justify-between text-body-sm">
+              <span class="text-on-surface-variant">Est. Monthly Payment*</span>
+              <span id="summary-emi" class="font-semibold text-primary">—</span>
+            </div>
+            <p class="text-body-sm text-on-surface-variant pt-2">*Estimate only, based on a 3-year tenure and your risk
+              tier. Final terms are confirmed after verification.</p>
+          </div>
+
+          <div id="confirmation-card"
+            class="hidden bg-white p-lg rounded-xl shadow-md border border-outline-variant text-center space-y-sm">
+            <span class="material-symbols-outlined text-secondary text-[48px]"
+              style="font-variation-settings: 'FILL' 1">check_circle</span>
+            <h3 class="font-headline-md text-headline-md text-primary">Application Received</h3>
+            <p id="confirmation-text" class="text-body-sm text-on-surface-variant"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+
+  <script src="/js/credify-core.js"></script>
+  <script type="module">
+    import { submitLoanLead } from './firebaseConfig.js';
+    (function () {
+      var form = document.getElementById('apply-form');
+      var loanTypeEl = document.getElementById('loanType');
+      var summaryLoanType = document.getElementById('summary-loanType');
+      var summaryApr = document.getElementById('summary-apr');
+      var summaryEmi = document.getElementById('summary-emi');
+      var summaryCard = document.getElementById('summary-card');
+      var confirmationCard = document.getElementById('confirmation-card');
+      var confirmationText = document.getElementById('confirmation-text');
+      var formStatus = document.getElementById('form-status');
+
+      // Pre-fill loan type from ?type= (e.g. apply.html?type=Personal+Loan) or saved state.
+      function prefillFromEngine() {
+        if (!window.CredifyEngine) return;
+        var data = window.CredifyEngine.getApplicationData();
+        if (data && data.loanType) {
+          var match = Array.prototype.slice.call(loanTypeEl.options)
+            .find(function (opt) { return opt.value === data.loanType; });
+          if (match) loanTypeEl.value = data.loanType;
+        }
+        updateSummary();
+      }
+
+      function updateSummary() {
+        var loanType = loanTypeEl.value;
+        summaryLoanType.textContent = loanType || '—';
+
+        if (!window.CredifyEngine) return;
+        var eligibility = window.CredifyEngine.evaluateEligibility();
+        summaryApr.textContent = eligibility.applicableAPR ? eligibility.applicableAPR.toFixed(2) + '% p.a.' : '—';
+
+        var amountEl = document.getElementById('loanAmount');
+        var amount = parseFloat(amountEl.value);
+        if (amount > 0) {
+          var emi = window.CredifyEngine.calculateMonthlyPayment(amount, eligibility.applicableAPR, 3);
+          summaryEmi.textContent = emi ? '₹' + emi.toLocaleString('en-IN') : '—';
+        } else {
+          summaryEmi.textContent = '—';
+        }
+      }
+
+      function clearErrors() {
+        form.querySelectorAll('[data-error-for]').forEach(function (el) { el.classList.add('hidden'); });
+        form.querySelectorAll('input, select').forEach(function (el) { el.classList.remove('border-error'); });
+      }
+
+      function showError(fieldName) {
+        var el = form.querySelector('[data-error-for="' + fieldName + '"]');
+        if (el) el.classList.remove('hidden');
+        var field = form.querySelector('[name="' + fieldName + '"]');
+        if (field) field.classList.add('border-error');
+      }
+
+      function validate() {
+        clearErrors();
+        var valid = true;
+
+        var fullName = form.fullName.value.trim();
+        if (!fullName) { showError('fullName'); valid = false; }
+
+        var phone = form.phone.value.trim();
+        if (!/^\d{10}$/.test(phone)) { showError('phone'); valid = false; }
+
+        var email = form.email.value.trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('email'); valid = false; }
+
+        if (!loanTypeEl.value) { showError('loanType'); valid = false; }
+
+        var income = parseFloat(form.monthlyIncome.value);
+        if (!(income > 0)) { showError('monthlyIncome'); valid = false; }
+
+        var amount = parseFloat(form.loanAmount.value);
+        if (!(amount > 0)) { showError('loanAmount'); valid = false; }
+
+        var city = form.city.value.trim();
+        if (!city) { showError('city'); valid = false; }
+
+        if (!form.consent.checked) { showError('consent'); valid = false; }
+
+        return valid;
+      }
+
+      loanTypeEl.addEventListener('change', function () {
+        if (window.CredifyEngine) window.CredifyEngine.setLoanType(loanTypeEl.value);
+        updateSummary();
+      });
+      document.getElementById('loanAmount').addEventListener('input', updateSummary);
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        if (!validate()) {
+          formStatus.textContent = 'Please fix the highlighted fields above.';
+          formStatus.classList.remove('hidden');
+          formStatus.classList.add('text-error');
+          return;
+        }
+
+        var appId = 'CC-APP-' + Math.floor(10000 + Math.random() * 90000);
+        var fullName = form.fullName.value.trim();
+        var phone = form.phone.value.trim();
+        var email = form.email.value.trim();
+        var loanType = loanTypeEl.value;
+        var amount = parseFloat(form.loanAmount.value);
+        var monthlyIncome = parseFloat(form.monthlyIncome.value);
+        var city = form.city.value.trim();
+        var today = new Date().toISOString().split('T')[0];
+
+        // Create application record for tracking
+        var appObject = {
+          id: appId,
+          name: fullName,
+          phone: phone,
+          email: email,
+          product: loanType,
+          amount: amount,
+          income: monthlyIncome,
+          city: city,
+          tenure: 36,
+          cibil: '710',
+          emis: 0,
+          createdDate: today,
+          status: 'Submitted',
+          docs: { pan: 'Pending', bank: 'Pending', itr: 'Pending' },
+          history: [
+            { stage: 'Form Submitted', date: today + ' 12:00', note: 'Application completed and submitted online.' }
+          ]
+        };
+
+        // Save to localStorage
+        var savedApps = [];
+        try {
+          var existing = localStorage.getItem('credify_user_applications');
+          if (existing) savedApps = JSON.parse(existing);
+        } catch (err) {
+          console.error(err);
+        }
+        if (!Array.isArray(savedApps)) savedApps = [];
+        savedApps.push(appObject);
+        localStorage.setItem('credify_user_applications', JSON.stringify(savedApps));
+
+        if (window.CredifyEngine) {
+          window.CredifyEngine.setLoanType(loanTypeEl.value);
+          window.CredifyEngine.setMonthlyIncome(parseFloat(form.monthlyIncome.value));
+          window.CredifyEngine.setCalculatorInputs({
+            principal: parseFloat(form.loanAmount.value),
+            tenureMonths: 36
+          });
+        }
+
+        formStatus.classList.add('hidden');
+        summaryCard.classList.add('hidden');
+        confirmationCard.classList.remove('hidden');
+        
+        var confirmationHTML =
+          'Thanks, <strong>' + fullName + '</strong>! Your ' + loanType +
+          ' application has been recorded with tracking code: <strong class="text-secondary select-all font-mono">' + appId + '</strong>.<br><br>' +
+          'A Credify Capital credit underwriting officer will call you on <strong class="text-primary">' + phone + '</strong> shortly to verify details.<br><br>' +
+          '<div class="pt-2"><a href="track-application.html?id=' + appId + '" class="inline-flex items-center gap-2 bg-primary hover:brightness-110 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md transition-all"><span class="material-symbols-outlined text-sm">timeline</span> Track Application Status Now</a></div>';
+
+        confirmationText.innerHTML = confirmationHTML;
+
+        try {
+          await submitLoanLead(appObject);
+        } catch (firebaseErr) {
+          console.error("Firebase lead capture failed:", firebaseErr);
+          confirmationText.innerHTML = confirmationHTML + 
+            '<div class="mt-4 p-3 bg-amber-50 text-amber-800 rounded-lg text-xs border border-amber-200">Note: We\'ve recorded your application locally. If you do not hear back from our team within 24 hours, please call us at +91 9931372218.</div>';
+        }
+
+        form.reset();
+        form.querySelectorAll('input, select').forEach(function (el) { el.disabled = true; });
+      });
+
+      prefillFromEngine();
+
+      // Mobile Menu Toggle
+      var menuBtn = document.getElementById('mobile-menu-btn');
+      var menuPanel = document.getElementById('mobile-menu-panel');
+      var menuIcon = document.getElementById('mobile-menu-icon');
+      if (menuBtn && menuPanel) {
+        menuBtn.addEventListener('click', function () {
+          var isOpen = !menuPanel.classList.contains('hidden');
+          menuPanel.classList.toggle('hidden');
+          if (menuIcon) menuIcon.textContent = isOpen ? 'menu' : 'close';
+        });
+      }
+    })();
+  </script>
+</body>
+
+</html>

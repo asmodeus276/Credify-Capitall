@@ -1,0 +1,51 @@
+{
+  "entities": {
+    "Lead": {
+      "title": "Lead",
+      "description": "A loan application lead containing personal details, financials, and application tracking info.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique application tracker ID" },
+        "name": { "type": "string", "description": "Full name of applicant" },
+        "phone": { "type": "string", "description": "10-digit mobile number" },
+        "email": { "type": "string", "description": "Email address of applicant" },
+        "product": { "type": "string", "description": "Type of loan applied for" },
+        "amount": { "type": "number", "description": "Requested loan amount" },
+        "income": { "type": "number", "description": "Monthly income of applicant" },
+        "tenure": { "type": "number", "description": "Requested tenure in months" },
+        "cibil": { "type": "string", "description": "Indicative CIBIL score tier" },
+        "emis": { "type": "number", "description": "Existing monthly EMIs" },
+        "createdDate": { "type": "string", "description": "Date application was submitted (YYYY-MM-DD)" },
+        "status": { "type": "string", "description": "Application review status" },
+        "docs": { "type": "object", "description": "Status of required documents" },
+        "history": { "type": "array", "description": "History log of application stage transitions" }
+      },
+      "required": ["id", "name", "phone", "email", "product", "amount", "income", "tenure", "cibil", "emis", "createdDate", "status", "docs", "history"]
+    },
+    "ContactMessage": {
+      "title": "ContactMessage",
+      "description": "A contact support message submitted by a site visitor.",
+      "type": "object",
+      "properties": {
+        "first_name": { "type": "string", "description": "First name of submitter" },
+        "last_name": { "type": "string", "description": "Last name of submitter" },
+        "email_id": { "type": "string", "description": "Email ID of submitter" },
+        "city": { "type": "string", "description": "City of submitter" },
+        "radios_option_purpose": { "type": "string", "description": "Purpose of message (e.g., Enquiry, Service, Other)" },
+        "product_type": { "type": "string", "description": "Target product type if applicable" },
+        "message": { "type": "string", "description": "The custom message content" }
+      },
+      "required": ["first_name", "last_name", "email_id", "city", "radios_option_purpose", "message"]
+    }
+  },
+  "firestore": {
+    "/leads/{leadId}": {
+      "schema": "Lead",
+      "description": "Collection storing real loan leads"
+    },
+    "/contactMessages/{messageId}": {
+      "schema": "ContactMessage",
+      "description": "Collection storing support and inquiry messages"
+    }
+  }
+}

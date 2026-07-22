@@ -1,0 +1,1076 @@
+<!DOCTYPE html><html class="light scroll-smooth" lang="en"><head>
+<script src="/js/jquery-3.6.0.min.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Check your credit score for free with Credify Capital. Complete soft check instantly, secure your detailed credit health report.">
+  <title>Check Free Credit Score - Credify Capital</title>
+  <link rel="shortcut icon" href="/img/favicon.ico">
+  <link rel="stylesheet" href="/css/loan-page-common.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tailwind-built.css">
+  
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var menuBtn = document.getElementById('mobile-menu-btn');
+    var menuPanel = document.getElementById('mobile-menu-panel');
+    var menuIcon = document.getElementById('mobile-menu-icon');
+    if (menuBtn && menuPanel) {
+      menuBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var isOpen = !menuPanel.classList.contains('hidden');
+        menuPanel.classList.toggle('hidden');
+        menuBtn.setAttribute('aria-expanded', String(!isOpen));
+        if (menuIcon) menuIcon.textContent = isOpen ? 'close' : 'menu';
+      });
+      document.addEventListener('click', function(e) {
+        if (!menuPanel.classList.contains('hidden') && !menuBtn.contains(e.target) && !menuPanel.contains(e.target)) {
+          menuPanel.classList.add('hidden');
+          menuBtn.setAttribute('aria-expanded', 'false');
+          if (menuIcon) menuIcon.textContent = 'menu';
+        }
+      });
+    }
+  });
+  </script>
+</head>
+<body class="bg-background text-on-background font-body-md pt-[64px] lg:pt-[116px]">
+
+<%- include('../partials/header') %>
+
+<main class="min-h-screen bg-[#f8f9ff]">
+
+  <!-- Top Hero Header Section -->
+  <section class="relative bg-gradient-to-br from-[#142450] to-[#253A71] text-white overflow-hidden py-16">
+    <!-- Abstract Design Accents (Strictly professional vector elements) -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none">
+      <div class="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-white blur-3xl"></div>
+      <div class="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-secondary blur-3xl"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- Hero Copy -->
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+          <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-full border border-white/20">
+            <span class="flex h-2 w-2 rounded-full bg-green-400"></span>
+            <p class="text-xs font-semibold uppercase tracking-wider text-green-300">RBI Compliant Soft Pull</p>
+          </div>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight">
+            Check Your Free <br class="hidden sm:inline" />
+            <span class="text-[#ffdad7]">CIBIL / Experian Credit Score</span>
+          </h1>
+          <p class="text-base sm:text-lg text-white/85 max-w-xl mx-auto lg:mx-0 font-medium">
+            Retrieve your detailed financial health analysis in 60 seconds. Absolutely free, fully encrypted, and guaranteed <span class="text-[#ffdad7] font-semibold underline decoration-wavy decoration-secondary">0% impact</span> on your credit score history.
+          </p>
+          
+          <!-- Key Points Grid -->
+          <div class="grid grid-cols-3 gap-3 pt-4 text-center">
+            <div class="bg-white/5 border border-white/10 rounded-xl p-3 backdrop-blur-sm">
+              <span class="material-symbols-outlined text-green-400 text-2xl mb-1">lock</span>
+              <p class="text-[11px] font-bold text-white uppercase tracking-wider">100% Encrypted</p>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-xl p-3 backdrop-blur-sm">
+              <span class="material-symbols-outlined text-green-400 text-2xl mb-1">trending_down</span>
+              <p class="text-[11px] font-bold text-white uppercase tracking-wider">No Score Impact</p>
+            </div>
+            <div class="bg-white/5 border border-white/10 rounded-xl p-3 backdrop-blur-sm">
+              <span class="material-symbols-outlined text-green-400 text-2xl mb-1">flash_on</span>
+              <p class="text-[11px] font-bold text-white uppercase tracking-wider">Instant Bureau Pull</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Steps Tracker Widget -->
+        <div class="lg:col-span-5">
+          <div class="bg-white text-on-background rounded-2xl shadow-xl border border-outline-variant/10 p-6 md:p-8 relative">
+            
+            <!-- Step Indicators -->
+            <div class="flex items-center justify-between mb-8" id="form-steps-header">
+              <div class="flex items-center gap-2">
+                <span id="step-1-badge" class="w-7 h-7 rounded-full bg-primary text-white font-bold flex items-center justify-center text-xs">1</span>
+                <span class="text-xs font-bold text-primary" id="step-1-label">Identity</span>
+              </div>
+              <div class="flex-grow h-0.5 bg-gray-200 mx-2" id="line-step-1"></div>
+              <div class="flex items-center gap-2">
+                <span id="step-2-badge" class="w-7 h-7 rounded-full bg-gray-200 text-gray-500 font-bold flex items-center justify-center text-xs">2</span>
+                <span class="text-xs font-semibold text-gray-400" id="step-2-label">Financials</span>
+              </div>
+              <div class="flex-grow h-0.5 bg-gray-200 mx-2" id="line-step-2"></div>
+              <div class="flex items-center gap-2">
+                <span id="step-3-badge" class="w-7 h-7 rounded-full bg-gray-200 text-gray-500 font-bold flex items-center justify-center text-xs">3</span>
+                <span class="text-xs font-semibold text-gray-400" id="step-3-label">Verification</span>
+              </div>
+            </div>
+
+            <!-- STEP 1 FORM: Basic Identity Details -->
+            <div id="form-step-1-content" class="space-y-5">
+              <h3 class="text-lg font-bold text-primary mb-1">Step 1 of 3: Primary Identity</h3>
+              <p class="text-xs text-on-surface-variant mb-4">Please input your matching government identity parameters.</p>
+              
+              <div>
+                <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Full Name (as per PAN Card)</label>
+                <div class="relative">
+                  <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-[20px]">person</span>
+                  <input type="text" id="id-fullname" required placeholder="Rajan Kumar" class="w-full pl-10 pr-4 py-3 bg-white border border-outline-variant/60 rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm font-semibold">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Date of Birth</label>
+                  <div class="relative">
+                    <input type="date" id="id-dob" required class="w-full px-4 py-3 bg-white border border-outline-variant/60 rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm font-semibold">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Gender</label>
+                  <div class="grid grid-cols-3 gap-2">
+                    <button type="button" class="gender-btn py-3 border border-outline-variant/60 rounded-xl font-bold text-xs bg-white text-gray-700 hover:bg-gray-50 transition-all focus:outline-none" data-val="male">Male</button>
+                    <button type="button" class="gender-btn py-3 border border-outline-variant/60 rounded-xl font-bold text-xs bg-white text-gray-700 hover:bg-gray-50 transition-all focus:outline-none" data-val="female">Female</button>
+                    <button type="button" class="gender-btn py-3 border border-outline-variant/60 rounded-xl font-bold text-xs bg-white text-gray-700 hover:bg-gray-50 transition-all focus:outline-none" data-val="other">Other</button>
+                  </div>
+                  <input type="hidden" id="id-gender" value="">
+                </div>
+              </div>
+
+              <div id="step-1-err" class="hidden text-xs text-red-600 bg-red-50 border border-red-100 p-2.5 rounded-lg font-semibold"></div>
+
+              <button type="button" id="next-to-step2" class="w-full bg-primary hover:brightness-110 text-white font-bold py-3.5 px-6 rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+                Continue to Financials
+                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+              </button>
+            </div>
+
+            <!-- STEP 2 FORM: Financials (PAN Card & Credentials) -->
+            <div id="form-step-2-content" class="hidden space-y-5">
+              <h3 class="text-lg font-bold text-primary mb-1">Step 2 of 3: Bureau Identifiers</h3>
+              <p class="text-xs text-on-surface-variant mb-4">Entering accurate identifiers prevents name mismatches in records.</p>
+              
+              <div>
+                <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">PAN Card Number</label>
+                <div class="relative">
+                  <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-[20px]">badge</span>
+                  <input type="text" id="id-pan" placeholder="ABCDE1234F" maxlength="10" style="text-transform:uppercase" class="w-full pl-10 pr-4 py-3 bg-white border border-outline-variant/60 rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm font-mono tracking-widest font-semibold">
+                </div>
+                <p class="text-[10px] text-gray-400 mt-1">This is a soft inquiry and is encrypted end-to-end.</p>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Mobile Number (Linked with PAN)</label>
+                  <div class="relative">
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-xs">+91</span>
+                    <input type="tel" id="id-mobile" maxlength="10" placeholder="10-digit mobile" class="w-full pl-12 pr-4 py-3 bg-white border border-outline-variant/60 rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm font-semibold">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Email Address</label>
+                  <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-[20px]">mail</span>
+                    <input type="email" id="id-email" placeholder="rajan@example.com" class="w-full pl-10 pr-4 py-3 bg-white border border-outline-variant/60 rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm font-semibold">
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1.5">Monthly Net Take-Home Salary (₹)</label>
+                <div class="relative">
+                  <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 font-bold text-xs">₹</span>
+                  <input type="number" id="id-income" placeholder="50000" class="w-full pl-8 pr-4 py-3 bg-white border border-outline-variant/60 rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm font-semibold">
+                </div>
+              </div>
+
+              <div class="flex items-start gap-2 pt-2">
+                <input type="checkbox" id="id-consent" checked class="w-4.5 h-4.5 border border-outline-variant rounded text-primary focus:ring-primary mt-0.5">
+                <label for="id-consent" class="text-[11px] text-on-surface-variant leading-relaxed">
+                  I consent to Credify Capital verifying my credit history through bureaus (Experian/CRIF/Equifax/CIBIL) as a soft check.
+                </label>
+              </div>
+
+              <div id="step-2-err" class="hidden text-xs text-red-600 bg-red-50 border border-red-100 p-2.5 rounded-lg font-semibold"></div>
+
+              <div class="grid grid-cols-3 gap-3">
+                <button type="button" id="back-to-step1" class="col-span-1 border border-outline-variant/60 bg-white hover:bg-gray-50 text-primary font-bold py-3 px-2 rounded-xl transition-all text-xs flex items-center justify-center gap-1">
+                  <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+                  Back
+                </button>
+                <button type="button" id="next-to-step3" class="col-span-2 bg-primary hover:brightness-110 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 text-xs">
+                  Generate Secure OTP
+                  <span class="material-symbols-outlined text-[16px]">security</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 3 FORM: Verification (OTP Simulator) -->
+            <div id="form-step-3-content" class="hidden space-y-5 text-center">
+              <span class="material-symbols-outlined text-4xl text-secondary animate-bounce mx-auto">sms</span>
+              <h3 class="text-lg font-bold text-primary">Verify Mobile Number</h3>
+              <p class="text-xs text-on-surface-variant">
+                We have triggered a secure OTP to the mobile number <span class="font-bold text-primary" id="entered-mobile-placeholder">+91 ******1234</span>.
+              </p>
+              
+              <div class="bg-amber-50 border border-amber-200/50 rounded-xl p-3 max-w-sm mx-auto">
+                <p class="text-xs text-amber-800 font-semibold flex items-center justify-center gap-1">
+                  <span class="material-symbols-outlined text-[16px]">info</span>
+                  Simulation Code: <span class="font-bold text-secondary text-sm">1234</span>
+                </p>
+              </div>
+
+              <div class="max-w-[200px] mx-auto">
+                <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2">Enter 4-Digit Code</label>
+                <input type="text" id="id-otp" maxlength="4" placeholder="••••" class="w-full text-center tracking-[1.5em] font-black text-xl py-3 border border-outline-variant rounded-xl outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-white">
+              </div>
+
+              <div id="step-3-err" class="hidden text-xs text-red-600 bg-red-50 border border-red-100 p-2.5 rounded-lg font-semibold"></div>
+
+              <div class="flex items-center justify-center gap-1.5 text-xs">
+                <span class="text-gray-500">Didn't receive the SMS?</span>
+                <button type="button" id="resend-otp-btn" class="font-bold text-secondary hover:underline">Resend OTP (<span id="otp-timer">59s</span>)</button>
+              </div>
+
+              <div class="grid grid-cols-3 gap-3 pt-2">
+                <button type="button" id="back-to-step2" class="col-span-1 border border-outline-variant/60 bg-white hover:bg-gray-50 text-primary font-bold py-3.5 px-2 rounded-xl transition-all text-xs flex items-center justify-center gap-1">
+                  <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+                  Back
+                </button>
+                <button type="button" id="submit-verify" class="col-span-2 bg-secondary hover:brightness-110 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-1.5 text-xs">
+                  Verify & Fetch Score
+                  <span class="material-symbols-outlined text-[16px]">done_all</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- LOADING SCREEN DURING SCORE CALCULATION -->
+            <div id="score-fetching-loading" class="hidden py-8 text-center space-y-6">
+              <div class="relative w-20 h-20 mx-auto">
+                <div class="w-20 h-20 border-4 border-[#142450]/15 border-t-secondary rounded-full animate-spin"></div>
+                <span class="material-symbols-outlined text-secondary absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl">query_stats</span>
+              </div>
+              
+              <div class="space-y-2">
+                <h4 class="font-bold text-primary text-base" id="loading-title">Initiating Bureau Request</h4>
+                <p class="text-xs text-gray-400" id="loading-sub">Connecting with Experian servers...</p>
+              </div>
+
+              <!-- Checkpoint logs list -->
+              <div class="max-w-xs mx-auto border border-gray-100 bg-gray-50 rounded-xl p-4 text-left space-y-2.5 text-xs font-semibold text-gray-500">
+                <div class="flex items-center gap-2.5" id="log-1">
+                  <span class="material-symbols-outlined text-[16px] text-green-500" id="log-1-icon">hourglass_top</span>
+                  <span id="log-1-txt">Encrypting PAN query inputs...</span>
+                </div>
+                <div class="flex items-center gap-2.5 text-gray-400" id="log-2">
+                  <span class="material-symbols-outlined text-[16px]" id="log-2-icon">hourglass_empty</span>
+                  <span id="log-2-txt">Securing connection with national bureaus...</span>
+                </div>
+                <div class="flex items-center gap-2.5 text-gray-400" id="log-3">
+                  <span class="material-symbols-outlined text-[16px]" id="log-3-icon">hourglass_empty</span>
+                  <span id="log-3-txt">Parsing payment records...</span>
+                </div>
+                <div class="flex items-center gap-2.5 text-gray-400" id="log-4">
+                  <span class="material-symbols-outlined text-[16px]" id="log-4-icon">hourglass_empty</span>
+                  <span id="log-4-txt">Generating dynamic visual dashboard...</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE RESULT DASHBOARD SECTION (Initially Hidden) -->
+  <section id="results-dashboard-panel" class="hidden py-12 px-4">
+    <div class="max-w-7xl mx-auto space-y-8">
+      
+      <!-- Welcome Header Banner -->
+      <div class="bg-white rounded-2xl border border-outline-variant/10 shadow-md p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <h2 class="text-2xl font-extrabold text-primary flex items-center gap-2">
+            Welcome, <span id="user-display-name">Rajan Kumar</span>!
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+              Verified User
+            </span>
+          </h2>
+          <p class="text-xs text-on-surface-variant font-medium">Credit profile fetched successfully from Experian on <span class="font-bold text-primary" id="current-date-placeholder">July 22, 2026</span></p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-print-report" class="border border-outline bg-white hover:bg-gray-50 text-primary font-bold py-2.5 px-4 rounded-xl text-xs flex items-center gap-1.5 transition-all">
+            <span class="material-symbols-outlined text-[18px]">print</span>
+            Print Report
+          </button>
+          <a href="apply.html" class="bg-[#b61722] hover:brightness-110 text-white font-bold py-2.5 px-5 rounded-xl text-xs flex items-center gap-1.5 transition-all shadow-md">
+            <span class="material-symbols-outlined text-[18px]">bolt</span>
+            Apply for Loan
+          </a>
+        </div>
+      </div>
+
+      <!-- Core Gauge & Diagnostic Breakdown -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Side: SVG Gauge & Speedometer -->
+        <div class="lg:col-span-5 bg-white rounded-2xl border border-outline-variant/10 shadow-md p-8 text-center flex flex-col items-center">
+          <h3 class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">BUREAU CREDIT SCORE</h3>
+          
+          <div class="relative w-64 h-64 mx-auto my-4">
+            <svg viewBox="0 0 200 200" class="w-full h-full">
+              <!-- Background Arc -->
+              <path d="M 30 165 A 80 80 0 1 1 170 165" fill="none" stroke="#f1f5f9" stroke-width="14" stroke-linecap="round"></path>
+              
+              <!-- Segment Arcs (Poor, Fair, Good, Excellent) -->
+              <!-- Poor: 300 - 580 (Degree: 30 to 114) -->
+              <!-- Fair: 580 - 670 (Degree: 114 to 156) -->
+              <!-- Good: 670 - 740 (Degree: 156 to 189) -->
+              <!-- Excellent: 740 - 900 (Degree: 189 to 264) -->
+              
+              <!-- Colored Meter Ring -->
+              <path d="M 30 165 A 80 80 0 0 1 73 48" fill="none" stroke="#ef4444" stroke-width="14" stroke-linecap="round" opacity="0.3"></path>
+              <path d="M 73 48 A 80 80 0 0 1 127 48" fill="none" stroke="#f97316" stroke-width="14" stroke-linecap="round" opacity="0.3"></path>
+              <path d="M 127 48 A 80 80 0 0 1 170 165" fill="none" stroke="#16a34a" stroke-width="14" stroke-linecap="round" opacity="0.3"></path>
+              
+              <!-- Interactive Dynamic Highlight Track -->
+              <path id="gauge-progress-track" d="M 30 165 A 80 80 0 1 1 170 165" fill="none" stroke="url(#gradient-score)" stroke-width="14" stroke-linecap="round" stroke-dasharray="415" stroke-dashoffset="415" style="transition: stroke-dashoffset 2s cubic-bezier(0.34, 1.56, 0.64, 1)"></path>
+
+              <!-- Color Gradient Definition -->
+              <defs>
+                <linearGradient id="gradient-score" x1="0%" y1="100%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#ef4444"></stop>
+                  <stop offset="50%" stop-color="#f97316"></stop>
+                  <stop offset="100%" stop-color="#22c55e"></stop>
+                </linearGradient>
+              </defs>
+
+              <!-- Rotating Pointer Pointer/Needle -->
+              <line id="gauge-needle" x1="100" y1="160" x2="100" y2="92" stroke="#142450" stroke-width="3" stroke-linecap="round" style="transform-origin: 100px 160px; transform: rotate(-108deg); transition: transform 2s cubic-bezier(0.34, 1.56, 0.64, 1)"></line>
+              <circle cx="100" cy="160" r="8" fill="#142450"></circle>
+            </svg>
+
+            <!-- Inner Numeric Score & Label -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center" style="top: 25px">
+              <span class="text-5xl font-black text-primary tracking-tight" id="disp-score">---</span>
+              <span class="text-xs font-bold uppercase tracking-widest mt-1.5 px-3 py-1 rounded-full border shadow-sm" id="disp-badge" style="background-color: transparent; border-color: transparent; color: transparent;">---</span>
+            </div>
+          </div>
+
+          <!-- Bureau Scale Reference -->
+          <div class="w-full grid grid-cols-4 gap-1 border-t border-gray-100 pt-5 text-[10px] font-bold text-gray-400">
+            <div>
+              <span class="block text-red-500 font-extrabold mb-0.5">Poor</span>
+              300–579
+            </div>
+            <div>
+              <span class="block text-orange-500 font-extrabold mb-0.5">Fair</span>
+              580–669
+            </div>
+            <div>
+              <span class="block text-green-500 font-extrabold mb-0.5">Good</span>
+              670–739
+            </div>
+            <div>
+              <span class="block text-green-700 font-extrabold mb-0.5">Excellent</span>
+              740–900
+            </div>
+          </div>
+
+          <div class="mt-6 bg-[#f8f9ff] border border-[#e5eeff] rounded-xl p-4 w-full text-left flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary text-xl">shield</span>
+            <div>
+              <p class="text-xs font-black text-primary">Your Data is Fully Safe</p>
+              <p class="text-[10px] text-gray-500 leading-normal mt-0.5">Retrieved via direct connection to bureaus. This pull is logged as a "Soft Check" with no negative rating impact.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Diagnostics & Factor Tabs -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="bg-white rounded-2xl border border-outline-variant/10 shadow-md p-6 md:p-8">
+            <h3 class="text-lg font-bold text-primary mb-1">Key Factors Impacting Your Score</h3>
+            <p class="text-xs text-on-surface-variant mb-6">Click on any factor block below to view diagnostics.</p>
+            
+            <!-- Grid of 4 Credit Factors -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="credit-factors-container">
+              <!-- Factor 1: Payment History -->
+              <button class="factor-tab-btn text-left p-4 rounded-xl border-2 border-primary bg-primary/[0.02] hover:bg-primary/[0.04] transition-all flex items-start gap-3 focus:outline-none" data-factor="history">
+                <div class="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center mt-0.5 flex-shrink-0">
+                  <span class="material-symbols-outlined text-[20px] font-bold">check_circle</span>
+                </div>
+                <div>
+                  <p class="text-xs font-bold text-primary">Payment History</p>
+                  <p class="text-[11px] text-green-600 font-semibold mt-0.5">Excellent (35% impact)</p>
+                  <p class="text-[10px] text-gray-400 mt-1">99.8% payments made on-time</p>
+                </div>
+              </button>
+
+              <!-- Factor 2: Credit Utilization -->
+              <button class="factor-tab-btn text-left p-4 rounded-xl border border-outline-variant/60 hover:bg-gray-50 transition-all flex items-start gap-3 focus:outline-none" data-factor="utilization">
+                <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center mt-0.5 flex-shrink-0">
+                  <span class="material-symbols-outlined text-[20px] font-bold">warning</span>
+                </div>
+                <div>
+                  <p class="text-xs font-bold text-primary">Credit Utilization</p>
+                  <p class="text-[11px] text-amber-600 font-semibold mt-0.5">High (30% impact)</p>
+                  <p class="text-[10px] text-gray-400 mt-1">Currently using 42% credit limit</p>
+                </div>
+              </button>
+
+              <!-- Factor 3: Credit History Age -->
+              <button class="factor-tab-btn text-left p-4 rounded-xl border border-outline-variant/60 hover:bg-gray-50 transition-all flex items-start gap-3 focus:outline-none" data-factor="age">
+                <div class="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center mt-0.5 flex-shrink-0">
+                  <span class="material-symbols-outlined text-[20px] font-bold">schedule</span>
+                </div>
+                <div>
+                  <p class="text-xs font-bold text-primary">Credit Mix & Age</p>
+                  <p class="text-[11px] text-green-600 font-semibold mt-0.5">Good (15% impact)</p>
+                  <p class="text-[10px] text-gray-400 mt-1">Average age: 5.4 Years</p>
+                </div>
+              </button>
+
+              <!-- Factor 4: Recent Inquiries -->
+              <button class="factor-tab-btn text-left p-4 rounded-xl border border-outline-variant/60 hover:bg-gray-50 transition-all flex items-start gap-3 focus:outline-none" data-factor="inquiries">
+                <div class="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center mt-0.5 flex-shrink-0">
+                  <span class="material-symbols-outlined text-[20px] font-bold">search</span>
+                </div>
+                <div>
+                  <p class="text-xs font-bold text-primary">Hard Inquiries</p>
+                  <p class="text-[11px] text-green-600 font-semibold mt-0.5">Excellent (10% impact)</p>
+                  <p class="text-[10px] text-gray-400 mt-1">0 inquires in last 6 months</p>
+                </div>
+              </button>
+            </div>
+
+            <!-- Detailed Diagnostics Text Block -->
+            <div class="mt-6 bg-[#f8f9ff] border border-outline-variant/30 rounded-xl p-5" id="factor-details-panel">
+              <h4 class="text-xs font-black text-primary uppercase tracking-wider mb-2" id="factor-detail-title">Payment History Analysis</h4>
+              <p class="text-xs text-gray-600 leading-relaxed" id="factor-detail-desc">Your payment track record is flawless. You have paid 118 out of 118 EMIs and credit card cycles on time over the past 4 years. On-time payment history has the single highest contribution of 35% toward your overall credit score ranking.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- INTERACTIVE SCORE SIMULATOR SECTION (Elite UI Feature) -->
+      <div class="bg-white rounded-2xl border border-outline-variant/10 shadow-lg p-6 md:p-8">
+        <div class="flex items-start gap-3 mb-6">
+          <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+            <span class="material-symbols-outlined">analytics</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-extrabold text-primary">Dynamic Credit Score Simulator</h3>
+            <p class="text-xs text-on-surface-variant">See how future actions will affect your current credit standing in real time.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <!-- Action 1 -->
+          <div class="bg-[#f8f9ff] border border-outline-variant/20 rounded-xl p-4 flex flex-col justify-between">
+            <div>
+              <p class="text-xs font-bold text-primary mb-1">Pay Off Card Outstanding</p>
+              <p class="text-[10px] text-gray-500 leading-normal">Reduce overall credit utilization from 42% down to 10%.</p>
+            </div>
+            <div class="flex items-center justify-between mt-4 pt-3 border-t border-outline-variant/10">
+              <span class="text-xs font-bold text-green-600">+48 Points</span>
+              <button class="simulator-toggle-btn w-12 h-6 rounded-full bg-gray-200 p-1 transition-all outline-none" data-score="48">
+                <div class="w-4 h-4 bg-white rounded-full transition-all shadow-sm"></div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Action 2 -->
+          <div class="bg-[#f8f9ff] border border-outline-variant/20 rounded-xl p-4 flex flex-col justify-between">
+            <div>
+              <p class="text-xs font-bold text-primary mb-1">Miss an EMI Payment</p>
+              <p class="text-[10px] text-gray-500 leading-normal">Simulate missing a single loan installment cycle by 30 days.</p>
+            </div>
+            <div class="flex items-center justify-between mt-4 pt-3 border-t border-outline-variant/10">
+              <span class="text-xs font-bold text-red-600">-85 Points</span>
+              <button class="simulator-toggle-btn w-12 h-6 rounded-full bg-gray-200 p-1 transition-all outline-none" data-score="-85">
+                <div class="w-4 h-4 bg-white rounded-full transition-all shadow-sm"></div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Action 3 -->
+          <div class="bg-[#f8f9ff] border border-outline-variant/20 rounded-xl p-4 flex flex-col justify-between">
+            <div>
+              <p class="text-xs font-bold text-primary mb-1">Close Oldest Credit Card</p>
+              <p class="text-[10px] text-gray-500 leading-normal">Closing older cards reduces your average age of credit lines.</p>
+            </div>
+            <div class="flex items-center justify-between mt-4 pt-3 border-t border-outline-variant/10">
+              <span class="text-xs font-bold text-red-600">-22 Points</span>
+              <button class="simulator-toggle-btn w-12 h-6 rounded-full bg-gray-200 p-1 transition-all outline-none" data-score="-22">
+                <div class="w-4 h-4 bg-white rounded-full transition-all shadow-sm"></div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Action 4 -->
+          <div class="bg-[#f8f9ff] border border-outline-variant/20 rounded-xl p-4 flex flex-col justify-between">
+            <div>
+              <p class="text-xs font-bold text-primary mb-1">Make 12 On-Time Repayments</p>
+              <p class="text-[10px] text-gray-500 leading-normal">Maintain perfect repayments for all accounts for next year.</p>
+            </div>
+            <div class="flex items-center justify-between mt-4 pt-3 border-t border-outline-variant/10">
+              <span class="text-xs font-bold text-green-600">+32 Points</span>
+              <button class="simulator-toggle-btn w-12 h-6 rounded-full bg-gray-200 p-1 transition-all outline-none" data-score="32">
+                <div class="w-4 h-4 bg-white rounded-full transition-all shadow-sm"></div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PERSONALIZED PRE-APPROVED OFFERS -->
+      <div id="qualified-offers-box" class="bg-gradient-to-br from-[#142450] to-[#253A71] text-white rounded-2xl p-8 relative overflow-hidden shadow-lg border border-[#2b3a67]">
+        <!-- Vector accent background -->
+        <div class="absolute right-0 bottom-0 top-0 w-1/3 opacity-5 pointer-events-none">
+          <span class="material-symbols-outlined text-[300px] absolute right-0 bottom-0 translate-y-12 translate-x-12">award_star</span>
+        </div>
+
+        <div class="relative z-10 max-w-3xl space-y-4 text-center sm:text-left">
+          <span class="inline-flex items-center gap-1 bg-secondary text-white text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+            <span class="material-symbols-outlined text-[14px]">stars</span>
+            EXCLUSIVE FOR YOU
+          </span>
+          <h3 class="text-xl sm:text-2xl font-black" id="offer-headline">You have a Pre-Approved Personal Loan of ₹15,00,000</h3>
+          <p class="text-sm text-white/80 max-w-xl" id="offer-description">Because of your strong credit standing, you are eligible for instant disbursal at premium interest rates starting from 10.49% with absolutely zero paperwork.</p>
+          
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2 text-center max-w-xl">
+            <div class="bg-white/10 p-3 rounded-xl border border-white/10">
+              <span class="block text-lg font-black text-secondary" id="offer-roi">10.49%</span>
+              <span class="text-[9px] font-bold uppercase tracking-wider text-white/60">Annual ROI</span>
+            </div>
+            <div class="bg-white/10 p-3 rounded-xl border border-white/10">
+              <span class="block text-lg font-black text-secondary">Up to 60 M</span>
+              <span class="text-[9px] font-bold uppercase tracking-wider text-white/60">Tenure</span>
+            </div>
+            <div class="bg-white/10 p-3 rounded-xl border border-white/10">
+              <span class="block text-lg font-black text-secondary">Zero</span>
+              <span class="text-[9px] font-bold uppercase tracking-wider text-white/60">Collateral</span>
+            </div>
+            <div class="bg-white/10 p-3 rounded-xl border border-white/10">
+              <span class="block text-lg font-black text-secondary">Instant</span>
+              <span class="text-[9px] font-bold uppercase tracking-wider text-white/60">Disbursal</span>
+            </div>
+          </div>
+
+          <div class="pt-4 flex flex-col sm:flex-row gap-3">
+            <a id="offer-cta-link" href="apply.html?type=Personal+Loan&amount=1500000" class="bg-secondary hover:brightness-110 text-white font-black px-8 py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md text-center">
+              Claim Pre-Approved Offer Now
+            </a>
+            <a href="calculator.html" class="border border-white/20 bg-white/5 hover:bg-white/10 text-white font-bold px-6 py-3 rounded-xl text-xs tracking-wider transition-all text-center">
+              Configure Repayment Schedule
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PRINT REPORT MODAL OR VIEW -->
+  <div id="print-modal-overlay" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+    <div class="bg-white text-on-background rounded-2xl max-w-2xl w-full p-8 space-y-6 max-h-[90vh] overflow-y-auto shadow-2xl relative">
+      <button id="close-print-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 outline-none">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      
+      <div class="text-center pb-4 border-b border-gray-100">
+        <h3 class="text-xl font-bold text-primary flex items-center justify-center gap-2">
+          <img src="/img/logo-mark.png" class="w-8 h-8 object-contain" alt="">
+          Credify Capital
+        </h3>
+        <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest">CREDIT BUREAU STATEMENT</p>
+      </div>
+
+      <table class="w-full text-xs text-left border-collapse">
+        <tbody>
+          <tr class="border-b border-gray-100">
+            <th class="py-3 font-bold text-gray-500 uppercase tracking-wider w-1/3">Report ID</th>
+            <td class="py-3 font-semibold text-primary" id="pdf-report-id">CRD-2026-98710</td>
+          </tr>
+          <tr class="border-b border-gray-100">
+            <th class="py-3 font-bold text-gray-500 uppercase tracking-wider">Report date</th>
+            <td class="py-3 font-semibold text-primary" id="pdf-report-date">July 22, 2026</td>
+          </tr>
+          <tr class="border-b border-gray-100">
+            <th class="py-3 font-bold text-gray-500 uppercase tracking-wider">Subject Name</th>
+            <td class="py-3 font-semibold text-primary" id="pdf-subject-name">Rajan Kumar</td>
+          </tr>
+          <tr class="border-b border-gray-100">
+            <th class="py-3 font-bold text-gray-500 uppercase tracking-wider">PAN Identifier</th>
+            <td class="py-3 font-semibold text-primary font-mono" id="pdf-subject-pan">XXXXX1234X</td>
+          </tr>
+          <tr class="border-b border-gray-100">
+            <th class="py-3 font-bold text-gray-500 uppercase tracking-wider">Mobile Number</th>
+            <td class="py-3 font-semibold text-primary" id="pdf-subject-mobile">+91 ******1234</td>
+          </tr>
+          <tr class="border-b border-gray-100">
+            <th class="py-3 font-bold text-gray-500 uppercase tracking-wider">BUREAU CREDIT SCORE</th>
+            <td class="py-3 font-extrabold text-secondary text-base" id="pdf-subject-score">765</td>
+          </tr>
+          <tr class="border-b border-gray-100">
+            <th class="py-3 font-bold text-gray-500 uppercase tracking-wider">SCORE RANK</th>
+            <td class="py-3 font-bold" id="pdf-subject-rank" style="color: rgb(22, 163, 74);">Excellent</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="p-4 bg-gray-50 rounded-xl space-y-1 text-xs text-gray-500 border border-gray-100 leading-normal">
+        <p class="font-bold text-primary">Bureau Certificate Statement</p>
+        <p>This report compiles soft credit pulls logged electronically across national bureaus for private assessment. It does not constituent a hard-pull on subject’s profiles.</p>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button id="btn-cancel-print" class="border border-outline bg-white hover:bg-gray-50 text-primary font-bold py-2.5 px-5 rounded-xl text-xs transition-all">
+          Close Preview
+        </button>
+        <button id="btn-trigger-print" class="bg-secondary hover:brightness-110 text-white font-bold py-2.5 px-6 rounded-xl text-xs transition-all shadow-md">
+          Print Statement
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational/Marketing Value Additions -->
+  <section class="py-16 px-4 bg-white border-t border-outline-variant/10">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center max-w-xl mx-auto mb-12">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-primary">Decoding Your Credit Score</h2>
+        <p class="text-xs text-on-surface-variant mt-2 leading-relaxed">Understanding the factors, parameters, and calculation mechanisms used by major credit rating agencies like Experian and CIBIL.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center font-bold">1</div>
+          <p class="font-extrabold text-primary text-sm">Payment Track Record (35%)</p>
+          <p class="text-xs text-gray-500 leading-relaxed">Paying active loan EMIs and credit card statement amounts before the absolute due date is the single most dominant driver of a high rating.</p>
+        </div>
+        <div class="space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center font-bold">2</div>
+          <p class="font-extrabold text-primary text-sm">Credit Utilization Index (30%)</p>
+          <p class="text-xs text-gray-500 leading-relaxed">Representing the ratio of your current credit usage compared to the limits assigned by lenders. Keeping this below 30% indicates excellent financial management.</p>
+        </div>
+        <div class="space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-primary/5 text-primary flex items-center justify-center font-bold">3</div>
+          <p class="font-extrabold text-primary text-sm">Credit Mix & Inquiries (35%)</p>
+          <p class="text-xs text-gray-500 leading-relaxed">Having a balanced combination of secure and unsecured borrowings, coupled with minimum recent hard loan queries, guarantees excellent credit scores.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<%- include('../partials/footer') %>
+
+<script src="/js/credify-core.js"></script>
+<script>
+(function() {
+  let activeGender = '';
+  let calculatedBaseScore = 765; 
+  let simulatorModifiers = {}; 
+
+  // Gender Buttons selection
+  $('.gender-btn').on('click', function() {
+    $('.gender-btn').removeClass('bg-primary text-white border-primary').addClass('bg-white text-gray-700 border-outline-variant/60');
+    $(this).removeClass('bg-white text-gray-700 border-outline-variant/60').addClass('bg-primary text-white border-primary');
+    activeGender = $(this).attr('data-val');
+    $('#id-gender').val(activeGender);
+  });
+
+  // Next to step 2 Handler
+  $('#next-to-step2').on('click', function() {
+    const name = $('#id-fullname').val().trim();
+    const dob = $('#id-dob').val();
+    const gender = $('#id-gender').val();
+    const errEl = $('#step-1-err');
+
+    errEl.addClass('hidden').empty();
+
+    if (!name) {
+      errEl.removeClass('hidden').text('Please enter your full name as printed on your PAN card.');
+      return;
+    }
+    if (!dob) {
+      errEl.removeClass('hidden').text('Please select your date of birth.');
+      return;
+    }
+    if (!gender) {
+      errEl.removeClass('hidden').text('Please select your gender.');
+      return;
+    }
+
+    // Progress indicators
+    $('#step-1-badge').removeClass('bg-primary text-white').addClass('bg-green-100 text-green-700').html('<span class="material-symbols-outlined text-[14px] font-bold">done</span>');
+    $('#step-2-badge').removeClass('bg-gray-200 text-gray-500').addClass('bg-primary text-white');
+    $('#step-2-label').removeClass('text-gray-400 font-semibold').addClass('text-primary font-bold');
+    $('#line-step-1').removeClass('bg-gray-200').addClass('bg-primary');
+
+    // Section views swap
+    $('#form-step-1-content').addClass('hidden');
+    $('#form-step-2-content').removeClass('hidden');
+  });
+
+  $('#back-to-step1').on('click', function() {
+    $('#step-1-badge').removeClass('bg-green-100 text-green-700').addClass('bg-primary text-white').text('1');
+    $('#step-2-badge').removeClass('bg-primary text-white').addClass('bg-gray-200 text-gray-500');
+    $('#step-2-label').removeClass('text-primary font-bold').addClass('text-gray-400 font-semibold');
+    $('#line-step-1').removeClass('bg-primary').addClass('bg-gray-200');
+
+    $('#form-step-2-content').addClass('hidden');
+    $('#form-step-1-content').removeClass('hidden');
+  });
+
+  // Next to step 3 OTP trigger
+  $('#next-to-step3').on('click', function() {
+    const pan = $('#id-pan').val().trim().toUpperCase();
+    const mobile = $('#id-mobile').val().trim();
+    const email = $('#id-email').val().trim();
+    const income = $('#id-income').val().trim();
+    const checkedConsent = $('#id-consent').is(':checked');
+    const errEl = $('#step-2-err');
+
+    errEl.addClass('hidden').empty();
+
+    if (!pan || !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan)) {
+      errEl.removeClass('hidden').text('Please enter a valid 10-digit PAN Card Number (e.g., ABCDE1234F).');
+      return;
+    }
+    if (!mobile || mobile.replace(/\D/g,'').length !== 10) {
+      errEl.removeClass('hidden').text('Please enter your active 10-digit mobile number.');
+      return;
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errEl.removeClass('hidden').text('Please enter a valid email address.');
+      return;
+    }
+    if (!income || parseFloat(income) <= 0) {
+      errEl.removeClass('hidden').text('Please state your net monthly salary.');
+      return;
+    }
+    if (!checkedConsent) {
+      errEl.removeClass('hidden').text('You must provide authorization consent to proceed.');
+      return;
+    }
+
+    // Set mobile display placeholder
+    $('#entered-mobile-placeholder').text('+91 ******' + mobile.substring(6));
+
+    // Progress indicators
+    $('#step-2-badge').removeClass('bg-primary text-white').addClass('bg-green-100 text-green-700').html('<span class="material-symbols-outlined text-[14px] font-bold">done</span>');
+    $('#step-3-badge').removeClass('bg-gray-200 text-gray-500').addClass('bg-primary text-white');
+    $('#step-3-label').removeClass('text-gray-400 font-semibold').addClass('text-primary font-bold');
+    $('#line-step-2').removeClass('bg-gray-200').addClass('bg-primary');
+
+    // Screen views swap
+    $('#form-step-2-content').addClass('hidden');
+    $('#form-step-3-content').removeClass('hidden');
+
+    // Trigger dummy countdown
+    startOtpCountdown();
+  });
+
+  $('#back-to-step2').on('click', function() {
+    $('#step-2-badge').removeClass('bg-green-100 text-green-700').addClass('bg-primary text-white').text('2');
+    $('#step-3-badge').removeClass('bg-primary text-white').addClass('bg-gray-200 text-gray-500');
+    $('#step-3-label').removeClass('text-primary font-bold').addClass('text-gray-400 font-semibold');
+    $('#line-step-2').removeClass('bg-primary').addClass('bg-gray-200');
+
+    $('#form-step-3-content').addClass('hidden');
+    $('#form-step-2-content').removeClass('hidden');
+  });
+
+  // OTP resend simulation countdown
+  let otpInterval;
+  function startOtpCountdown() {
+    clearInterval(otpInterval);
+    let secondsLeft = 59;
+    $('#resend-otp-btn').attr('disabled', true).addClass('cursor-not-allowed opacity-75');
+    $('#otp-timer').text(secondsLeft + 's');
+    
+    otpInterval = setInterval(() => {
+      secondsLeft--;
+      if (secondsLeft <= 0) {
+        clearInterval(otpInterval);
+        $('#otp-timer').text('Available');
+        $('#resend-otp-btn').attr('disabled', false).removeClass('cursor-not-allowed opacity-75');
+      } else {
+        $('#otp-timer').text(secondsLeft + 's');
+      }
+    }, 1000);
+  }
+
+  $('#resend-otp-btn').on('click', function() {
+    startOtpCountdown();
+    alert('A simulation verification SMS has been sent again! Enter code 1234.');
+  });
+
+  // Verify OTP Action -> Trigger Loading Checklist
+  $('#submit-verify').on('click', function() {
+    const otp = $('#id-otp').val().trim();
+    const errEl = $('#step-3-err');
+    errEl.addClass('hidden').empty();
+
+    if (otp !== '1234') {
+      errEl.removeClass('hidden').text('Incorrect OTP code. Enter 1234 to simulate a successful check.');
+      return;
+    }
+
+    // Move step-3 to completed status
+    $('#step-3-badge').removeClass('bg-primary text-white').addClass('bg-green-100 text-green-700').html('<span class="material-symbols-outlined text-[14px] font-bold">done</span>');
+    
+    // Hide OTP, show loading screen
+    $('#form-step-3-content').addClass('hidden');
+    $('#score-fetching-loading').removeClass('hidden');
+
+    // Run custom checkpoint log checklist
+    runLoadingChecklist();
+  });
+
+  function runLoadingChecklist() {
+    // Step 1 checkoff (600ms)
+    setTimeout(() => {
+      $('#log-1-icon').text('check_circle').removeClass('text-gray-400').addClass('text-green-500 font-bold');
+      $('#log-1').removeClass('text-gray-500').addClass('text-primary font-semibold');
+      
+      $('#loading-title').text('Connecting with Bureau Servers');
+      $('#loading-sub').text('Checking Experian, Equifax, and CRIF indexes...');
+      
+      $('#log-2').removeClass('text-gray-400').addClass('text-gray-500');
+      $('#log-2-icon').text('hourglass_top').addClass('text-primary font-semibold');
+    }, 800);
+
+    // Step 2 checkoff (1500ms)
+    setTimeout(() => {
+      $('#log-2-icon').text('check_circle').removeClass('text-gray-400').addClass('text-green-500 font-bold');
+      $('#log-2').removeClass('text-gray-500').addClass('text-primary font-semibold');
+
+      $('#loading-title').text('Analyzing Credit Profile');
+      $('#loading-sub').text('Parsing account histories, utilization indices, and active balances...');
+
+      $('#log-3').removeClass('text-gray-400').addClass('text-gray-500');
+      $('#log-3-icon').text('hourglass_top').addClass('text-primary font-semibold');
+    }, 1800);
+
+    // Step 3 checkoff (2400ms)
+    setTimeout(() => {
+      $('#log-3-icon').text('check_circle').removeClass('text-gray-400').addClass('text-green-500 font-bold');
+      $('#log-3').removeClass('text-gray-500').addClass('text-primary font-semibold');
+
+      $('#loading-title').text('Calculating Credit Score');
+      $('#loading-sub').text('Synthesizing metrics and establishing secure portal credentials...');
+
+      $('#log-4').removeClass('text-gray-400').addClass('text-gray-500');
+      $('#log-4-icon').text('hourglass_top').addClass('text-primary font-semibold');
+    }, 2800);
+
+    // Final Render (3600ms)
+    setTimeout(() => {
+      $('#log-4-icon').text('check_circle').removeClass('text-gray-400').addClass('text-green-500 font-bold');
+      $('#log-4').removeClass('text-gray-500').addClass('text-primary font-semibold');
+
+      // Generate a reproducible rating score using the subject's PAN string hash!
+      const panVal = $('#id-pan').val().trim().toUpperCase();
+      const nameVal = $('#id-fullname').val().trim();
+      const mobileVal = $('#id-mobile').val().trim();
+      
+      let charSum = 0;
+      for (let i = 0; i < panVal.length; i++) {
+        charSum += panVal.charCodeAt(i);
+      }
+      // Calculate a realistic Indian Experian bureau score in the 680 to 820 bracket
+      calculatedBaseScore = 680 + (charSum % 140); 
+
+      // Apply initial dashboard rendering
+      renderDashboardResults(nameVal, calculatedBaseScore, panVal, mobileVal);
+    }, 3600);
+  }
+
+  function renderDashboardResults(name, score, pan, mobile) {
+    // Hide progress forms container completely
+    $('#form-steps-header').parent().parent().addClass('hidden');
+    
+    // Set customer name
+    $('#user-display-name').text(name);
+    
+    // Set formatted date
+    const d = new Date();
+    const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    $('#current-date-placeholder').text(months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear());
+
+    // Show result board
+    $('#results-dashboard-panel').removeClass('hidden');
+
+    // Set print preview values
+    $('#pdf-subject-name').text(name);
+    $('#pdf-subject-pan').text(pan.substring(0,2) + 'XXX' + pan.substring(5,9) + 'X');
+    $('#pdf-subject-mobile').text('+91 ******' + mobile.substring(6));
+    $('#pdf-report-date').text(months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear());
+
+    // Trigger score gauge animations
+    updateScoreDisplay();
+  }
+
+  // Factor breakdown diagnostics dataset
+  const factorDiagnostics = {
+    history: {
+      title: "Payment History Analysis",
+      desc: "Your payment history is excellent. You have registered 100% complete on-time payment records over all past active cycles across the last 36 months. Since payment logs constitute 35% of your total credit score calculation, this is a strong pillar supporting your credit profile."
+    },
+    utilization: {
+      title: "Credit Utilization Analysis",
+      desc: "Your current credit utilization stands at 42%, which is considered high. Lenders prefer borrowing indexes below 30% on revolving credit accounts. Reducing this index back to excellent ranges by clearing active dues will unlock immediate positive points adjustments."
+    },
+    age: {
+      title: "Credit History Age Analysis",
+      desc: "Your credit files average an active age of 5.4 years. A mature credit profile indicates stable reliability to lending partners. Maintain your oldest credit account lines open to preserve this rating factor over time."
+    },
+    inquiries: {
+      title: "Hard Bureau Inquiries Analysis",
+      desc: "There are absolutely zero (0) hard queries submitted on your file in the past 6 months. High frequencies of hard pulls indicate credit-seeking distress behavior and drop scores. Your score is currently enjoying a high status because of this minimal activity level."
+    }
+  };
+
+  // Factor tab swapping
+  $('.factor-tab-btn').on('click', function() {
+    $('.factor-tab-btn').removeClass('border-primary bg-primary/[0.02]').addClass('border-outline-variant/60 bg-white');
+    $(this).removeClass('border-outline-variant/60 bg-white').addClass('border-primary bg-primary/[0.02]');
+    
+    const factorId = $(this).attr('data-factor');
+    const dataset = factorDiagnostics[factorId];
+    if (dataset) {
+      $('#factor-detail-title').text(dataset.title);
+      $('#factor-detail-desc').text(dataset.desc);
+    }
+  });
+
+  // Simulator Toggle Buttons
+  $('.simulator-toggle-btn').on('click', function() {
+    const isActivating = !$(this).hasClass('bg-primary');
+    const scoreVal = parseInt($(this).attr('data-score'));
+
+    if (isActivating) {
+      // Turn Toggle on
+      $(this).removeClass('bg-gray-200').addClass('bg-primary');
+      $(this).find('div').addClass('translate-x-6');
+      simulatorModifiers[scoreVal] = true;
+    } else {
+      // Turn Toggle off
+      $(this).removeClass('bg-primary').addClass('bg-gray-200');
+      $(this).find('div').removeClass('translate-x-6');
+      delete simulatorModifiers[scoreVal];
+    }
+
+    // Refresh overall rating display
+    updateScoreDisplay();
+  });
+
+  function updateScoreDisplay() {
+    let finalScore = calculatedBaseScore;
+    Object.keys(simulatorModifiers).forEach(mod => {
+      finalScore += parseInt(mod);
+    });
+
+    // Constrain score between 300 and 900
+    finalScore = Math.max(300, Math.min(900, finalScore));
+
+    // Update displays
+    $('#disp-score').text(finalScore);
+    $('#pdf-subject-score').text(finalScore);
+
+    // Map bands
+    let rank = '';
+    let color = '';
+    let bBg = '';
+    let bFg = '';
+    
+    let offerHeadline = '';
+    let offerDesc = '';
+    let offerRoi = '';
+
+    if (finalScore >= 740) {
+      rank = 'Excellent';
+      color = '#16a34a';
+      bBg = 'bg-green-50';
+      bFg = 'text-green-700 border-green-200';
+      offerHeadline = 'You qualify for a Pre-Approved Personal Credit of ₹15,00,000!';
+      offerDesc = 'Based on your elite credit tier, you qualify for instant disbursals at our absolute lowest introductory rates of 10.49% with zero physical papers required.';
+      offerRoi = '10.49%';
+    } else if (finalScore >= 670) {
+      rank = 'Good';
+      color = '#22c55e';
+      bBg = 'bg-emerald-50';
+      bFg = 'text-emerald-700 border-emerald-200';
+      offerHeadline = 'Get Pre-Qualified Business & Personal funding up to ₹10,00,000!';
+      offerDesc = 'Your sound history qualifies you for highly competitive funding. Enjoy fastest processing on instant unsecured personal or working capital limits.';
+      offerRoi = '11.99%';
+    } else if (finalScore >= 580) {
+      rank = 'Fair';
+      color = '#f97316';
+      bBg = 'bg-orange-50';
+      bFg = 'text-orange-700 border-orange-200';
+      offerHeadline = 'Explore Personal Loan Plans up to ₹5,00,000';
+      offerDesc = 'You are eligible to check special custom-repayment packages. We recommend clearing outstanding billing balances to unlock premium interest discounts.';
+      offerRoi = '13.99%';
+    } else {
+      rank = 'Poor';
+      color = '#ef4444';
+      bBg = 'bg-red-50';
+      bFg = 'text-red-700 border-red-200';
+      offerHeadline = 'Rebuild Your Score with Secured Loan Offers';
+      offerDesc = 'We recommend establishing stable payments. Our expert digital advisors can draft a customized roadmap to restore your credit score range.';
+      offerRoi = '15.99%';
+    }
+
+    // Apply dashboard colors
+    $('#disp-badge').text(rank)
+      .removeClass('bg-green-50 text-green-700 border-green-200 bg-emerald-50 text-emerald-700 border-emerald-200 bg-orange-50 text-orange-700 border-orange-200 bg-red-50 text-red-700 border-red-200')
+      .addClass(bBg + ' ' + bFg)
+      .css({'color': color, 'border-color': color + '33', 'background-color': color + '11'});
+
+    // Update print preview
+    $('#pdf-subject-rank').text(rank).css('color', color);
+
+    // Update Offer Banner Card
+    $('#offer-headline').text(offerHeadline);
+    $('#offer-description').text(offerDesc);
+    $('#offer-roi').text(offerRoi);
+    $('#offer-cta-link').attr('href', `apply.html?type=Personal+Loan&amount=${finalScore >= 740 ? '1500000' : (finalScore >= 670 ? '1000000' : '500000')}`);
+
+    // Update SVG Needle Rotation
+    // Range 300 to 900 maps to -135 degrees to +135 degrees
+    const percentage = (finalScore - 300) / 600; 
+    const rotationDeg = -135 + (percentage * 270);
+    $('#gauge-needle').css('transform', `rotate(${rotationDeg}deg)`);
+
+    // Update Gauge Track Dash Offset
+    // Dasharray circumference is ~415px
+    const trackDashOffset = 415 - (percentage * 415);
+    $('#gauge-progress-track').css('stroke-dashoffset', trackDashOffset);
+  }
+
+  // Modal print behaviors
+  $('#btn-print-report').on('click', function() {
+    $('#print-modal-overlay').removeClass('hidden');
+  });
+
+  $('#close-print-modal, #btn-cancel-print').on('click', function() {
+    $('#print-modal-overlay').addClass('hidden');
+  });
+
+  $('#btn-trigger-print').on('click', function() {
+    window.print();
+  });
+
+  // Close modal if background clicked
+  $('#print-modal-overlay').on('click', function(e) {
+    if (e.target === this) {
+      $(this).addClass('hidden');
+    }
+  });
+
+})();
+</script>
+</body></html>

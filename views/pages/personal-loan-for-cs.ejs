@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Exclusive Unsecured Personal & Professional Loans for CS - Credify Capital</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/tailwind-built.css">
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var menuBtn = document.getElementById('mobile-menu-btn');
+  var menuPanel = document.getElementById('mobile-menu-panel');
+  var menuIcon = document.getElementById('mobile-menu-icon');
+  if (menuBtn && menuPanel) {
+    menuBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var isOpen = !menuPanel.classList.contains('hidden');
+      menuPanel.classList.toggle('hidden');
+      menuBtn.setAttribute('aria-expanded', String(!isOpen));
+      if (menuIcon) menuIcon.textContent = isOpen ? 'close' : 'menu';
+    });
+    document.addEventListener('click', function(e) {
+      if (!menuPanel.classList.contains('hidden') && !menuBtn.contains(e.target) && !menuPanel.contains(e.target)) {
+        menuPanel.classList.add('hidden');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        if (menuIcon) menuIcon.textContent = 'menu';
+      }
+    });
+  }
+});
+</script>
+
+</head>
+<body class="bg-background text-on-background font-body-md pt-[64px] lg:pt-[116px]">
+
+  <%- include('../partials/header') %>
+
+<!-- HERO SECTION -->
+  <section class="relative bg-gradient-to-r from-[#142450] via-[#1b2f66] to-[#253A71] text-white py-16 px-4 md:px-12 overflow-hidden">
+    <!-- Background accents -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.05),transparent)] pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto relative flex flex-col lg:flex-row items-center justify-between gap-12">
+      <div class="space-y-6 max-w-2xl">
+        <div class="inline-flex items-center gap-2 bg-secondary/25 border border-secondary/40 text-red-200 px-4 py-1.5 rounded-full text-xs font-bold tracking-wide">
+          <span class="material-symbols-outlined text-sm">verified_user</span> EXCLUSIVE CS SPECIAL PREFERENCE CREDIT
+        </div>
+        <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
+          Unsecured Credit Solutions for <span class="text-red-400">Company Secretaries (CS)</span>
+        </h1>
+        <p class="text-gray-300 text-lg">
+          Custom-designed Personal, Corporate Advisory, and Business Loans without collateral. Fast digital verification using your CS Certificate of Practice.
+        </p>
+        <div class="flex flex-wrap gap-4 items-center pt-2">
+          <div class="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-xl">
+            <span class="material-symbols-outlined text-secondary">percent</span>
+            <span class="text-xs text-gray-200"><strong class="text-white text-sm block">10.50% p.a.</strong> Starts from</span>
+          </div>
+          <div class="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-xl">
+            <span class="material-symbols-outlined text-secondary">speed</span>
+            <span class="text-xs text-gray-200"><strong class="text-white text-sm block">Instant approval</strong> 100% Online</span>
+          </div>
+          <div class="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-xl">
+            <span class="material-symbols-outlined text-secondary">gavel</span>
+            <span class="text-xs text-gray-200"><strong class="text-white text-sm block">No Collateral</strong> Zero Security</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 pt-4">
+          <a href="apply.html?type=Personal+Loan+for+CS" class="bg-secondary text-white px-8 py-3.5 rounded-full font-bold text-sm hover:scale-[1.02] transition shadow-lg inline-flex items-center gap-2">
+            Apply Online <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+          <a href="#matrix" class="border border-white/30 text-white hover:bg-white/10 px-6 py-3 rounded-full font-bold text-sm transition">
+            Compare Features
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Quote Widget -->
+      <div class="w-full max-w-md bg-white text-on-surface p-6 rounded-3xl border border-gray-100 shadow-xl relative">
+        <h3 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary">calculate</span> Estimate CS Loan EMI
+        </h3>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between text-xs font-semibold text-gray-500 mb-1">
+              <span>Required Credit Amount</span>
+              <span class="text-primary font-bold" id="amt-label">₹25,00,000</span>
+            </div>
+            <input type="range" min="100000" max="7500000" step="50000" value="2500000" class="w-full accent-secondary" id="amt-range">
+          </div>
+          <div>
+            <div class="flex justify-between text-xs font-semibold text-gray-500 mb-1">
+              <span>Preference Tenure (Months)</span>
+              <span class="text-primary font-bold" id="tenure-label">36 Months</span>
+            </div>
+            <input type="range" min="12" max="60" step="6" value="36" class="w-full accent-secondary" id="tenure-range">
+          </div>
+          <div>
+            <div class="flex justify-between text-xs font-semibold text-gray-500 mb-1">
+              <span>Interest Rate (Assumed)</span>
+              <span class="text-primary font-bold">10.5% p.a.</span>
+            </div>
+          </div>
+          <div class="bg-primary/5 rounded-2xl p-4 flex justify-between items-center border border-primary/10">
+            <div>
+              <span class="text-[10px] uppercase font-bold text-gray-400 block tracking-wider">Estimated Monthly EMI</span>
+              <span class="text-2xl font-black text-primary" id="emi-val">₹81,249</span>
+            </div>
+            <a href="apply.html?type=Personal+Loan+for+CS" class="bg-primary text-white text-xs px-4 py-2.5 rounded-lg font-bold hover:bg-secondary transition shadow">
+              Apply Now
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CS CREDIT PRODUCTS COMPARISON MATRIX -->
+  <section class="py-16 px-4 md:px-12 max-w-7xl mx-auto" id="matrix">
+    <div class="text-center space-y-3 mb-12">
+      <div class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-800 px-4 py-1.5 rounded-full font-bold text-xs">
+        <span class="material-symbols-outlined text-sm">compare_arrows</span> THE CS CREDIT SUITE COMPARISON MATRIX
+      </div>
+      <h2 class="text-3xl font-extrabold text-primary">Personal vs. Professional Practice vs. Corporate Advisory Loans</h2>
+      <p class="text-sm text-gray-500 max-w-xl mx-auto">
+        Company Secretaries can access multiple types of unsecured credit lines depending on the exact usage criteria. Compare and select your perfect fit.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Unsecured Personal Loan -->
+      <div class="bg-white rounded-3xl border border-gray-200 p-8 shadow-sm flex flex-col justify-between hover:border-blue-300 transition-all duration-300 relative group">
+        <div class="absolute top-4 right-4 bg-gray-100 text-gray-600 font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider">Personal Use</div>
+        <div class="space-y-6">
+          <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-800 flex items-center justify-center">
+            <span class="material-symbols-outlined text-2xl font-bold">person</span>
+          </div>
+          <div class="space-y-1">
+            <h3 class="text-xl font-bold text-primary group-hover:text-secondary transition-colors">Unsecured Personal Loan</h3>
+            <p class="text-xs text-gray-400">For non-business personal lifestyle &amp; emergency needs</p>
+          </div>
+          <ul class="space-y-3 text-xs text-gray-600 border-t border-gray-100 pt-4">
+            <li class="flex justify-between"><strong>Ticket Size:</strong> <span>₹1 Lakh to ₹40 Lakhs</span></li>
+            <li class="flex justify-between"><strong>Interest Rates:</strong> <span class="font-bold text-emerald-600">Starting @ 10.50%</span></li>
+            <li class="flex justify-between"><strong>Tenure Duration:</strong> <span>12 to 60 Months</span></li>
+            <li class="flex justify-between"><strong>End-Use Criteria:</strong> <span class="text-right">Wedding, vacation, home renovation, medical</span></li>
+            <li class="flex justify-between"><strong>Key Document:</strong> <span>ICSI COP Certificate + Salaried / Self-Employed KYC</span></li>
+          </ul>
+        </div>
+        <div class="pt-8">
+          <a href="apply.html?type=Personal+Loan+for+CS" class="w-full text-center block bg-primary text-white py-3 rounded-xl font-bold text-xs hover:bg-secondary transition-all">
+            Get Personal Loan
+          </a>
+        </div>
+      </div>
+
+      <!-- Unsecured Professional Loan -->
+      <div class="bg-white rounded-3xl border-2 border-secondary p-8 shadow-md flex flex-col justify-between hover:scale-[1.01] transition-all duration-300 relative">
+        <div class="absolute top-4 right-4 bg-secondary text-white font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider">Most Popular</div>
+        <div class="space-y-6">
+          <div class="w-12 h-12 rounded-2xl bg-red-50 text-secondary flex items-center justify-center">
+            <span class="material-symbols-outlined text-2xl font-bold">work</span>
+          </div>
+          <div class="space-y-1">
+            <h3 class="text-xl font-bold text-primary">Unsecured Professional Loan</h3>
+            <p class="text-xs text-red-500 font-semibold">Specialized for Office Expansion &amp; Advisory Infrastructure</p>
+          </div>
+          <ul class="space-y-3 text-xs text-gray-600 border-t border-gray-100 pt-4">
+            <li class="flex justify-between"><strong>Ticket Size:</strong> <span>₹5 Lakhs to ₹75 Lakhs</span></li>
+            <li class="flex justify-between"><strong>Interest Rates:</strong> <span class="font-bold text-emerald-600">Starting @ 10.75%</span></li>
+            <li class="flex justify-between"><strong>Tenure Duration:</strong> <span>12 to 60 Months</span></li>
+            <li class="flex justify-between"><strong>End-Use Criteria:</strong> <span class="text-right">Advisory office setup, compliance software, laptop upgrade, staff</span></li>
+            <li class="flex justify-between"><strong>Key Document:</strong> <span>COP Certificate (2+ Yrs vintage) + 2 yrs ITR</span></li>
+          </ul>
+        </div>
+        <div class="pt-8">
+          <a href="apply.html?type=Professional+Loan+for+CS" class="w-full text-center block bg-secondary text-white py-3 rounded-xl font-bold text-xs hover:brightness-110 transition-all shadow-md">
+            Get Professional Loan
+          </a>
+        </div>
+      </div>
+
+      <!-- Unsecured Business Loan -->
+      <div class="bg-white rounded-3xl border border-gray-200 p-8 shadow-sm flex flex-col justify-between hover:border-blue-300 transition-all duration-300 relative group">
+        <div class="absolute top-4 right-4 bg-gray-100 text-gray-600 font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wider">High Ticket</div>
+        <div class="space-y-6">
+          <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-800 flex items-center justify-center">
+            <span class="material-symbols-outlined text-2xl font-bold">business_center</span>
+          </div>
+          <div class="space-y-1">
+            <h3 class="text-xl font-bold text-primary group-hover:text-secondary transition-colors">Corporate Advisory Loan</h3>
+            <p class="text-xs text-gray-400">For major firm scaling, partner buyouts &amp; acquisitions</p>
+          </div>
+          <ul class="space-y-3 text-xs text-gray-600 border-t border-gray-100 pt-4">
+            <li class="flex justify-between"><strong>Ticket Size:</strong> <span>₹10 Lakhs to ₹1 Crore</span></li>
+            <li class="flex justify-between"><strong>Interest Rates:</strong> <span class="font-bold text-emerald-600">Starting @ 11.25%</span></li>
+            <li class="flex justify-between"><strong>Tenure Duration:</strong> <span>12 to 60 Months</span></li>
+            <li class="flex justify-between"><strong>End-Use Criteria:</strong> <span class="text-right">Expanding compliance consulting services, setting branch offices</span></li>
+            <li class="flex justify-between"><strong>Key Document:</strong> <span>Partnership Deed/COI + Audited Practice Accounts</span></li>
+          </ul>
+        </div>
+        <div class="pt-8">
+          <a href="apply.html?type=Business+Loan+for+CS" class="w-full text-center block bg-primary text-white py-3 rounded-xl font-bold text-xs hover:bg-secondary transition-all">
+            Get Corporate Advisory Loan
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES & BENEFITS -->
+  <section class="bg-gray-50 py-16 px-4 md:px-12">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="space-y-6">
+        <div class="inline-flex items-center gap-2 bg-red-50 text-secondary px-4 py-1.5 rounded-full font-bold text-xs">
+          <span class="material-symbols-outlined text-sm">auto_awesome</span> PREMIUM PRIVILEGES FOR CS
+        </div>
+        <h2 class="text-3xl font-extrabold text-primary leading-tight">
+          Why Credify Capital is India's Choice for Unsecured CS Loans
+        </h2>
+        <p class="text-gray-600 text-sm">
+          We understand that Company Secretaries hold immense professional accountability and exceptional financial credibility. Hence, we offer higher loan caps, lowered administrative charges, and zero collateral mandates.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
+          <div class="flex gap-3">
+            <span class="material-symbols-outlined text-secondary font-bold text-2xl">verified</span>
+            <div>
+              <h4 class="font-bold text-primary text-sm">Preferential ROI</h4>
+              <p class="text-xs text-gray-500 mt-1">Starting from 10.50% based on ICSI membership vintage.</p>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <span class="material-symbols-outlined text-secondary font-bold text-2xl">offline_pin</span>
+            <div>
+              <h4 class="font-bold text-primary text-sm">No Security Required</h4>
+              <p class="text-xs text-gray-500 mt-1">Completely collateral-free unsecured structure protects personal assets.</p>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <span class="material-symbols-outlined text-secondary font-bold text-2xl">flash_on</span>
+            <div>
+              <h4 class="font-bold text-primary text-sm">Digital Approval</h4>
+              <p class="text-xs text-gray-500 mt-1">E-KYC, automated digital credit check, and rapid online documentation.</p>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <span class="material-symbols-outlined text-secondary font-bold text-2xl">history</span>
+            <div>
+              <h4 class="font-bold text-primary text-sm">Flexible Repayment</h4>
+              <p class="text-xs text-gray-500 mt-1">Bullet payments or tailored EMI structured matching client collections.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Eligibility Panel -->
+      <div class="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm space-y-6">
+        <h3 class="text-xl font-bold text-primary flex items-center gap-2 border-b border-gray-100 pb-4">
+          <span class="material-symbols-outlined text-secondary">checklist</span> Requirements &amp; Eligibility
+        </h3>
+        <div class="space-y-4">
+          <div>
+            <h4 class="font-bold text-primary text-xs flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Professional Status
+            </h4>
+            <p class="text-xs text-gray-500 ml-3.5 mt-0.5">Must hold a valid Certificate of Practice (COP) issued by the Institute of Company Secretaries of India (ICSI).</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-primary text-xs flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> COP Experience
+            </h4>
+            <p class="text-xs text-gray-500 ml-3.5 mt-0.5">Minimum active COP practice vintage of 2 years (for personal/professional loans) or 3 years (for unsecured business loans).</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-primary text-xs flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Credit Score Requirement
+            </h4>
+            <p class="text-xs text-gray-500 ml-3.5 mt-0.5">A stable CIBIL score of 700 or above with a solid historic repayment history.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-primary text-xs flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Key Documents Needed
+            </h4>
+            <div class="grid grid-cols-2 gap-2 text-xs text-gray-600 ml-3.5 mt-1">
+              <span class="flex items-center gap-1"><span class="material-symbols-outlined text-emerald-600 text-sm">check</span> PAN &amp; Aadhaar Card</span>
+              <span class="flex items-center gap-1"><span class="material-symbols-outlined text-emerald-600 text-sm">check</span> ICSI COP Certificate</span>
+              <span class="flex items-center gap-1"><span class="material-symbols-outlined text-emerald-600 text-sm">check</span> Last 2 Years ITR</span>
+              <span class="flex items-center gap-1"><span class="material-symbols-outlined text-emerald-600 text-sm">check</span> 6 Months Bank Statement</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section class="py-16 px-4 md:px-12 max-w-5xl mx-auto space-y-8">
+    <div class="text-center space-y-3">
+      <h2 class="text-3xl font-extrabold text-primary">Frequently Asked Questions</h2>
+      <p class="text-xs text-gray-500">Quick answers regarding unsecured credit solutions for Company Secretaries</p>
+    </div>
+
+    <div class="space-y-4">
+      <div class="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-sm transition-all">
+        <h4 class="font-bold text-primary text-sm mb-2">Can a Company Secretary get an unsecured personal loan?</h4>
+        <p class="text-xs text-gray-500 leading-relaxed">
+          Absolutely! CS professionals are considered highly stable premium borrowers. You can easily obtain an unsecured personal loan of up to ₹40 Lakhs at preferential interest rates without pledging any collateral, jewelry, or assets.
+        </p>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-sm transition-all">
+        <h4 class="font-bold text-primary text-sm mb-2">How does a CS Personal Loan differ from a CS Professional Practice Loan?</h4>
+        <p class="text-xs text-gray-500 leading-relaxed">
+          A Personal Loan has zero end-use restrictions—you can use it for your wedding, travel, home renovation, or private emergencies. A Professional Practice Loan is specifically meant to scale your advisory firm, purchase high-end bookkeeping and secretarial compliance software licenses, manage client working capital, or hire qualified team members.
+        </p>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-sm transition-all">
+        <h4 class="font-bold text-primary text-sm mb-2">What is the vintage requirement of COP for a professional unsecured loan?</h4>
+        <p class="text-xs text-gray-500 leading-relaxed">
+          Typically, an active COP (Certificate of Practice) vintage of 2 years is required for personal or professional loans. For large-ticket unsecured business loans up to ₹1 Crore, a 3-year registration history is requested.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <%- include('../partials/footer') %>
+
+  <script>
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+    const mobileMenuIcon = document.getElementById('mobile-menu-icon');
+
+    if (mobileMenuBtn && mobileMenuPanel) {
+      mobileMenuBtn.addEventListener('click', () => {
+        const isHidden = mobileMenuPanel.classList.contains('hidden');
+        if (isHidden) {
+          mobileMenuPanel.classList.remove('hidden');
+          if (mobileMenuIcon) mobileMenuIcon.textContent = 'close';
+        } else {
+          mobileMenuPanel.classList.add('hidden');
+          if (mobileMenuIcon) mobileMenuIcon.textContent = 'menu';
+        }
+      });
+    }
+
+    // Dynamic Calculator for CS Loan
+    const amtRange = document.getElementById('amt-range');
+    const tenureRange = document.getElementById('tenure-range');
+    const amtLabel = document.getElementById('amt-label');
+    const tenureLabel = document.getElementById('tenure-label');
+    const emiVal = document.getElementById('emi-val');
+
+    function calculateEMI() {
+      const p = parseFloat(amtRange.value);
+      const n = parseFloat(tenureRange.value);
+      const r = 10.5 / 12 / 100; // 10.5% p.a.
+      
+      // EMI = [P x r x (1+r)^n]/[((1+r)^n)-1]
+      const emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+      
+      // Format to Indian Currency
+      const formattedEmi = new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        maximumFractionDigits: 0
+      }).format(emi);
+      
+      const formattedAmt = new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        maximumFractionDigits: 0
+      }).format(p);
+
+      amtLabel.textContent = formattedAmt;
+      tenureLabel.textContent = n + ' Months';
+      emiVal.textContent = formattedEmi;
+    }
+
+    if (amtRange && tenureRange) {
+      amtRange.addEventListener('input', calculateEMI);
+      tenureRange.addEventListener('input', calculateEMI);
+      calculateEMI();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#253A71">
+  <title>Admin Portal Login - Credify Capital</title>
+  <link rel="shortcut icon" href="/img/favicon.ico">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tailwind-built.css">
+
+</head>
+<body class="bg-background text-primary min-h-screen flex flex-col justify-between font-sans">
+
+  <!-- HEADER -->
+  <%- include('../partials/header') %>
+
+  <!-- MAIN BODY -->
+  <main class="flex-grow flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-md bg-white border border-outline-variant/30 rounded-2xl shadow-xl p-8">
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 bg-primary/5 text-primary rounded-full flex items-center justify-center mx-auto mb-4 border border-primary/10">
+          <span class="material-symbols-outlined text-3xl">admin_panel_settings</span>
+        </div>
+        <h2 class="text-2xl font-bold tracking-tight text-primary">System Administrator</h2>
+        <p class="text-sm text-gray-500 mt-1">Please sign in with your credential keys</p>
+      </div>
+
+      <!-- FORM -->
+      <form id="admin-login-form" class="space-y-5">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5" for="admin-email">Admin Email ID</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-lg">mail</span>
+            <input type="email" id="admin-email" required class="w-full pl-10 pr-4 py-2.5 rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm" placeholder="admin@credifycapital.com">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5" for="admin-password">Secure Password</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-lg">lock</span>
+            <input type="password" id="admin-password" required class="w-full pl-10 pr-4 py-2.5 rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm" placeholder="••••••••">
+          </div>
+        </div>
+
+        <!-- ERROR CONTAINER -->
+        <div id="error-box" class="hidden p-3.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-medium flex items-start gap-2">
+          <span class="material-symbols-outlined text-sm shrink-0 mt-0.5">error</span>
+          <span id="error-message"></span>
+        </div>
+
+        <button type="submit" id="submit-btn" class="w-full bg-primary hover:bg-primary/95 text-white py-3 rounded-lg font-bold shadow-md hover:shadow-lg transition flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-lg">vpn_key</span> Sign In to Dashboard
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <%- include('../partials/footer') %>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- FIREBASE SCRIPTS -->
+  <script type="module">
+    import { auth } from "./firebaseConfig.js";
+    import { signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    const errorBox = document.getElementById('error-box');
+    const errorMessage = document.getElementById('error-message');
+    const submitBtn = document.getElementById('submit-btn');
+
+    // Toast helper
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `flex items-center gap-2 px-4 py-3 rounded-xl text-white text-xs font-bold shadow-lg transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-auto ${
+        type === 'error' ? 'bg-secondary' : 'bg-primary'
+      }`;
+      const icon = type === 'error' ? 'error' : 'check_circle';
+      toast.innerHTML = `<span class="material-symbols-outlined text-sm">${icon}</span> <span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 50);
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Redirect if already authenticated
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "admin-dashboard.html";
+      }
+    });
+
+    // Handle form submission
+    document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Clear errors & set loading state
+      errorBox.classList.add('hidden');
+      errorMessage.textContent = '';
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span class="material-symbols-outlined animate-spin text-lg">sync</span> Authenticating...`;
+
+      const email = document.getElementById('admin-email').value.trim();
+      const password = document.getElementById('admin-password').value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        showToast("Access Granted! Redirecting...", "success");
+        setTimeout(() => {
+          window.location.href = "admin-dashboard.html";
+        }, 1000);
+      } catch (err) {
+        console.error("Login failed:", err);
+        errorBox.classList.remove('hidden');
+        
+        // Custom user-friendly messages for standard Firebase error codes
+        let msg = "Authentication failed. Please verify your credentials.";
+        if (err.code === "auth/invalid-credential") {
+          msg = "Invalid admin credentials. Please double-check your email and password.";
+        } else if (err.code === "auth/user-not-found") {
+          msg = "No administrator account found with this email.";
+        } else if (err.code === "auth/wrong-password") {
+          msg = "Incorrect password. Please try again.";
+        } else if (err.code === "auth/too-many-requests") {
+          msg = "Access temporarily blocked due to multiple failed login attempts. Please try again later.";
+        } else if (err.code === "auth/network-request-failed") {
+          msg = "Network error. Please check your internet connection.";
+        } else {
+          // Fallback to error message
+          msg = err.message || msg;
+        }
+        
+        errorMessage.textContent = msg;
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span class="material-symbols-outlined text-lg">vpn_key</span> Sign In to Dashboard`;
+      }
+    });
+  </script>
+</body>
+</html>

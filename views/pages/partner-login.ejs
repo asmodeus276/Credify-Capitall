@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>DSA Partner Portal - Credify Capital</title>
+
+  <link rel="stylesheet" href="/css/tailwind-built.css">
+  <script>
+    try {
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#142450",
+              secondary: "#b61722",
+              background: "#f8f9ff",
+              "on-background": "#0b1c30",
+              "outline-variant": "#c5c6d0",
+              "surface-container-low": "#eff4ff"
+            }
+          }
+        }
+      }
+    } catch(e) {}
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .scroll-hide::-webkit-scrollbar { display: none; }
+    .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/tailwind-built.css">
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var menuBtn = document.getElementById('mobile-menu-btn');
+  var menuPanel = document.getElementById('mobile-menu-panel');
+  var menuIcon = document.getElementById('mobile-menu-icon');
+  if (menuBtn && menuPanel) {
+    menuBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var isOpen = !menuPanel.classList.contains('hidden');
+      menuPanel.classList.toggle('hidden');
+      menuBtn.setAttribute('aria-expanded', String(!isOpen));
+      if (menuIcon) menuIcon.textContent = isOpen ? 'close' : 'menu';
+    });
+    document.addEventListener('click', function(e) {
+      if (!menuPanel.classList.contains('hidden') && !menuBtn.contains(e.target) && !menuPanel.contains(e.target)) {
+        menuPanel.classList.add('hidden');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        if (menuIcon) menuIcon.textContent = 'menu';
+      }
+    });
+  }
+});
+</script>
+
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col pt-[64px] lg:pt-[116px]">
+
+  <!-- HEADER -->
+  <%- include('../partials/header') %>
+
+<!-- PORTAL NOTIFICATION TOAST -->
+  <div id="toast-container" class="fixed top-20 right-4 z-50 pointer-events-none space-y-2"></div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 md:px-8 py-6 flex flex-col">
+    <!-- NOT LOGGED IN WORKSPACE -->
+    <div id="auth-section" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center py-8">
+      <div class="lg:col-span-7 space-y-6">
+        <div class="inline-flex items-center gap-2 bg-primary/5 text-primary px-4 py-2 rounded-full font-semibold text-sm">
+          <span class="material-symbols-outlined text-sm">handshake</span> Direct Selling Agent (DSA) Program
+        </div>
+        <h1 class="text-3xl md:text-5xl font-extrabold text-primary leading-tight">
+          Multiply Your Payouts with India's Smartest Loan Platform
+        </h1>
+        <p class="text-gray-600 text-lg leading-relaxed max-w-xl">
+          Register as an authorized Credify Capital partner. Bring high-quality leads for Business, Personal, and Asset loans, track credit approval stages in real-time, and get immediate weekly commission payouts.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="flex gap-3 items-start bg-white p-4 rounded-xl border border-outline-variant/10 shadow-sm">
+            <span class="material-symbols-outlined text-secondary text-2xl">percent</span>
+            <div>
+              <h4 class="font-bold text-primary">Highest Slab Commissions</h4>
+              <p class="text-xs text-gray-500">Up to 2.5% payouts on disbursed business and machinery loans.</p>
+            </div>
+          </div>
+          <div class="flex gap-3 items-start bg-white p-4 rounded-xl border border-outline-variant/10 shadow-sm">
+            <span class="material-symbols-outlined text-secondary text-2xl">bolt</span>
+            <div>
+              <h4 class="font-bold text-primary">Instant Pre-Screener Tool</h4>
+              <p class="text-xs text-gray-500">Evaluate application status instantly with our underwriting check.</p>
+            </div>
+          </div>
+          <div class="flex gap-3 items-start bg-white p-4 rounded-xl border border-outline-variant/10 shadow-sm">
+            <span class="material-symbols-outlined text-secondary text-2xl">insights</span>
+            <div>
+              <h4 class="font-bold text-primary">Live Milestone Tracking</h4>
+              <p class="text-xs text-gray-500">Full visibility of verification, credit risk checks, and disbursed cash.</p>
+            </div>
+          </div>
+          <div class="flex gap-3 items-start bg-white p-4 rounded-xl border border-outline-variant/10 shadow-sm">
+            <span class="material-symbols-outlined text-secondary text-2xl">credit_card</span>
+            <div>
+              <h4 class="font-bold text-primary">Weekly Direct Settlement</h4>
+              <p class="text-xs text-gray-500">Fast commission payouts directly to your registered bank details.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-5 bg-white border border-outline-variant/25 rounded-2xl shadow-xl overflow-hidden">
+        <div class="flex border-b border-outline-variant/20 bg-gray-50">
+          <button id="tab-login-btn" onclick="switchAuthTab('login')" class="flex-1 py-4 text-center font-bold text-primary border-b-2 border-primary transition-all">
+            Partner Sign In
+          </button>
+          <button id="tab-register-btn" onclick="switchAuthTab('register')" class="flex-1 py-4 text-center font-bold text-gray-500 border-b-2 border-transparent transition-all">
+            Join Partner Network
+          </button>
+        </div>
+
+        <div class="p-6">
+          <!-- LOGIN VIEW -->
+          <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">DSA Partner Code</label>
+              <input type="text" id="login-dsa-code" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm py-2.5" placeholder="e.g. CC-DSA-9842">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Secure Password</label>
+              <input type="password" id="login-password" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm py-2.5" placeholder="Enter password">
+            </div>
+            <button type="submit" class="w-full bg-primary hover:bg-primary/95 text-white py-3 rounded-lg font-bold shadow-md hover:shadow-lg transition">
+              Verify & Enter Portal
+            </button>
+          </form>
+
+          <!-- REGISTER VIEW -->
+          <form id="register-form" onsubmit="handleRegister(event)" class="hidden space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Agent Full Name</label>
+                <input type="text" id="reg-name" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-xs py-2" placeholder="Suresh Patel">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Agency/Firm Name</label>
+                <input type="text" id="reg-agency" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-xs py-2" placeholder="Patel Financials">
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Email Address</label>
+                <input type="email" id="reg-email" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-xs py-2" placeholder="suresh@patel.in">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Mobile (WhatsApp)</label>
+                <input type="tel" id="reg-mobile" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-xs py-2" placeholder="+91 99887 76655">
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Your Business Location (City)</label>
+              <input type="text" id="reg-city" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-xs py-2" placeholder="Mumbai, MH">
+            </div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200/50 space-y-2">
+              <span class="block text-[11px] font-bold text-primary uppercase">Direct Commission Bank Settlement</span>
+              <div class="grid grid-cols-2 gap-2">
+                <input type="text" id="reg-bank-name" required class="w-full rounded-md border-gray-300 text-xs py-1.5" placeholder="Bank Name (e.g. ICICI)">
+                <input type="text" id="reg-bank-acc" required class="w-full rounded-md border-gray-300 text-xs py-1.5" placeholder="Account Number">
+              </div>
+            </div>
+            <label class="flex items-start gap-2 cursor-pointer pt-1">
+              <input type="checkbox" required class="rounded border-gray-300 text-primary focus:ring-primary/20 mt-0.5">
+              <span class="text-[11px] text-gray-500 leading-snug">I agree to Credify Capital's DSA Code of Conduct and represent that I will maintain authentic customer KYC profiles.</span>
+            </label>
+            <button type="submit" class="w-full bg-secondary hover:brightness-110 text-white py-2.5 rounded-lg font-bold shadow transition">
+              Create Partner Account & Get DSA Code
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGGED IN PORTAL WORKSPACE -->
+    <div id="portal-section" class="hidden flex-grow flex flex-col md:flex-row gap-6 py-4">
+      <!-- PORTAL SIDE NAV -->
+      <aside class="md:w-64 bg-white border border-outline-variant/20 rounded-xl shadow-sm p-4 flex flex-col gap-6">
+        <div class="flex items-center gap-3 p-2 bg-primary/5 rounded-xl border border-primary/10">
+          <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm" id="user-avatar">
+            AP
+          </div>
+          <div>
+            <h5 class="font-bold text-sm text-primary leading-tight" id="user-name">Authorized Partner</h5>
+            <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full mt-1">
+              <span class="material-symbols-outlined text-[10px] fill-1">star</span> Gold Agent
+            </span>
+          </div>
+        </div>
+
+        <nav class="flex flex-col gap-1 flex-grow">
+          <button onclick="switchTab('dashboard')" id="btn-tab-dashboard" class="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-semibold transition bg-primary text-white text-left">
+            <span class="material-symbols-outlined text-lg">dashboard</span> Dashboard Overview
+          </button>
+          <button onclick="switchTab('submit')" id="btn-tab-submit" class="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-semibold transition text-gray-600 hover:bg-slate-100 hover:text-primary text-left">
+            <span class="material-symbols-outlined text-lg">post_add</span> Submit New Lead
+          </button>
+          <button onclick="switchTab('pipeline')" id="btn-tab-pipeline" class="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-semibold transition text-gray-600 hover:bg-slate-100 hover:text-primary text-left">
+            <span class="material-symbols-outlined text-lg">list_alt</span> Leads Pipeline
+          </button>
+          <button onclick="switchTab('commission')" id="btn-tab-commission" class="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-semibold transition text-gray-600 hover:bg-slate-100 hover:text-primary text-left">
+            <span class="material-symbols-outlined text-lg">payments</span> Commission Tracker
+          </button>
+          <button onclick="switchTab('resources')" id="btn-tab-resources" class="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-semibold transition text-gray-600 hover:bg-slate-100 hover:text-primary text-left">
+            <span class="material-symbols-outlined text-lg">download_for_offline</span> Resource Center
+          </button>
+        </nav>
+
+        <div class="pt-4 border-t border-outline-variant/20 space-y-2">
+          <div class="text-[11px] text-gray-400">DSA CODE: <strong class="text-gray-700" id="user-dsa-code">CC-DSA-9842</strong></div>
+          <button onclick="handleLogout()" class="flex items-center gap-2 text-xs font-bold text-red-600 hover:bg-red-50 w-full px-3 py-2 rounded-lg transition text-left">
+            <span class="material-symbols-outlined text-sm">logout</span> Logout Session
+          </button>
+        </div>
+      </aside>
+
+      <!-- PORTAL CORE WORK AREA -->
+      <section class="flex-grow bg-white border border-outline-variant/20 rounded-xl shadow-sm p-4 md:p-6 min-h-[500px] flex flex-col">
+        
+        <!-- SCREEN: DASHBOARD -->
+        <div id="screen-dashboard" class="space-y-6">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-100 pb-4">
+            <div>
+              <h2 class="text-xl font-extrabold text-primary">Partner Business Performance</h2>
+              <p class="text-xs text-gray-500">Live operational reporting dashboard for your referral pipeline.</p>
+            </div>
+            <button onclick="switchTab('submit')" class="bg-secondary text-white px-4 py-2 rounded-lg text-xs font-bold shadow hover:brightness-110 flex items-center gap-1 transition">
+              <span class="material-symbols-outlined text-sm">add</span> Submit Applicant Lead
+            </button>
+          </div>
+
+          <!-- SUMMARY KPIs -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-gradient-to-br from-primary to-primary-container p-4 rounded-xl text-white shadow-sm">
+              <span class="text-xs text-white/70 block uppercase font-bold">Referred Leads</span>
+              <span class="text-2xl md:text-3xl font-extrabold block mt-1" id="stat-total-leads">0</span>
+              <span class="text-[10px] text-white/50 block mt-2">Submitted to underwriting</span>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-outline-variant/15 shadow-sm">
+              <span class="text-xs text-gray-400 block uppercase font-bold">Approved Loans</span>
+              <span class="text-2xl md:text-3xl font-extrabold block text-primary mt-1" id="stat-approved-leads">0</span>
+              <span class="text-[10px] text-emerald-600 font-bold block mt-2" id="stat-approved-percent">0% Conversion Rate</span>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-outline-variant/15 shadow-sm">
+              <span class="text-xs text-gray-400 block uppercase font-bold">Disbursed Volume</span>
+              <span class="text-xl md:text-2xl font-extrabold block text-secondary mt-1" id="stat-disbursed-volume">₹0</span>
+              <span class="text-[10px] text-gray-500 block mt-2">Active paying loans</span>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-outline-variant/15 shadow-sm">
+              <span class="text-xs text-gray-400 block uppercase font-bold">My Earnings</span>
+              <span class="text-xl md:text-2xl font-extrabold block text-emerald-700 mt-1" id="stat-total-commission">₹0</span>
+              <span class="text-[10px] text-gray-500 block mt-2"><span id="stat-pending-payout" class="font-semibold text-primary">₹0</span> unsettled payouts</span>
+            </div>
+          </div>
+
+          <!-- ANALYTICS SECTION -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-7 bg-slate-50/50 rounded-xl p-4 border border-outline-variant/10">
+              <h4 class="font-extrabold text-sm text-primary mb-4">Pipeline Distribution (by Loan Segment)</h4>
+              <div class="space-y-3" id="dashboard-bar-chart">
+                <!-- Programmatically rendered elegant bar charts -->
+              </div>
+            </div>
+            <div class="lg:col-span-5 bg-slate-50/50 rounded-xl p-4 border border-outline-variant/10 flex flex-col justify-between">
+              <div>
+                <h4 class="font-extrabold text-sm text-primary mb-2">Weekly Settlement Progress</h4>
+                <p class="text-xs text-gray-500">Track paid vs pending agent commission milestones.</p>
+              </div>
+              <div class="py-4 flex flex-col items-center justify-center">
+                <svg class="w-28 h-28 transform -rotate-90">
+                  <circle cx="56" cy="56" r="46" stroke="#e2e8f0" stroke-width="10" fill="transparent" />
+                  <circle cx="56" cy="56" r="46" stroke="#b61722" stroke-width="10" fill="transparent" 
+                    stroke-dasharray="289" id="progress-circle-dash" />
+                </svg>
+                <div class="text-center mt-2">
+                  <span class="text-sm font-extrabold text-primary" id="progress-percent-label">0%</span>
+                  <p class="text-[10px] text-gray-400">Commission Settled</p>
+                </div>
+              </div>
+              <div class="text-center text-[11px] text-gray-500 border-t border-gray-200/50 pt-2">
+                Payout settled every week on Friday to your primary bank profile.
+              </div>
+            </div>
+          </div>
+
+          <!-- RECENT TIMELINE activity -->
+          <div class="space-y-3">
+            <h4 class="font-extrabold text-sm text-primary">Recent Active Submissions</h4>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-gray-50 border-b border-outline-variant/10 text-gray-400">
+                    <th class="p-2.5 font-bold">Applicant Name</th>
+                    <th class="p-2.5 font-bold">Product</th>
+                    <th class="p-2.5 font-bold">Loan Amount</th>
+                    <th class="p-2.5 font-bold">Created Date</th>
+                    <th class="p-2.5 font-bold text-center">Referral Status</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-recent-leads">
+                  <!-- JS rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCREEN: SUBMIT LEAD -->
+        <div id="screen-submit" class="hidden space-y-6">
+          <div class="border-b border-gray-100 pb-4">
+            <h2 class="text-xl font-extrabold text-primary">Submit Applicant Referral Form</h2>
+            <p class="text-xs text-gray-500">Provide accurate customer details to initiate credit underwriting immediately.</p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Form Grid -->
+            <form onsubmit="handleNewLead(event)" class="lg:col-span-7 space-y-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">Applicant Full Name *</label>
+                  <input type="text" id="lead-name" required class="w-full rounded-lg border-gray-300 focus:ring-primary/20 focus:border-primary text-sm py-2" placeholder="Vijay Kumar">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">Mobile Contact Number *</label>
+                  <input type="tel" id="lead-phone" required class="w-full rounded-lg border-gray-300 focus:ring-primary/20 focus:border-primary text-sm py-2" placeholder="+91 99000 88000">
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">Email ID</label>
+                  <input type="email" id="lead-email" class="w-full rounded-lg border-gray-300 focus:ring-primary/20 focus:border-primary text-sm py-2" placeholder="vijay@gmail.com">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">Target Loan Segment *</label>
+                  <select id="lead-product" required onchange="runPreScreenerCheck()" class="w-full rounded-lg border-gray-300 focus:ring-primary/20 focus:border-primary text-sm py-2">
+                    <option value="Business Loan">Business Loan (1.5% commission)</option>
+                    <option value="Personal Loan">Personal Loan (1.2% commission)</option>
+                    <option value="Machinery Loan">Machinery Loan (1.5% commission)</option>
+                    <option value="Loan Against Property">Loan Against Property (LAP) (1.5% commission)</option>
+                    <option value="Professional Loan">Professional Loan (1.2% commission)</option>
+                    <option value="Car Loan">Car Loan (1.0% commission)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3 gap-3">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">Loan Size Requested (₹) *</label>
+                  <input type="number" id="lead-amount" value="1500000" required oninput="runPreScreenerCheck()" class="w-full rounded-lg border-gray-300 text-sm py-2">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">Income (Monthly ₹) *</label>
+                  <input type="number" id="lead-income" value="150000" required oninput="runPreScreenerCheck()" class="w-full rounded-lg border-gray-300 text-sm py-2">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">Tenure (Months) *</label>
+                  <input type="number" id="lead-tenure" value="36" required oninput="runPreScreenerCheck()" class="w-full rounded-lg border-gray-300 text-sm py-2">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">Applicant CIBIL/Credit Score</label>
+                  <select id="lead-cibil" onchange="runPreScreenerCheck()" class="w-full rounded-lg border-gray-300 text-sm py-2">
+                    <option value="780">Excellent (750+ CIBIL)</option>
+                    <option value="710">Good (700 - 749 CIBIL)</option>
+                    <option value="660">Average (650 - 699 CIBIL)</option>
+                    <option value="580">Below Average (&lt; 650 CIBIL)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">Existing Monthly EMIs (₹)</label>
+                  <input type="number" id="lead-emis" value="20000" oninput="runPreScreenerCheck()" class="w-full rounded-lg border-gray-300 text-sm py-2">
+                </div>
+              </div>
+
+              <button type="submit" class="w-full bg-primary hover:bg-primary/95 text-white py-3 rounded-lg font-bold shadow-md hover:shadow-lg transition flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-sm">rocket_launch</span> Confirm & Submit to Underwriting
+              </button>
+            </form>
+
+            <!-- Pre-screener Analytics Card -->
+            <div class="lg:col-span-5 bg-slate-50 border border-outline-variant/15 rounded-xl p-5 flex flex-col justify-between">
+              <div class="space-y-4">
+                <div class="flex items-center gap-2 border-b border-gray-200 pb-2">
+                  <span class="material-symbols-outlined text-primary">analytics</span>
+                  <span class="font-bold text-sm text-primary uppercase">Credify Lead Prescreener</span>
+                </div>
+                
+                <div class="text-center py-4 bg-white rounded-lg border border-gray-100 shadow-sm space-y-1">
+                  <span class="text-[10px] text-gray-400 block uppercase font-bold">Estimated Risk Rating</span>
+                  <div id="screener-risk-rating" class="text-lg font-black text-emerald-600">HIGH PROBABILITY</div>
+                  <span class="text-[10px] text-gray-500 block px-4" id="screener-risk-desc">Customer profile shows strong eligibility criteria for direct automatic approval.</span>
+                </div>
+
+                <div class="space-y-2 text-xs">
+                  <div class="flex justify-between text-gray-500">
+                    <span>Estimated Monthly EMI:</span>
+                    <strong class="text-primary font-bold" id="screener-emi">₹48,745 / mo</strong>
+                  </div>
+                  <div class="flex justify-between text-gray-500">
+                    <span>Applicable Net Rate (APR):</span>
+                    <strong class="text-primary font-bold" id="screener-apr">10.5% APR</strong>
+                  </div>
+                  <div class="flex justify-between text-gray-500">
+                    <span>Proposed DSA Slab Earnings:</span>
+                    <strong class="text-emerald-700 font-bold" id="screener-commission">₹22,500 (1.5%)</strong>
+                  </div>
+                  <div class="flex justify-between text-gray-500">
+                    <span>FOIR (Fixed Income Ratio):</span>
+                    <strong class="text-primary font-bold" id="screener-foir">45.8%</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 p-3 bg-primary/5 text-primary rounded-lg text-[11px] leading-relaxed border border-primary/10">
+                <strong class="block mb-0.5">Screener Logic Parameters:</strong>
+                Eligibility check uses CIBIL, Monthly FOIR ratio (EMIs vs Net Income), and current product APR margins. Actual underwriting reports are subjected to official bank KYC validation.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCREEN: LEADS PIPELINE -->
+        <div id="screen-pipeline" class="hidden space-y-6">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-100 pb-4">
+            <div>
+              <h2 class="text-xl font-extrabold text-primary">Referral Leads Pipeline</h2>
+              <p class="text-xs text-gray-500">Full lifecycle tracker showing instant progress, credit checks, and documents upload.</p>
+            </div>
+            <div class="flex gap-2">
+              <input type="text" id="pipeline-search" oninput="renderPipelineTable()" placeholder="Search applicant name..." class="rounded-lg border-gray-300 text-xs py-1.5 w-44">
+              <select id="pipeline-filter" onchange="renderPipelineTable()" class="rounded-lg border-gray-300 text-xs py-1.5">
+                <option value="ALL">All Statuses</option>
+                <option value="Submitted">Submitted</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Approved">Approved</option>
+                <option value="Disbursed">Disbursed</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- TABLE AND COLLAPSIBLE EXPANSIONS -->
+          <div class="overflow-x-auto border border-outline-variant/10 rounded-xl">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-gray-50 border-b border-outline-variant/10 text-gray-500 font-bold">
+                  <th class="p-3">Applicant Code</th>
+                  <th class="p-3">Applicant Name</th>
+                  <th class="p-3">Loan Segment</th>
+                  <th class="p-3">Amount Requested</th>
+                  <th class="p-3">Submitted On</th>
+                  <th class="p-3 text-center">Current Status</th>
+                  <th class="p-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="pipeline-table-body" class="divide-y divide-gray-100">
+                <!-- JS rows -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- EXPANDED DETAILED DRAWER (Dynamic content injected here) -->
+          <div id="pipeline-lead-details" class="hidden bg-slate-50/50 border border-outline-variant/15 rounded-xl p-5 space-y-6">
+            <!-- Dynamic lead detailed step progress and files zone -->
+          </div>
+        </div>
+
+        <!-- SCREEN: COMMISSION -->
+        <div id="screen-commission" class="hidden space-y-6">
+          <div class="border-b border-gray-100 pb-4">
+            <h2 class="text-xl font-extrabold text-primary">DSA Commissions & Weekly Settlements</h2>
+            <p class="text-xs text-gray-500">Complete breakdown of earned agent commission shares per loan product disbursement.</p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Summary cards -->
+            <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl space-y-1">
+              <span class="text-xs text-emerald-800 font-bold block uppercase tracking-wide">Total Earnings Paid</span>
+              <span class="text-2xl font-black text-emerald-900 block" id="comm-payout-settled">₹0</span>
+              <span class="text-[10px] text-emerald-700 block mt-2">Transferred to registered bank profile</span>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl space-y-1">
+              <span class="text-xs text-amber-800 font-bold block uppercase tracking-wide">Pending Settlement</span>
+              <span class="text-2xl font-black text-amber-900 block" id="comm-payout-pending">₹0</span>
+              <button onclick="requestInstantSettlement()" id="request-settlement-btn" class="bg-primary hover:bg-primary/95 text-white px-3 py-1 rounded text-[10px] font-bold block mt-2 shadow transition">
+                Request Quick Settlement
+              </button>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-2">
+              <span class="text-xs text-gray-600 font-bold block uppercase tracking-wide">Your Settlement Profile</span>
+              <div class="text-[11px] text-gray-500 space-y-1 leading-snug">
+                <div><strong>Bank Name:</strong> <span id="comm-profile-bank">HDFC Bank Ltd</span></div>
+                <div><strong>Account No:</strong> <span id="comm-profile-account">•••• •••• 9842</span></div>
+                <div><strong>DSA Status:</strong> <span class="text-amber-800 font-bold bg-amber-100 px-1 rounded">Active</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SLAB CHART -->
+          <div class="space-y-3">
+            <h4 class="font-extrabold text-sm text-primary">Credify DSA Commission Slabs Matrix</h4>
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-3">
+              <div class="bg-white border border-outline-variant/15 p-3 rounded-lg text-center shadow-xs">
+                <span class="text-[10px] text-gray-400 block uppercase">Business Loan</span>
+                <strong class="text-lg font-bold text-primary block mt-1">1.5%</strong>
+              </div>
+              <div class="bg-white border border-outline-variant/15 p-3 rounded-lg text-center shadow-xs">
+                <span class="text-[10px] text-gray-400 block uppercase">Machinery Loan</span>
+                <strong class="text-lg font-bold text-primary block mt-1">1.5%</strong>
+              </div>
+              <div class="bg-white border border-outline-variant/15 p-3 rounded-lg text-center shadow-xs">
+                <span class="text-[10px] text-gray-400 block uppercase">Personal Loan</span>
+                <strong class="text-lg font-bold text-primary block mt-1">1.2%</strong>
+              </div>
+              <div class="bg-white border border-outline-variant/15 p-3 rounded-lg text-center shadow-xs">
+                <span class="text-[10px] text-gray-400 block uppercase">Professional Loan</span>
+                <strong class="text-lg font-bold text-primary block mt-1">1.2%</strong>
+              </div>
+              <div class="bg-white border border-outline-variant/15 p-3 rounded-lg text-center shadow-xs">
+                <span class="text-[10px] text-gray-400 block uppercase">LAP Loan</span>
+                <strong class="text-lg font-bold text-primary block mt-1">1.5%</strong>
+              </div>
+              <div class="bg-white border border-outline-variant/15 p-3 rounded-lg text-center shadow-xs">
+                <span class="text-[10px] text-gray-400 block uppercase">Car Loan</span>
+                <strong class="text-lg font-bold text-primary block mt-1">1.0%</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAYOUT LOGS -->
+          <div class="space-y-3">
+            <h4 class="font-extrabold text-sm text-primary">Settlement Payout Transaction Logs</h4>
+            <div class="overflow-x-auto border border-outline-variant/10 rounded-xl">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="bg-gray-50 border-b border-outline-variant/10 text-gray-500 font-bold">
+                    <th class="p-3">Reference Trx ID</th>
+                    <th class="p-3">Settlement Date</th>
+                    <th class="p-3">Bank Channel</th>
+                    <th class="p-3">Disbursed Base Leads</th>
+                    <th class="p-3">Payout Amount</th>
+                    <th class="p-3 text-center">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="commission-logs-body" class="divide-y divide-gray-100">
+                  <!-- JS rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCREEN: RESOURCES & LINKS -->
+        <div id="screen-resources" class="hidden space-y-6">
+          <div class="border-b border-gray-100 pb-4">
+            <h2 class="text-xl font-extrabold text-primary">Agent Tools, Flyers & Referral Builders</h2>
+            <p class="text-xs text-gray-500">Download authorized promotional resources and build custom tracking affiliate links.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Referral Link Generator -->
+            <div class="bg-slate-50 border border-outline-variant/15 rounded-xl p-5 space-y-4">
+              <div class="flex items-center gap-2 border-b border-gray-200 pb-2">
+                <span class="material-symbols-outlined text-primary">link</span>
+                <span class="font-bold text-sm text-primary uppercase">Custom Lead Link Builder</span>
+              </div>
+              <p class="text-xs text-gray-500 leading-relaxed">
+                Build a personalized loan application link. Clients who apply through this URL will be automatically attributed to your DSA code.
+              </p>
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-700 uppercase tracking-wide mb-1">Target Application Page</label>
+                  <select id="link-target" onchange="generateReferralLink()" class="w-full rounded-lg border-gray-300 text-xs py-2">
+                    <option value="apply.html">Standard Digital Application Form</option>
+                    <option value="calculator.html">Smart Payment Estimator Page</option>
+                    <option value="credit-score.html">Soft Credit Check Tool</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-700 uppercase tracking-wide mb-1">Source Tag / Campaign (Optional)</label>
+                  <input type="text" id="link-source" oninput="generateReferralLink()" placeholder="e.g. facebook_ad, whatsapp_group" class="w-full rounded-lg border-gray-300 text-xs py-2">
+                </div>
+                <div class="p-3 bg-white border border-gray-200 rounded-lg">
+                  <span class="block text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1">Generated Tracking Link</span>
+                  <div class="flex items-center gap-2">
+                    <span id="ref-link-display" class="text-[11px] text-primary font-mono font-medium truncate select-all flex-grow">https://credifycapital.com/apply.html?ref=CC-DSA-9842</span>
+                    <button onclick="copyReferralLink()" class="bg-primary hover:bg-primary/95 text-white px-3 py-1.5 rounded font-bold text-xs flex items-center gap-1">
+                      <span class="material-symbols-outlined text-xs">content_copy</span> Copy
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Training kit / Flyers download -->
+            <div class="bg-slate-50 border border-outline-variant/15 rounded-xl p-5 space-y-4">
+              <div class="flex items-center gap-2 border-b border-gray-200 pb-2">
+                <span class="material-symbols-outlined text-primary">download</span>
+                <span class="font-bold text-sm text-primary uppercase">Credify Agent Kit Downloads</span>
+              </div>
+              <p class="text-xs text-gray-500 leading-relaxed">
+                Download official PDF flyers, marketing boards, and customer eligibility checklists containing Credify branding.
+              </p>
+              
+              <div class="space-y-2">
+                <div class="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg text-xs shadow-xs">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary text-lg">picture_as_pdf</span>
+                    <div>
+                      <span class="font-bold text-primary block">Credify Business Loan Flyer</span>
+                      <span class="text-[10px] text-gray-400">PDF Document &bull; 1.4 MB</span>
+                    </div>
+                  </div>
+                  <button onclick="downloadResource('Business_Loan_Flyer.pdf')" class="text-primary hover:text-secondary font-bold text-xs flex items-center gap-1 transition">
+                    <span class="material-symbols-outlined text-sm">download</span> Get File
+                  </button>
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg text-xs shadow-xs">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary text-lg">picture_as_pdf</span>
+                    <div>
+                      <span class="font-bold text-primary block">Machinery Loan Eligibility Kit</span>
+                      <span class="text-[10px] text-gray-400">PDF Guidelines &bull; 920 KB</span>
+                    </div>
+                  </div>
+                  <button onclick="downloadResource('Machinery_Loan_Guide.pdf')" class="text-primary hover:text-secondary font-bold text-xs flex items-center gap-1 transition">
+                    <span class="material-symbols-outlined text-sm">download</span> Get File
+                  </button>
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg text-xs shadow-xs">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary text-lg">picture_as_pdf</span>
+                    <div>
+                      <span class="font-bold text-primary block">Personal Loan Rate Slab Matrix</span>
+                      <span class="text-[10px] text-gray-400">Excel Reference Sheet &bull; 450 KB</span>
+                    </div>
+                  </div>
+                  <button onclick="downloadResource('PL_Rates_Slab_Matrix.xlsx')" class="text-primary hover:text-secondary font-bold text-xs flex items-center gap-1 transition">
+                    <span class="material-symbols-outlined text-sm">download</span> Get File
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <%- include('../partials/footer') %>
+
+  <!-- SCRIPT ENGINE -->
+  <script src="/js/credify-core.js"></script>
+  <script>
+    // CORE CONSTANTS
+    const LOCAL_STORAGE_KEY = 'credify_dsa_portal_state_v1';
+    
+    // DEFAULT STATE DATA (Preserved in LocalStorage)
+    const DEFAULT_PORTAL_STATE = {
+      isLoggedIn: false,
+      activeTab: 'dashboard',
+      selectedLeadId: null,
+      currentPartner: {
+        name: 'Authorized Partner',
+        agency: 'Credify Capital Associate',
+        dsaCode: 'CC-DSA-9842',
+        email: 'partner@credifycapital.in',
+        mobile: '+91 99999 99999',
+        bankName: 'Partner Bank Name',
+        bankAcc: '•••• •••• 0000'
+      },
+      leads: [],
+      payoutLogs: []
+    };
+
+    let portalState = {};
+
+    // INITIALIZE PORTAL
+    function initPortal() {
+      const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (stored) {
+        try {
+          portalState = JSON.parse(stored);
+        } catch(e) {
+          portalState = { ...DEFAULT_PORTAL_STATE };
+        }
+      } else {
+        portalState = { ...DEFAULT_PORTAL_STATE };
+        saveState();
+      }
+      render();
+    }
+
+    function saveState() {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(portalState));
+    }
+
+    // TOAST NOTIFICATIONS
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `flex items-center gap-2 px-4 py-3 rounded-xl text-white text-xs font-bold shadow-lg transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-auto ${
+        type === 'error' ? 'bg-secondary' : 'bg-primary'
+      }`;
+      
+      const icon = type === 'error' ? 'error' : 'check_circle';
+      toast.innerHTML = `<span class="material-symbols-outlined text-sm">${icon}</span> <span>${message}</span>`;
+      container.appendChild(toast);
+      
+      // Animate Entrance
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 50);
+
+      // Dismiss after 3s
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // SWITCH AUTH VIEW (LOGIN vs REGISTER TABS)
+    function switchAuthTab(tab) {
+      const loginBtn = document.getElementById('tab-login-btn');
+      const regBtn = document.getElementById('tab-register-btn');
+      const loginForm = document.getElementById('login-form');
+      const regForm = document.getElementById('register-form');
+
+      if (tab === 'login') {
+        loginBtn.className = "flex-1 py-4 text-center font-bold text-primary border-b-2 border-primary transition-all";
+        regBtn.className = "flex-1 py-4 text-center font-bold text-gray-500 border-b-2 border-transparent transition-all";
+        loginForm.classList.remove('hidden');
+        regForm.classList.add('hidden');
+      } else {
+        regBtn.className = "flex-1 py-4 text-center font-bold text-primary border-b-2 border-primary transition-all";
+        loginBtn.className = "flex-1 py-4 text-center font-bold text-gray-500 border-b-2 border-transparent transition-all";
+        regForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+      }
+    }
+
+    // AUTH ACTION HANDLERS
+    function handleLogin(e) {
+      e.preventDefault();
+      const code = document.getElementById('login-dsa-code').value.trim();
+      const pass = document.getElementById('login-password').value;
+
+      if (code === 'CC-DSA-9842' && pass === 'password') {
+        portalState.isLoggedIn = true;
+        portalState.currentPartner = DEFAULT_PORTAL_STATE.currentPartner;
+        saveState();
+        showToast(`Authorized successfully! Welcome ${portalState.currentPartner.name}.`);
+        render();
+      } else if (code.startsWith('CC-DSA-') && code.length > 7 && pass) {
+        portalState.isLoggedIn = true;
+        saveState();
+        showToast(`Signed in to Partner Account: ${code}`);
+        render();
+      } else {
+        showToast('Invalid DSA credential keys. Please check demo code!', 'error');
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value.trim();
+      const agency = document.getElementById('reg-agency').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const mobile = document.getElementById('reg-mobile').value.trim();
+      const city = document.getElementById('reg-city').value.trim();
+      const bankName = document.getElementById('reg-bank-name').value.trim();
+      const bankAcc = document.getElementById('reg-bank-acc').value.trim();
+
+      const customDsa = 'CC-DSA-' + Math.floor(1000 + Math.random() * 9000);
+      
+      portalState.currentPartner = {
+        name, agency, email, mobile, city, bankName, bankAcc,
+        dsaCode: customDsa
+      };
+      portalState.isLoggedIn = true;
+      portalState.leads = []; // Starts fresh for newly registered agents
+      saveState();
+
+      showToast(`Welcome! Your generated DSA ID is: ${customDsa}`);
+      render();
+
+      // Asynchronously submit partner application to Firestore for business owner
+      try {
+        const firebaseMod = await import("./firebaseConfig.js");
+        
+        // Mask bank account number for Firestore submission
+        let maskedBankAcc = bankAcc;
+        if (bankAcc && bankAcc.length > 4) {
+          maskedBankAcc = '*'.repeat(Math.min(bankAcc.length - 4, 12)) + bankAcc.slice(-4);
+        } else if (bankAcc) {
+          maskedBankAcc = '****' + bankAcc;
+        }
+
+        const partnerApplicationData = {
+          name,
+          agency,
+          email,
+          mobile,
+          city,
+          bankName,
+          bankAcc: maskedBankAcc,
+          dsaCode: customDsa,
+          status: "Pending Review"
+        };
+
+        await firebaseMod.submitPartnerApplication(partnerApplicationData);
+      } catch (err) {
+        console.error("Error submitting partner application to Firestore:", err);
+      }
+    }
+
+    function handleLogout() {
+      portalState.isLoggedIn = false;
+      saveState();
+      showToast('Logged out of workspace.');
+      render();
+    }
+
+    // WORKSPACE SCREEN SWITCHER
+    function switchTab(tab) {
+      portalState.activeTab = tab;
+      saveState();
+      
+      // Update Buttons
+      const tabs = ['dashboard', 'submit', 'pipeline', 'commission', 'resources'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`btn-tab-${t}`);
+        const screen = document.getElementById(`screen-${t}`);
+        if (t === tab) {
+          btn.className = "flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-semibold transition bg-primary text-white text-left";
+          screen.classList.remove('hidden');
+        } else {
+          btn.className = "flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-semibold transition text-gray-600 hover:bg-slate-100 hover:text-primary text-left";
+          screen.classList.add('hidden');
+        }
+      });
+
+      // Special Tab Initiations
+      if (tab === 'dashboard') {
+        renderDashboardStats();
+      } else if (tab === 'pipeline') {
+        renderPipelineTable();
+      } else if (tab === 'commission') {
+        renderCommissionTracker();
+      } else if (tab === 'resources') {
+        generateReferralLink();
+      }
+    }
+
+    // RENDER FUNCTIONS
+
+    // Main Renderer
+    function render() {
+      const authSec = document.getElementById('auth-section');
+      const portalSec = document.getElementById('portal-section');
+      
+      if (portalState.isLoggedIn) {
+        authSec.classList.add('hidden');
+        portalSec.classList.remove('hidden');
+
+        // Populate Left Panel Profile Card
+        document.getElementById('user-name').textContent = portalState.currentPartner.name;
+        document.getElementById('user-dsa-code').textContent = portalState.currentPartner.dsaCode;
+        const initials = portalState.currentPartner.name.split(' ').map(n=>n[0]).join('').toUpperCase();
+        document.getElementById('user-avatar').textContent = initials;
+
+        // Render current active tab view
+        switchTab(portalState.activeTab || 'dashboard');
+      } else {
+        authSec.classList.remove('hidden');
+        portalSec.classList.add('hidden');
+        switchAuthTab('login');
+      }
+    }
+
+    // Dashboard Calculations & Charts
+    function renderDashboardStats() {
+      const leads = portalState.leads || [];
+      
+      // Stats totals
+      const totalLeads = leads.length;
+      const approvedLeads = leads.filter(l => l.status === 'Approved' || l.status === 'Disbursed').length;
+      
+      let disbursedVol = 0;
+      let totalComm = 0;
+      let pendingComm = 0;
+
+      leads.forEach(l => {
+        if (l.status === 'Disbursed') {
+          disbursedVol += l.amount;
+          totalComm += l.commissionEarned;
+          if (!l.isSettled) {
+            pendingComm += l.commissionEarned;
+          }
+        } else if (l.status === 'Approved') {
+          // Earnings computed but not yet disbursed
+          totalComm += l.commissionEarned;
+          pendingComm += l.commissionEarned;
+        }
+      });
+
+      // Set DOM Text
+      document.getElementById('stat-total-leads').textContent = totalLeads;
+      document.getElementById('stat-approved-leads').textContent = approvedLeads;
+      document.getElementById('stat-approved-percent').textContent = totalLeads > 0 
+        ? `${Math.round((approvedLeads/totalLeads)*100)}% Conversion Rate` 
+        : '0% Conversion Rate';
+      document.getElementById('stat-disbursed-volume').textContent = '₹' + disbursedVol.toLocaleString('en-IN');
+      document.getElementById('stat-total-commission').textContent = '₹' + totalComm.toLocaleString('en-IN');
+      document.getElementById('stat-pending-payout').textContent = '₹' + pendingComm.toLocaleString('en-IN');
+
+      // Weekly Settlement Circle Ring
+      const ratio = totalComm > 0 ? (totalComm - pendingComm) / totalComm : 1;
+      const progressLabel = document.getElementById('progress-percent-label');
+      const progressCircle = document.getElementById('progress-circle-dash');
+      
+      const percent = Math.round(ratio * 100);
+      progressLabel.textContent = `${percent}%`;
+      // SVG Circle math: 2 * PI * r = 2 * 3.1415 * 46 = 289
+      const dashoffset = 289 - (ratio * 289);
+      progressCircle.setAttribute('stroke-dashoffset', dashoffset);
+
+      // Render Dynamic Bar Chart
+      const categories = ['Business Loan', 'Personal Loan', 'Machinery Loan', 'Loan Against Property', 'Professional Loan', 'Car Loan'];
+      const chartContainer = document.getElementById('dashboard-bar-chart');
+      chartContainer.innerHTML = '';
+
+      categories.forEach(cat => {
+        const catLeads = leads.filter(l => l.product === cat);
+        const count = catLeads.length;
+        const maxLeads = Math.max(...categories.map(c => leads.filter(l => l.product === c).length), 1);
+        const barWidth = Math.max((count / maxLeads) * 100, 3); // minimum 3% width visual line
+        
+        const row = document.createElement('div');
+        row.className = 'space-y-1 text-xs';
+        row.innerHTML = `
+          <div class="flex justify-between font-semibold text-gray-600">
+            <span>${cat}</span>
+            <span>${count} referred</span>
+          </div>
+          <div class="w-full bg-gray-200/50 rounded-full h-2">
+            <div class="bg-primary rounded-full h-2 transition-all duration-500" style="width: ${barWidth}%"></div>
+          </div>
+        `;
+        chartContainer.appendChild(row);
+      });
+
+      // Render Recent Leads Table
+      const recentBody = document.getElementById('dashboard-recent-leads');
+      recentBody.innerHTML = '';
+      if (leads.length === 0) {
+        recentBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-400 font-medium">No leads submitted yet. Start referencing candidates!</td></tr>`;
+      } else {
+        // Show up to 3 most recent leads
+        leads.slice(-3).reverse().forEach(l => {
+          const statusColors = {
+            'Submitted': 'bg-gray-100 text-gray-800',
+            'Under Review': 'bg-amber-100 text-amber-800',
+            'Approved': 'bg-blue-100 text-blue-800',
+            'Disbursed': 'bg-emerald-100 text-emerald-800',
+            'Rejected': 'bg-red-100 text-red-800'
+          };
+          const badgeClass = statusColors[l.status] || 'bg-gray-100';
+
+          const tr = document.createElement('tr');
+          tr.className = 'border-b border-gray-100 hover:bg-slate-50/50';
+          tr.innerHTML = `
+            <td class="p-2.5 font-semibold text-primary">${l.name}</td>
+            <td class="p-2.5 text-gray-500">${l.product}</td>
+            <td class="p-2.5 font-bold text-gray-700">₹${l.amount.toLocaleString('en-IN')}</td>
+            <td class="p-2.5 text-gray-400">${l.createdDate}</td>
+            <td class="p-2.5 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${badgeClass}">${l.status}</span></td>
+          `;
+          recentBody.appendChild(tr);
+        });
+      }
+    }
+
+    // Interactive eligibility Pre-Screener Checklist Calculator (Submit Lead page)
+    function runPreScreenerCheck() {
+      const product = document.getElementById('lead-product').value;
+      const amount = parseFloat(document.getElementById('lead-amount').value) || 0;
+      const income = parseFloat(document.getElementById('lead-income').value) || 0;
+      const tenure = parseFloat(document.getElementById('lead-tenure').value) || 12;
+      const cibil = document.getElementById('lead-cibil').value;
+      const emis = parseFloat(document.getElementById('lead-emis').value) || 0;
+
+      // Parameters based on product
+      let apr = 13.5;
+      let commissionRate = 1.2;
+
+      if (product === 'Business Loan' || product === 'Machinery Loan' || product === 'Loan Against Property') {
+        apr = 10.5;
+        commissionRate = 1.5;
+      } else if (product === 'Car Loan') {
+        apr = 8.5;
+        commissionRate = 1.0;
+      } else if (product === 'Professional Loan') {
+        apr = 11.5;
+        commissionRate = 1.2;
+      }
+
+      // Estimate monthly payment
+      let emi = 0;
+      if (window.CredifyEngine && window.CredifyEngine.calculateMonthlyPayment) {
+        emi = window.CredifyEngine.calculateMonthlyPayment(amount, apr, tenure / 12);
+      } else {
+        // Fallback simple EMI calculation
+        const r = (apr / 100) / 12;
+        if (r > 0) {
+          emi = Math.round(amount * r * Math.pow(1 + r, tenure) / (Math.pow(1 + r, tenure) - 1));
+        } else {
+          emi = Math.round(amount / tenure);
+        }
+      }
+
+      // Calculate FOIR (Fixed Obligation to Income Ratio)
+      const totalLiability = emi + emis;
+      const foir = income > 0 ? Math.round((totalLiability / income) * 100) : 0;
+
+      // Predict risk eligibility
+      let riskRating = "HIGH PROBABILITY";
+      let riskDesc = "Applicant qualifies for immediate automated underwriting. Excellent credentials.";
+      let ratingColor = "text-emerald-600";
+
+      if (cibil === '580' || foir > 65) {
+        riskRating = "REJECT RISK (LOW)";
+        riskDesc = "CIBIL scores are too weak, or monthly EMI liability is excessive relative to income.";
+        ratingColor = "text-red-600";
+      } else if (cibil === '660' || foir > 50) {
+        riskRating = "UNDERWRITING REVIEW (MEDIUM)";
+        riskDesc = "Requires manual file checks. Consider adding a strong co-applicant with assets.";
+        ratingColor = "text-amber-600";
+      }
+
+      // Update Screener Card DOM elements
+      document.getElementById('screener-risk-rating').textContent = riskRating;
+      document.getElementById('screener-risk-rating').className = `text-base md:text-lg font-black ${ratingColor}`;
+      document.getElementById('screener-risk-desc').textContent = riskDesc;
+      document.getElementById('screener-emi').textContent = isNaN(emi) ? '₹0 / mo' : `₹${emi.toLocaleString('en-IN')} / mo`;
+      document.getElementById('screener-apr').textContent = `${apr}% APR`;
+      document.getElementById('screener-foir').textContent = `${foir}%`;
+      
+      const potentialComm = Math.round(amount * (commissionRate / 100));
+      document.getElementById('screener-commission').textContent = `₹${potentialComm.toLocaleString('en-IN')} (${commissionRate}%)`;
+    }
+
+    // Submit Lead Action Handlers
+    async function handleNewLead(e) {
+      e.preventDefault();
+      const name = document.getElementById('lead-name').value.trim();
+      const phone = document.getElementById('lead-phone').value.trim();
+      const email = document.getElementById('lead-email').value.trim();
+      const product = document.getElementById('lead-product').value;
+      const amount = parseFloat(document.getElementById('lead-amount').value) || 0;
+      const income = parseFloat(document.getElementById('lead-income').value) || 0;
+      const tenure = parseFloat(document.getElementById('lead-tenure').value) || 12;
+      const cibil = document.getElementById('lead-cibil').value;
+      const emis = parseFloat(document.getElementById('lead-emis').value) || 0;
+
+      let commissionRate = 1.2;
+      if (product.includes('Business') || product.includes('Machinery') || product.includes('Property')) {
+        commissionRate = 1.5;
+      } else if (product.includes('Car')) {
+        commissionRate = 1.0;
+      }
+
+      const commissionEarned = Math.round(amount * (commissionRate / 100));
+      const customId = 'LD-' + Math.floor(1000 + Math.random() * 9000);
+      const today = new Date().toISOString().split('T')[0];
+
+      // Auto assign initial status based on prescreener eligibility
+      let status = 'Submitted';
+      let historyNotes = 'Lead submitted via referral portal.';
+      if (cibil === '580') {
+        status = 'Rejected';
+        historyNotes = 'Lead automatically rejected by credit engine due to CIBIL constraints (< 650).';
+      }
+
+      const newLead = {
+        id: customId,
+        name, phone, email, product, amount, income, tenure, cibil, emis,
+        createdDate: today,
+        status,
+        commissionRate,
+        commissionEarned,
+        isSettled: false,
+        docs: { pan: 'Pending', bank: 'Pending', itr: 'Pending' },
+        history: [
+          { stage: 'Form Submitted', date: `${today} 11:30`, note: historyNotes }
+        ]
+      };
+
+      portalState.leads.push(newLead);
+      saveState();
+
+      showToast(`Lead for ${name} submitted successfully! ID: ${customId}`);
+      
+      // Reset Form fields
+      document.getElementById('lead-name').value = '';
+      document.getElementById('lead-phone').value = '';
+      document.getElementById('lead-email').value = '';
+      
+      // Switch to Pipeline View
+      switchTab('pipeline');
+
+      // Asynchronously submit lead to Firestore for business owner
+      try {
+        const firebaseMod = await import("./firebaseConfig.js");
+        
+        // Format phone to strictly 10 digits for Firestore rules compliance (data.phone.size() == 10)
+        let cleanedPhone = phone.replace(/\D/g, '');
+        if (cleanedPhone.length > 10) {
+          cleanedPhone = cleanedPhone.slice(-10);
+        } else if (cleanedPhone.length < 10) {
+          cleanedPhone = cleanedPhone.padStart(10, '0');
+        }
+
+        const referredByPartnerCode = (portalState.currentPartner && portalState.currentPartner.dsaCode) || "";
+        const referredByPartnerName = (portalState.currentPartner && portalState.currentPartner.name) || "";
+
+        const firestoreLeadData = {
+          ...newLead,
+          phone: cleanedPhone, // overwrite with strictly 10-digit phone for firestore validation rules
+          source: "partner_referral",
+          referredByPartnerCode,
+          referredByPartnerName
+        };
+
+        await firebaseMod.submitLoanLead(firestoreLeadData);
+      } catch (err) {
+        console.error("Error submitting lead to Firestore:", err);
+      }
+    }
+
+    // Lead Pipeline Screen Table Rendering
+    function renderPipelineTable() {
+      const searchVal = document.getElementById('pipeline-search').value.toLowerCase();
+      const filterVal = document.getElementById('pipeline-filter').value;
+      const tbody = document.getElementById('pipeline-table-body');
+      
+      tbody.innerHTML = '';
+      const filtered = portalState.leads.filter(l => {
+        const matchesSearch = l.name.toLowerCase().includes(searchVal);
+        const matchesFilter = filterVal === 'ALL' || l.status === filterVal;
+        return matchesSearch && matchesFilter;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-gray-400 font-medium">No active applicant leads found matching filter.</td></tr>`;
+        return;
+      }
+
+      filtered.reverse().forEach(l => {
+        const statusColors = {
+          'Submitted': 'bg-gray-100 text-gray-800',
+          'Under Review': 'bg-amber-100 text-amber-800',
+          'Approved': 'bg-blue-100 text-blue-800',
+          'Disbursed': 'bg-emerald-100 text-emerald-800',
+          'Rejected': 'bg-red-100 text-red-800'
+        };
+        const badgeClass = statusColors[l.status] || 'bg-gray-100';
+
+        const tr = document.createElement('tr');
+        tr.className = 'border-b border-gray-100 hover:bg-slate-50/70 transition cursor-pointer';
+        tr.onclick = () => selectLead(l.id);
+        tr.innerHTML = `
+          <td class="p-3 font-semibold text-primary font-mono">${l.id}</td>
+          <td class="p-3 font-bold text-gray-700">${l.name}</td>
+          <td class="p-3 text-gray-500">${l.product}</td>
+          <td class="p-3 font-extrabold text-primary">₹${l.amount.toLocaleString('en-IN')}</td>
+          <td class="p-3 text-gray-400">${l.createdDate}</td>
+          <td class="p-3 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${badgeClass}">${l.status}</span></td>
+          <td class="p-3 text-right" onclick="event.stopPropagation();">
+            <button onclick="selectLead('${l.id}')" class="text-secondary hover:text-primary font-bold text-xs flex items-center justify-end gap-1 w-full text-right transition">
+              Track Progress <span class="material-symbols-outlined text-sm">chevron_right</span>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Pipeline Detailed Progress and Upload Drawer
+    function selectLead(leadId) {
+      portalState.selectedLeadId = leadId;
+      saveState();
+
+      const lead = portalState.leads.find(l => l.id === leadId);
+      const drawer = document.getElementById('pipeline-lead-details');
+      
+      if (!lead) {
+        drawer.classList.add('hidden');
+        return;
+      }
+      
+      drawer.classList.remove('hidden');
+
+      // Setup timeline status milestones
+      const stages = ['Submitted', 'Under Review', 'Approved', 'Disbursed'];
+      const activeStageIndex = stages.indexOf(lead.status);
+
+      let stepperHtml = '';
+      stages.forEach((stage, index) => {
+        let circleBg = 'border-gray-200 text-gray-400 bg-white';
+        let titleColor = 'text-gray-400';
+        let barBg = 'bg-gray-200';
+
+        if (index < activeStageIndex) {
+          // Completed milestone
+          circleBg = 'border-emerald-500 bg-emerald-500 text-white';
+          titleColor = 'text-emerald-700 font-bold';
+          barBg = 'bg-emerald-500';
+        } else if (index === activeStageIndex) {
+          // Current milestone
+          circleBg = 'border-primary bg-primary text-white ring-4 ring-primary/10 animate-pulse';
+          titleColor = 'text-primary font-extrabold';
+          barBg = 'bg-gray-200';
+        } else if (lead.status === 'Rejected') {
+          circleBg = 'border-red-500 bg-red-500 text-white';
+          titleColor = 'text-red-700 font-bold';
+          barBg = 'bg-gray-200';
+        }
+
+        stepperHtml += `
+          <div class="flex-1 flex flex-col items-center relative text-center">
+            <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold z-10 ${circleBg}">
+              ${index + 1}
+            </div>
+            <span class="text-[10px] mt-2 block ${titleColor}">${stage}</span>
+            ${index < 3 ? `<div class="absolute top-4 left-1/2 w-full h-[2px] -z-0 ${barBg}"></div>` : ''}
+          </div>
+        `;
+      });
+
+      // Files Upload Section
+      const files = ['pan', 'bank', 'itr'];
+      let filesHtml = '';
+      files.forEach(f => {
+        const isUploaded = lead.docs && lead.docs[f] === 'Uploaded';
+        const fileLabel = f === 'pan' ? 'Aadhar & PAN Document' : f === 'bank' ? '6 Months Bank Statement' : 'ITR Verification / Form 16';
+        
+        filesHtml += `
+          <div class="flex items-center justify-between p-3 bg-white border border-outline-variant/10 rounded-lg text-xs">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg ${isUploaded ? 'text-emerald-600' : 'text-gray-300'}">
+                ${isUploaded ? 'cloud_done' : 'cloud_upload'}
+              </span>
+              <div>
+                <span class="font-bold text-gray-700 block">${fileLabel}</span>
+                <span class="text-[10px] text-gray-400">${isUploaded ? 'File approved and secured' : 'Required for underwriting evaluation'}</span>
+              </div>
+            </div>
+            ${isUploaded 
+              ? `<span class="text-emerald-600 font-bold flex items-center gap-0.5"><span class="material-symbols-outlined text-sm">check_circle</span> Verified</span>`
+              : `<button onclick="simulateUpload('${lead.id}', '${f}')" class="bg-primary/5 hover:bg-primary/10 text-primary px-3 py-1.5 rounded-md font-bold text-[10px] transition">Upload Attachment</button>`
+            }
+          </div>
+        `;
+      });
+
+      // History log
+      let historyLogsHtml = '';
+      if (lead.history) {
+        lead.history.forEach(h => {
+          historyLogsHtml += `
+            <div class="flex gap-3 text-[11px] leading-relaxed pb-3 border-l border-gray-200 pl-3 relative last:border-0 last:pb-0">
+              <div class="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-primary"></div>
+              <div>
+                <span class="font-bold text-primary block">${h.stage} <span class="font-normal text-gray-400 text-[10px] ml-1">${h.date}</span></span>
+                <p class="text-gray-500">${h.note}</p>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      // Action triggers for manual status overrides in demo
+      let adminOverrideHtml = '';
+      if (lead.status !== 'Disbursed' && lead.status !== 'Rejected') {
+        adminOverrideHtml = `
+          <div class="p-3 bg-primary/5 rounded-lg border border-primary/10 text-xs flex flex-col md:flex-row justify-between items-center gap-3">
+            <span class="text-primary font-bold">🛠️ Demo Credit Actions:</span>
+            <div class="flex gap-2">
+              ${lead.status === 'Submitted' ? `<button onclick="updateLeadStatus('${lead.id}', 'Under Review', 'Verified attachments. Underwriter reviewing bank FOIR.')" class="bg-amber-600 hover:brightness-110 text-white px-3 py-1 rounded font-bold text-[10px]">Move to Review</button>` : ''}
+              ${lead.status === 'Under Review' ? `<button onclick="updateLeadStatus('${lead.id}', 'Approved', 'Credit risk team approved. Rate settled at 10.5% APR.')" class="bg-blue-600 hover:brightness-110 text-white px-3 py-1 rounded font-bold text-[10px]">Approve Loan</button>` : ''}
+              ${lead.status === 'Approved' ? `<button onclick="updateLeadStatus('${lead.id}', 'Disbursed', 'Disbursal executed. Trx #984102948 settled.')" class="bg-emerald-600 hover:brightness-110 text-white px-3 py-1 rounded font-bold text-[10px]">Disburse Funds</button>` : ''}
+              <button onclick="updateLeadStatus('${lead.id}', 'Rejected', 'Rejected due to low credit score metrics.')" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded font-bold text-[10px]">Reject Lead</button>
+            </div>
+          </div>
+        `;
+      }
+
+      drawer.innerHTML = `
+        <div class="flex justify-between items-start border-b border-gray-200 pb-3">
+          <div>
+            <h3 class="font-extrabold text-base text-primary">${lead.name} (${lead.id})</h3>
+            <span class="text-xs text-gray-400 font-semibold">${lead.product} &bull; Requested Amount: ₹${lead.amount.toLocaleString('en-IN')}</span>
+          </div>
+          <button onclick="closeLeadDrawer()" class="text-gray-400 hover:text-gray-600"><span class="material-symbols-outlined">close</span></button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left Col Stepper & uploads -->
+          <div class="lg:col-span-7 space-y-6">
+            <div class="bg-white p-4 rounded-xl border border-outline-variant/10 shadow-xs">
+              <h4 class="font-bold text-xs text-primary mb-4 uppercase tracking-wider">Milestone Verification Timeline</h4>
+              <div class="flex justify-between items-center">
+                ${stepperHtml}
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h4 class="font-bold text-xs text-primary uppercase tracking-wider">KYC & Income Document Attachments</h4>
+              <div class="space-y-2">
+                ${filesHtml}
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Col Log History -->
+          <div class="lg:col-span-5 bg-white p-4 rounded-xl border border-outline-variant/10 shadow-xs flex flex-col justify-between">
+            <div>
+              <h4 class="font-bold text-xs text-primary mb-4 uppercase tracking-wider">Operational Activity Logs</h4>
+              <div class="space-y-4">
+                ${historyLogsHtml}
+              </div>
+            </div>
+            <div class="pt-4 mt-4 border-t border-gray-100">
+              <div class="text-[11px] text-gray-500 space-y-1">
+                <div><strong>Mobile:</strong> ${lead.phone}</div>
+                <div><strong>Email:</strong> ${lead.email || 'N/A'}</div>
+                <div><strong>Monthly Earnings:</strong> ₹${lead.income.toLocaleString('en-IN')}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        ${adminOverrideHtml}
+      `;
+      
+      // Auto-Scroll to details section
+      drawer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function closeLeadDrawer() {
+      document.getElementById('pipeline-lead-details').classList.add('hidden');
+      portalState.selectedLeadId = null;
+      saveState();
+    }
+
+    function simulateUpload(leadId, docType) {
+      const lead = portalState.leads.find(l => l.id === leadId);
+      if (!lead) return;
+
+      showToast(`Uploading secure ${docType.toUpperCase()} file...`);
+      
+      // Complete simulated upload in 1.2s
+      setTimeout(() => {
+        lead.docs = lead.docs || {};
+        lead.docs[docType] = 'Uploaded';
+        
+        const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 16);
+        lead.history.push({
+          stage: `${docType.toUpperCase()} File Uploaded`,
+          date: timestamp,
+          note: `DSA partner uploaded applicant's secondary secure verification file.`
+        });
+        
+        saveState();
+        showToast(`${docType.toUpperCase()} Document verified and locked.`);
+        selectLead(leadId); // Refresh detailed Drawer
+      }, 1200);
+    }
+
+    // Demo status transition trigger
+    function updateLeadStatus(leadId, nextStatus, logNote) {
+      const lead = portalState.leads.find(l => l.id === leadId);
+      if (!lead) return;
+
+      const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 16);
+      lead.status = nextStatus;
+      lead.history.push({
+        stage: nextStatus,
+        date: timestamp,
+        note: logNote
+      });
+
+      saveState();
+      showToast(`Lead status updated to: ${nextStatus}`);
+      renderPipelineTable();
+      selectLead(leadId); // Refresh detailed drawer
+    }
+
+    // Commission Tracker Screen Rendering
+    function renderCommissionTracker() {
+      const leads = portalState.leads || [];
+      const payoutsBody = document.getElementById('commission-logs-body');
+      
+      let paidTotal = 0;
+      let pendingTotal = 0;
+
+      leads.forEach(l => {
+        if (l.status === 'Disbursed') {
+          if (l.isSettled) {
+            paidTotal += l.commissionEarned;
+          } else {
+            pendingTotal += l.commissionEarned;
+          }
+        } else if (l.status === 'Approved') {
+          pendingTotal += l.commissionEarned;
+        }
+      });
+
+      document.getElementById('comm-payout-settled').textContent = '₹' + paidTotal.toLocaleString('en-IN');
+      document.getElementById('comm-payout-pending').textContent = '₹' + pendingTotal.toLocaleString('en-IN');
+      document.getElementById('comm-profile-bank').textContent = portalState.currentPartner.bankName;
+      document.getElementById('comm-profile-account').textContent = portalState.currentPartner.bankAcc;
+
+      // Settlement request button visual locking
+      const reqBtn = document.getElementById('request-settlement-btn');
+      if (pendingTotal === 0) {
+        reqBtn.disabled = true;
+        reqBtn.className = "bg-gray-300 text-gray-500 cursor-not-allowed px-3 py-1 rounded text-[10px] font-bold block mt-2";
+        reqBtn.textContent = "No Pending Settlements";
+      } else {
+        reqBtn.disabled = false;
+        reqBtn.className = "bg-primary hover:bg-primary/95 text-white px-3 py-1 rounded text-[10px] font-bold block mt-2 shadow transition";
+        reqBtn.textContent = "Request Quick Settlement";
+      }
+
+      // Render Transaction logs
+      payoutsBody.innerHTML = '';
+      const logs = portalState.payoutLogs || [];
+      if (logs.length === 0) {
+        payoutsBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-gray-400 font-medium">No prior settlements processed yet.</td></tr>`;
+      } else {
+        logs.slice().reverse().forEach(log => {
+          const tr = document.createElement('tr');
+          tr.className = 'border-b border-gray-100 text-xs hover:bg-slate-50/50';
+          tr.innerHTML = `
+            <td class="p-3 font-semibold text-primary font-mono">${log.trxId}</td>
+            <td class="p-3 text-gray-500">${log.date}</td>
+            <td class="p-3 text-gray-400">${log.channel}</td>
+            <td class="p-3 font-mono text-gray-600">${log.baseLeads}</td>
+            <td class="p-3 font-extrabold text-primary">₹${log.amount.toLocaleString('en-IN')}</td>
+            <td class="p-3 text-center"><span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full text-[10px] font-bold">${log.status}</span></td>
+          `;
+          payoutsBody.appendChild(tr);
+        });
+      }
+    }
+
+    function requestInstantSettlement() {
+      const pendingLeads = portalState.leads.filter(l => !l.isSettled && (l.status === 'Disbursed' || l.status === 'Approved'));
+      let pendingTotal = 0;
+      const leadIds = [];
+
+      pendingLeads.forEach(l => {
+        pendingTotal += l.commissionEarned;
+        leadIds.push(l.id);
+        l.isSettled = true; // settle
+      });
+
+      if (pendingTotal === 0) {
+        showToast('No outstanding commissions to settle.', 'error');
+        return;
+      }
+
+      const today = new Date().toISOString().split('T')[0];
+      const customTrx = 'SET-' + Math.floor(984200 + Math.random() * 1000);
+
+      // Create log
+      const newLog = {
+        trxId: customTrx,
+        date: today,
+        channel: `NEFT (${portalState.currentPartner.bankName})`,
+        baseLeads: leadIds.join(', '),
+        amount: pendingTotal,
+        status: 'Processed'
+      };
+
+      portalState.payoutLogs.push(newLog);
+      saveState();
+
+      showToast(`Settlement processed successfully! Trx: ${customTrx}`);
+      renderCommissionTracker();
+    }
+
+    // Resources & Link generator builders
+    function generateReferralLink() {
+      const page = document.getElementById('link-target').value;
+      const source = document.getElementById('link-source').value.trim();
+      const code = portalState.currentPartner.dsaCode;
+      
+      let refUrl = `https://credifycapital.in/${page}?ref=${code}`;
+      if (source) {
+        refUrl += `&source=${encodeURIComponent(source)}`;
+      }
+
+      document.getElementById('ref-link-display').textContent = refUrl;
+    }
+
+    function copyReferralLink() {
+      const refUrl = document.getElementById('ref-link-display').textContent;
+      navigator.clipboard.writeText(refUrl).then(() => {
+        showToast('Referral affiliate link copied to clipboard!');
+      }).catch(() => {
+        showToast('Failed to copy. Please copy text manually!', 'error');
+      });
+    }
+
+    function downloadResource(fileName) {
+      showToast(`Downloading ${fileName}...`);
+      setTimeout(() => {
+        showToast(`Resource: ${fileName} downloaded successfully!`);
+      }, 1500);
+    }
+
+    // Mobile Menu Toggler
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const menuPanel = document.getElementById('mobile-menu-panel');
+    const menuIcon = document.getElementById('mobile-menu-icon');
+    if (menuBtn && menuPanel) {
+      menuBtn.addEventListener('click', () => {
+        const isOpen = !menuPanel.classList.contains('hidden');
+        menuPanel.classList.toggle('hidden');
+        menuBtn.setAttribute('aria-expanded', String(!isOpen));
+        if (menuIcon) menuIcon.textContent = isOpen ? 'menu' : 'close';
+      });
+    }
+
+    // RUN ON LOAD
+    window.addEventListener('load', () => {
+      initPortal();
+      runPreScreenerCheck();
+    });
+  </script>
+</body>
+</html>

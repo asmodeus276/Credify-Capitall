@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" fill="none">
+  <rect width="60" height="60" rx="14" fill="#FFF1F2"/>
+  <!-- Experience Growth Stairs/Bars -->
+  <rect x="16" y="34" width="6" height="10" rx="2" fill="#23326B" opacity="0.4"/>
+  <rect x="25" y="28" width="6" height="16" rx="2" fill="#23326B" opacity="0.7"/>
+  <rect x="34" y="21" width="6" height="23" rx="2" fill="#23326B"/>
+  <!-- Gold Milestone Ribbon/Star -->
+  <circle cx="43" cy="20" r="9" fill="#E83B3B"/>
+  <path d="M43 14.5L44.5 18L48 18.3L45.4 20.7L46.2 24.2L43 22.3L39.8 24.2L40.6 20.7L38 18.3L41.5 18L43 14.5Z" fill="#FEF08A"/>
+</svg>

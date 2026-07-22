@@ -1,0 +1,412 @@
+.emisection {
+    position: relative;
+}
+.new-acco .nav-tabs:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-bottom: 1px solid #142450;
+    top: 40px;
+}
+.new-acco .nav-tabs.tab-scroll-fixed {
+    border-bottom: 1px solid #142450;
+    border-top: 1px solid #142450;
+}
+.new-acco .nav-tabs.tab-scroll-fixed:after,
+.tab-inner-content .nav-tabs:after {
+    content: unset;
+}
+.new-acco .nav-tabs {
+    border: 0;
+}
+.new-acco .card-body,
+.new-acco.emitab .tab-content {
+    padding: 0;
+}
+.new-acco.emitab .tab-content {
+    border: 0;
+    margin-top: 25px;
+}
+.divborder,
+.new-acco .acco-item {
+    border: 1px solid #142450;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    padding: 0 25px;
+}
+.divborder {
+    padding: 25px 40px;
+}
+.divborder hr,
+.topbordr {
+    border-top: 1px solid #142450;
+}
+.divborder hr {
+    margin: 10px 0 25px;
+}
+.topbordr {
+    padding-top: 5px;
+}
+.vl {
+    border-left: 1px solid #142450;
+    height: 25px;
+    display: inline;
+    margin: 0 10px;
+}
+.firstrevw {
+    display: flex;
+}
+.firstrevw p {
+    font-size: 15px;
+    font-weight: 500;
+    color: #142450;
+}
+.secondrevw p {
+    color: #000;
+}
+.checked {
+    color: #142450;
+}
+.fa-star:before {
+    content: "";
+    font-size: 16px;
+    padding: 1px;
+}
+.new-acco .acco-item .acco-link {
+    padding: 20px 25px 20px 0;
+    margin: 0;
+    cursor: pointer;
+    font-size: 20px;
+    position: relative;
+}
+.new-acco .acco-item .acco-link img,
+.new-acco .acco-item .acco-link:after {
+    position: absolute;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+}
+.new-acco .acco-item .acco-link img {
+    left: 0;
+    width: 45px;
+    height: 45px;
+    top: 50%;
+}
+.new-acco .acco-item .acco-link:after {
+    content: "";
+    border-color: transparent #142450;
+    border-style: solid;
+    border-width: 0.35em 0 0.35em 0.45em;
+    display: block;
+    height: 0;
+    width: 0;
+    right: 0;
+    top: 40%;
+    transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+}
+.new-acco .acco-item .acco-link.close-acco:after {
+    transform: unset;
+    -moz-transform: unset;
+    -o-transform: unset;
+}
+.new-acco .tab-inner-content {
+    padding: 0;
+}
+.new-acco .faqbox-new .emitab {
+    margin: 0 !important;
+}
+.golden-border {
+    border: 1px solid #142450;
+    padding: 25px;
+}
+.sec-head {
+    font-size: 20px;
+    color: #142450;
+    font-weight: 700;
+    margin-top: 10px;
+}
+.fl-rght {
+    float: right;
+}
+.desktop-none {
+    display: none;
+}
+.mobile-none {
+    display: block;
+}
+.arrowimg {
+    width: 18px;
+    vertical-align: super;
+    position: absolute;
+}
+.card-review {
+    border-top: 3px solid #142450;
+    padding-top: 32px;
+}
+.pl-new .acco-item h2 {font-size: 18px!important;}
+.pl-new .acco-item h3{font-size: 17px!important;}
+@media only screen and (min-device-width: 1920px) and (max-device-width: 2560px) {
+    .new-acco .acco-item .acco-link {
+        font-size: 28px;
+    }
+    .new-acco .acco-item .acco-link:after {
+        border-width: 0.45em 0 0.45em 0.45em;
+    }
+}
+@media only screen and (min-device-width: 1600px) and (max-device-width: 2560px) {
+    .new-acco .nav-tabs:after {
+        top: 50px;
+    }
+}
+@media only screen and (max-width: 767px) {
+    .emisection:after {
+        content: unset;
+    }
+    .mbltextcenter {
+        text-align: center;
+        padding: 10px 0;
+    }
+    .reviewname p {
+        font-size: 14px;
+        font-weight: 700;
+        text-align: center;
+    }
+    .desktop-none {
+        display: block;
+    }
+    .mobile-none {
+        display: none;
+    }
+    .divborder hr,
+    .mblborder {
+        border-top: 1px solid #142450;
+    }
+    .mblborder {
+        border-bottom: 1px solid #142450;
+        margin-bottom: 10px;
+    }
+    .fa-star:before,
+    .mblborder {
+        padding: 3px;
+    }
+    .mblmt20,
+    .new-acco .card-body {
+        margin-top: 20px;
+    }
+    .new-acco .acco-item {
+        border-radius: 8px;
+        margin-bottom: 15px;
+        padding: 0 10px;
+    }
+    .new-acco .acco-item .acco-link {
+        font-size: 18px;
+    }
+    .new-acco .acco-item .acco-link img {
+        width: 40px;
+        height: 40px;
+    }
+    .new-acco .acco-item .acco-link:after {
+        right: 5px;
+    }
+    .golden-border {
+        margin: 20px 0;
+    }
+    .divborder hr {
+        margin: 50px 0 10px;
+    }
+    .mblmt5 {
+        margin-top: 5px;
+    }
+}
+@media only screen and (max-width: 280px) {
+    .divborder hr {
+        margin: 66px 0 10px;
+    }
+}
+.IIFL_wrap,
+.pl_criteria_wrap {
+    padding: 30px;
+    background-color: #edf2ee;
+    margin-bottom: 20px;
+}
+.pl_criteria_wrap h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.tab-inner-content .IIFL_wrap h3 {
+    margin-bottom: 18px;
+}
+.IIFL_wrap_left ul li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.IIFL_wrap_left ul li span {
+    margin-right: 20px;
+}
+.doc-wrap img,
+.doc_pl img,
+.fbenefits img,
+.nofilter img,
+.plel_box_img img {
+    filter: none;
+}
+.rates-charges-block-lists {
+    display: flex;
+}
+.rates-charges-block-lists li {
+    width: 25%;
+    background-color: #fff;
+    padding: 30px 20px;
+    margin-right: 2%;
+    margin-bottom: 2%;
+    box-shadow: -1px 2px 20px -2px rgb(0 0 0/9%);
+}
+.rates-charges-block-lists span {
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+.rates-charges-block-lists h4 span {
+    font-size: 28px;
+}
+.rates-charges-block-lists__desc {
+    border-top: 1px solid #939598;
+    padding-top: 16px;
+}
+.plel_box {
+    width: 23%;
+    margin: 0 1% 2%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+.plel_box_img {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 20px;
+}
+.plel_box_img img {
+    margin: 8px;
+}
+.tab-inner-content .plel_box h3 {
+    margin-bottom: 8px;
+}
+#pl-steps .steps.section-padding {
+    padding: 0 0 10px;
+}
+#pl-steps .custom-para {
+    margin: 0;
+    text-align: left;
+    padding-bottom: 20px;
+}
+.doc-wrap {
+    padding: 15px 20px;
+}
+.rates-charges-block {
+    padding: 15px 0;
+}
+@media only screen and (max-width: 767px) {
+    .rates-charges-block-lists {
+        display: block;
+    }
+    .plel_box,
+    .rates-charges-block-lists li {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 30px;
+    }
+}
+
+/* overview page review section css start here*/
+.pf-review{position:relative;border:1px solid #142450;border-radius:20px;padding:25px}
+.reviewcarausel .mbltextcenter,.reviewcarauselmob .mbltextcenter{margin:auto}
+.reviewcarausel .mbltextcenter img,.reviewcarauselmob .mbltextcenter img{border:5px solid #fff;border-radius:50%;}
+.review-detail{margin-left:20px}
+.review-heading{position:relative;}
+.review-description{float:left;}
+.review-rate{float:right;margin-top: 5px;}
+.review-name{font-size: 20px;font-weight: 700;margin-bottom: 0;margin-right: 10px;}
+.reviewcarausel .secondrevw p,.reviewcarauselmob .secondrevw p{text-align:left;margin:8px 0 0}
+.review-container{position:relative}
+.pf-review::before{content:"";width:100px;height:100%;position:absolute;left:0;top:0;background-color:#142450;border-top-left-radius:20px;border-bottom-left-radius:20px}
+.reviewcarausel .owl-theme .owl-nav .owl-next,.reviewcarauselmob .owl-theme .owl-nav .owl-next{right:-25px;padding:8px 4px}
+.reviewcarausel .owl-theme .owl-nav .owl-prev,.reviewcarauselmob .owl-theme .owl-nav .owl-prev{left:-25px;padding:8px 5px}
+.reviewcarauselmob{display:none;}
+.owl-theme .owl-dots .owl-dot.active span, .owl-theme .owl-dots .owl-dot:hover span {background: #142450!important;}
+.owl-theme .owl-nav {margin-top: 0px; position: absolute; top: 38%;}
+
+/*white banner text*/
+.inner_banner  .inner_text .banner-white {color:#ffffff;}
+
+@media only screen and (max-width: 992px){
+    .reviewcarausel{display:none;}
+    .reviewcarauselmob{display:block;}
+    .acco-body-mob-desk{display:none;}
+    .reviewcarauselmob .owl-theme .owl-nav .owl-next, .reviewcarauselmob  .owl-theme .owl-nav .owl-next{right: -35px;}
+    .reviewcarauselmob .owl-theme .owl-nav .owl-prev, .reviewcarauselmob .owl-theme .owl-nav .owl-prev{left: -35px;}
+    .review-description,.review-rate{float: none;}
+    .review-name{font-size:14px;line-height: 20px;}
+    .review-description span{display: block;}
+    .review-container{margin: 0 25px;}
+    .reviewcarauselmob .secondrevw p,.reviewcarauselmob .secondrevw p{margin-top: 20px;}
+    .pf-review::before {width:100%;height: 100px;border-top-left-radius: 20px;border-top-right-radius: 20px; border-bottom-left-radius: 0px;}s
+    .reviewcarauselmob .mbltextcenter{padding: 0 10px;}
+    .img-container img{width:30% !important; margin:auto;}
+    .img-container{display:flex; justify-content:center;}
+    .no-js .owl-carousel, .owl-carousel.owl-loaded {display: block;}
+    .reviewcarauselmob .mbltextcenter {text-align: center;padding: 10px 0;}
+}
+@media only screen and (max-width: 599px) and (min-width:320px){
+    .img-container{display:flex; justify-content:center;}
+    .img-container img{width:50% !important; margin:auto;}
+}
+
+/* PL calculator page tabs */
+.amortization-slider{position: relative;padding: 0 20px;margin-bottom: 35px;}
+.amortization-slider .nav-tabs {border: none;}
+.amortization-slider .tab-item .active, .amortization-slider .tab-item a.tab-link:hover{font-weight: 700;border-bottom: 2px solid #142450;}
+.amortization-slider .tab-item a:before {display: block;content: attr(title);font-weight: 700;height: 0;overflow: hidden;visibility: hidden;}
+.amortization-slider .item {position: relative;text-align: center;padding: 0 10px;}
+.amortization-slider .item:after{content: "";width: 2px;height: 70%;background-color: #142450;position: absolute;right: -1px;top: 3px;}
+.amortization-slider .owl-item:last-child .item:after{display: none}
+.mb-20 {margin-bottom: 20px!important;}
+.amortization-slider .owl-theme .owl-nav .owl-prev,.amortization-slider .owl-theme .owl-nav .owl-next{background-color: transparent;color:#142450;padding: 0;}
+.amortization-slider .owl-theme .owl-nav .owl-prev{left: -18px;}
+.amortization-slider .owl-theme .owl-nav .owl-next{right: -18px;}
+.amortization-slider i.fa.fa-chevron-left, .amortization-slider i.fa.fa-chevron-right{font-size: 18px;line-height: 18px;}
+@media only screen and (max-width: 767px) {
+    .amortization-slider .item:after{height: 60px;}
+    .emitab-mobile .collapse.show {
+        border-bottom: 0px; 
+}
+}
+
+
+
+
+
+
+/* BUG FIX: Force overview tab content always visible */
+#collapse-A,
+#collapse-A.collapse,
+#collapse-A.collapse.show {
+    display: block !important;
+}
+.tab-pane.show.active .collapse {
+    display: block !important;
+}
+.acco-body {
+    display: block !important;
+}
+/* Prevent Bootstrap from hiding the active tab pane body */
+.tab-pane.active .card-body {
+    display: block !important;
+}

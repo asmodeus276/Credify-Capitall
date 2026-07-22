@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="100" viewBox="0 0 200 100">
+  <rect width="200" height="100" rx="10" fill="#142450"/>
+  <text x="50%" y="40%" dominant-baseline="middle" text-anchor="middle" font-size="28" fill="#22c55e">&#x2713;</text>
+  <text x="50%" y="72%" dominant-baseline="middle" text-anchor="middle" font-size="14" fill="#ffffff" font-family="Arial">Thank You!</text>
+</svg>

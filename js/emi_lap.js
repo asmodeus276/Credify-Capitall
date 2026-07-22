@@ -1,0 +1,1 @@
+/* EMI loan against property stub */

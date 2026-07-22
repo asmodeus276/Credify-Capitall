@@ -1,0 +1,344 @@
+<!DOCTYPE html><html lang="en"><head>
+<script src="/js/jquery-3.6.0.min.js"></script>
+
+      <!-- Metas -->
+
+      <meta charset="utf-8">
+
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+      <!-- Chrome, Firefox, OS & Opera -->
+
+      <meta name="theme-color" content="#253A71">
+
+      <!-- Windows Phone -->
+
+      <meta name="msapplication-navbutton-color" content="#253A71">
+
+      <!-- Safari/iOS -->
+
+      <meta name="apple-mobile-web-app-capable" content="yes">
+
+      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+      <link rel="apple-touch-icon" type="image/png" href="/img/favicon.ico">
+
+      <meta name="keywords" content="personal loan, personal loan eligibility, documents required for personal loan, ">
+
+      <meta name="description" content="Read expert articles, borrowing tips, and financial guides to help you make informed decisions about Personal, Business, and Professional Loans.">
+
+      <meta name="author" content="">
+
+      <meta name="robots" content="index,follow">
+
+      <link rel="canonical" href="blogs.html">
+
+      <!-- Title  -->
+
+      <title>Financial Insights, Guides & Borrowing Tips - Credify Capital</title>
+
+      <!-- Favicon -->
+
+      <link rel="shortcut icon" href="/img/favicon.ico">
+
+      <!-- Plugins -->
+
+      <link rel="stylesheet" href="/css/plugins.css">
+
+      <!-- Core Style Css -->
+
+      <link rel="stylesheet" href="/css/style.css">
+
+      <link rel="stylesheet" href="/css/style-new.css">
+
+      <link rel="stylesheet" href="/css/style-pl.css">
+
+      <link rel="stylesheet" href="/css/new-acco.css">
+
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="/css/tailwind-built.css">
+
+  <link rel="stylesheet" href="/css/loan-page-common.css">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/tailwind-built.css">
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var menuBtn = document.getElementById('mobile-menu-btn');
+  var menuPanel = document.getElementById('mobile-menu-panel');
+  var menuIcon = document.getElementById('mobile-menu-icon');
+  if (menuBtn && menuPanel) {
+    menuBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var isOpen = !menuPanel.classList.contains('hidden');
+      menuPanel.classList.toggle('hidden');
+      menuBtn.setAttribute('aria-expanded', String(!isOpen));
+      if (menuIcon) menuIcon.textContent = isOpen ? 'close' : 'menu';
+    });
+    document.addEventListener('click', function(e) {
+      if (!menuPanel.classList.contains('hidden') && !menuBtn.contains(e.target) && !menuPanel.contains(e.target)) {
+        menuPanel.classList.add('hidden');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        if (menuIcon) menuIcon.textContent = 'menu';
+      }
+    });
+  }
+});
+</script>
+
+</head>
+
+   <body class="bg-background text-on-background font-body-md pt-[64px] lg:pt-[116px]">
+<%- include('../partials/header') %>
+
+    <section class="section-padding pt-32 pb-16 bg-surface">
+      <div class="container mx-auto max-w-7xl px-4 md:px-6">
+        <div class="text-center space-y-4 mb-12">
+          <span class="text-secondary font-bold text-sm tracking-widest uppercase">FINANCIAL INSIGHTS</span>
+          <h1 class="text-4xl md:text-5xl font-extrabold text-primary tracking-tight">Our Latest Blogs & Guides</h1>
+          <p class="text-gray-500 max-w-2xl mx-auto text-base">Expert advice, borrowing tips, and financial guides to help you make informed decisions and build a stable future.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Blog Card 1 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-all">
+                <img src="/img/blog/how-to-use-personal-loan-for-financial-investment.jpg" alt="How to Use Personal Loans for Financial Investments?" class="h-48 w-full object-cover">
+                <div class="p-6 flex-grow flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <span class="text-xs font-semibold bg-blue-50 text-secondary px-2.5 py-1 rounded-full">Investment</span>
+                        <h3 class="text-xl font-bold text-primary leading-tight"><a href="blogs/how-to-use-personal-loan-for-financial-investment.html" class="hover:text-secondary transition-colors font-bold text-primary leading-tight">How to Use Personal Loans for Financial Investments?</a></h3>
+                        <p class="text-gray-500 text-sm line-clamp-3">Discover the strategic ways to utilize low-interest personal loans to generate positive investment returns and manage wealth.</p>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-gray-400 pt-4 border-t border-gray-50">
+                        <span>5 Min Read</span>
+                        <span>July 21, 2026</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Blog Card 2 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-all">
+                <img src="/img/blog/how-to-get-a-personal-loan-in-five-easy-steps.jpg" alt="How to Get A Personal Loan in 5 Easy Steps?" class="h-48 w-full object-cover">
+                <div class="p-6 flex-grow flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <span class="text-xs font-semibold bg-blue-50 text-secondary px-2.5 py-1 rounded-full">Loan Guide</span>
+                        <h3 class="text-xl font-bold text-primary leading-tight"><a href="blogs/how-to-get-a-personal-loan-in-five-easy-steps.html" class="hover:text-secondary transition-colors font-bold text-primary leading-tight">How to Get A Personal Loan in 5 Easy Steps?</a></h3>
+                        <p class="text-gray-500 text-sm line-clamp-3">Navigating personal loan applications is simple. Follow our 5 quick digital steps to secure cash in under 24 hours.</p>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-gray-400 pt-4 border-t border-gray-50">
+                        <span>4 Min Read</span>
+                        <span>June 18, 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Card 3 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-all">
+                <img src="/img/blog/all-about-personal-loan-disbursement-process.jpg" alt="All You Need to Know about Personal Loan Disbursal Process" class="h-48 w-full object-cover">
+                <div class="p-6 flex-grow flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <span class="text-xs font-semibold bg-blue-50 text-secondary px-2.5 py-1 rounded-full">Disbursal</span>
+                        <h3 class="text-xl font-bold text-primary leading-tight"><a href="blogs/all-about-personal-loan-disbursement-process.html" class="hover:text-secondary transition-colors font-bold text-primary leading-tight">All About Personal Loan Disbursement Process</a></h3>
+                        <p class="text-gray-500 text-sm line-clamp-3">Understand what happens behind the scenes once your loan gets approved and how funds are safely credited to your bank account.</p>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-gray-400 pt-4 border-t border-gray-50">
+                        <span>6 Min Read</span>
+                        <span>May 12, 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Card 4 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-all">
+                <img src="/img/blog/top-advantages-of-applying-online-for-personal-loan.jpg" alt="Top 5 Advantages of Applying Online for a Personal Loan" class="h-48 w-full object-cover">
+                <div class="p-6 flex-grow flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <span class="text-xs font-semibold bg-blue-50 text-secondary px-2.5 py-1 rounded-full">Digital Lending</span>
+                        <h3 class="text-xl font-bold text-primary leading-tight"><a href="blogs/top-advantages-of-applying-online-for-personal-loan.html" class="hover:text-secondary transition-colors font-bold text-primary leading-tight">Top 5 Advantages of Applying Online</a></h3>
+                        <p class="text-gray-500 text-sm line-clamp-3">Explore how online applications speed up credit checks, improve options comparison, and lower overall administrative costs.</p>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-gray-400 pt-4 border-t border-gray-50">
+                        <span>4 Min Read</span>
+                        <span>April 29, 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Card 5 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-all">
+                <img src="/img/blog/top-benefits-of-using-personal-loan-emi-calculator.jpg" alt="Top Benefits of Using a Personal Loan EMI Calculator" class="h-48 w-full object-cover">
+                <div class="p-6 flex-grow flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <span class="text-xs font-semibold bg-blue-50 text-secondary px-2.5 py-1 rounded-full">Planning</span>
+                        <h3 class="text-xl font-bold text-primary leading-tight"><a href="blogs/top-benefits-of-using-personal-loan-emi-calculator.html" class="hover:text-secondary transition-colors font-bold text-primary leading-tight">Top Benefits of Using an EMI Calculator</a></h3>
+                        <p class="text-gray-500 text-sm line-clamp-3">Never guess your monthly repayments. Learn how a digital EMI tool helps optimize interest rates and plan repayment cycles easily.</p>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-gray-400 pt-4 border-t border-gray-50">
+                        <span>3 Min Read</span>
+                        <span>April 14, 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Card 6 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-all">
+                <img src="/img/blog/what-happens-if-you-miss-to-pay-personal-loan-emi.jpg" alt="What Will Happen When You Miss Your Personal Loan EMI?" class="h-48 w-full object-cover">
+                <div class="p-6 flex-grow flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <span class="text-xs font-semibold bg-blue-50 text-secondary px-2.5 py-1 rounded-full">Credit Health</span>
+                        <h3 class="text-xl font-bold text-primary leading-tight"><a href="blogs/what-happens-if-you-miss-to-pay-personal-loan-emi.html" class="hover:text-secondary transition-colors font-bold text-primary leading-tight">What Happens If You Miss an EMI?</a></h3>
+                        <p class="text-gray-500 text-sm line-clamp-3">Avoid credit downgrades. Know the penalties, credit score impacts, and amicable options available if you miss a personal loan payment.</p>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-gray-400 pt-4 border-t border-gray-50">
+                        <span>5 Min Read</span>
+                        <span>March 22, 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Card 7 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-all">
+                <img src="/img/blog/where-can-i-get-personal-loan-online.jpg" alt="Where Can I Get a Personal Loan Online in India?" class="h-48 w-full object-cover">
+                <div class="p-6 flex-grow flex flex-col justify-between space-y-4">
+                    <div class="space-y-2">
+                        <span class="text-xs font-semibold bg-blue-50 text-secondary px-2.5 py-1 rounded-full">Lending Portal</span>
+                        <h3 class="text-xl font-bold text-primary leading-tight"><a href="blogs/where-can-i-get-personal-loan-online.html" class="hover:text-secondary transition-colors font-bold text-primary leading-tight">Where to Get Personal Loan Online?</a></h3>
+                        <p class="text-gray-500 text-sm line-clamp-3">A complete list of digital platforms, banking channels, and NBFCs offering instant personal credit lines in India.</p>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-gray-400 pt-4 border-t border-gray-50">
+                        <span>4 Min Read</span>
+                        <span>February 10, 2026</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </section>
+  </body>
+    <%- include('../partials/footer') %>
+<script defer="" src="/js/jquery.validate.js"></script>
+<script defer="" src="/js/additional-methods.js"></script>
+
+      <script></script>
+
+      <!-- jQuery -->
+
+      <!-- bootstrap -->
+
+      <script src="/js/bootstrap.min.js"></script>
+
+      <!-- scrollIt -->
+
+      <script src="/js/scrollIt.min.js"></script>
+
+      <!-- owl carousel -->
+
+      <script src="/js/owl.carousel.min.js"></script>
+
+      <!-- isotope.pkgd.min js -->
+
+      <!-- custom scripts -->
+
+      <script src="/js/scripts.js"></script>
+
+      <!-- emi scripts -->
+
+      <script type="text/javascript" src="/js/new-acco.js"></script>
+
+      <!-- owl scripts -->
+
+      <script>
+
+         $('.pltype .owl-carousel').owlCarousel({
+
+             loop:true,   
+
+             margin:10,             
+
+             nav:true,
+
+             navText : ["<i class='fa fa-chevron-left'></i>","<i class='fa fa-chevron-right'></i>"],
+
+             dots: false,           
+
+             autoplay:false,
+
+             //stagePadding: 100,
+
+             autoplayTimeout:5000,
+
+             responsive:{
+
+                 0:{
+
+                     items:1
+
+                 },
+
+                 600:{
+
+                     items:2
+
+                 },
+
+                 1000:{
+
+                     items:2
+
+                 }
+
+             }
+
+         })
+
+         $('.offcarausel .owl-carousel').owlCarousel({
+
+             loop:true,   
+
+             margin:10,             
+
+             nav:true,
+
+             navText : ["<i class='fa fa-chevron-left'></i>","<i class='fa fa-chevron-right'></i>"],
+
+             dots: false,           
+
+             autoplay:false,
+
+             //stagePadding: 100,
+
+             autoplayTimeout:5000,
+
+             responsive:{
+
+                 0:{
+
+                     items:1,
+
+         stagePadding: 50
+
+                 },
+
+                 600:{
+
+                     items:2
+
+                 },
+
+                 1000:{
+
+                     items:4
+
+                 }
+
+             }
+
+         })
+
+      </script>
+
+</body></html><!-- ==== End Desktop Footer ==== -->

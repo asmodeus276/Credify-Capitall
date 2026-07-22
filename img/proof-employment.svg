@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" fill="none">
+  <rect width="60" height="60" rx="14" fill="#FFF7ED"/>
+  <!-- Lanyard Neck Strap -->
+  <path d="M24 12L30 18L36 12" stroke="#EA580C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- ID Badge Body -->
+  <rect x="16" y="18" width="28" height="26" rx="4" fill="#23326B"/>
+  <!-- Clip Slot -->
+  <rect x="26" y="16" width="8" height="3" rx="1.5" fill="#EA580C"/>
+  <!-- Photo Slot -->
+  <rect x="20" y="23" width="8" height="10" rx="2" fill="#FDBA74"/>
+  <circle cx="24" cy="26" r="2.2" fill="#23326B"/>
+  <path d="M21 32C21 30.5 22.2 29.5 24 29.5C25.8 29.5 27 30.5 27 32" fill="#23326B"/>
+  <!-- Info Lines -->
+  <rect x="31" y="23" width="10" height="2" rx="1" fill="#FFFFFF"/>
+  <rect x="31" y="27" width="8" height="2" rx="1" fill="#FFFFFF" opacity="0.7"/>
+  <rect x="31" y="31" width="6" height="2" rx="1" fill="#FFFFFF" opacity="0.7"/>
+  <!-- Green Verified Badge -->
+  <circle cx="39" cy="38" r="6.5" fill="#10B981"/>
+  <path d="M36.2 38L38 39.8L41.8 36" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,76 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global safety net: default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Validation helper for IDs to guard against Path ID Poisoning
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Helper to get incoming data
+    function incoming() {
+      return request.resource.data;
+    }
+
+    // Helper for leads validation
+    function isValidLead(data) {
+      return data.keys().hasAll(['id', 'name', 'phone', 'email', 'product', 'amount', 'income', 'tenure', 'cibil', 'emis', 'createdDate', 'status', 'docs', 'history'])
+        && data.id is string && data.id.size() <= 100
+        && data.name is string && data.name.size() <= 200
+        && data.phone is string && data.phone.size() == 10
+        && data.email is string && data.email.size() <= 200
+        && data.product is string && data.product.size() <= 100
+        && data.amount is number && data.amount > 0
+        && data.income is number && data.income > 0
+        && data.tenure is number
+        && data.cibil is string
+        && data.emis is number
+        && data.createdDate is string
+        && data.status is string
+        && data.docs is map
+        && data.history is list;
+    }
+
+    // Helper for contactMessages validation
+    function isValidContactMessage(data) {
+      return data.keys().hasAll(['first_name', 'last_name', 'email_id', 'city', 'radios_option_purpose', 'message'])
+        && data.first_name is string && data.first_name.size() <= 100
+        && data.last_name is string && data.last_name.size() <= 100
+        && data.email_id is string && data.email_id.size() <= 200
+        && data.city is string && data.city.size() <= 100
+        && data.radios_option_purpose is string && data.radios_option_purpose.size() <= 100
+        && data.message is string && data.message.size() <= 2000
+        // Optional product_type validation
+        && (!data.keys().contains('product_type') || (data.product_type is string && data.product_type.size() <= 100));
+    }
+
+    // Match block for leads collection
+    match /leads/{leadId} {
+      allow create: if isValidId(leadId) 
+        && isValidLead(incoming())
+        && incoming().createdAt == request.time;
+      allow read: if request.auth != null;
+      allow update, delete: if false;
+    }
+
+    // Match block for contactMessages collection
+    match /contactMessages/{messageId} {
+      allow create: if isValidId(messageId)
+        && isValidContactMessage(incoming())
+        && incoming().createdAt == request.time;
+      allow read: if request.auth != null;
+      allow update, delete: if false;
+    }
+
+    // Match block for partnerApplications collection
+    match /partnerApplications/{applicationId} {
+      allow create: if true;
+      allow read, update: if request.auth != null;
+      allow delete: if false;
+    }
+  }
+}

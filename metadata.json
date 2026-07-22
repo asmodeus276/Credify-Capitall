@@ -1,0 +1,7 @@
+{
+  "name": "Credify Capital",
+  "description": "Smart Lending Solutions with instant approvals, EMI estimators, and fully digital loan applications.",
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

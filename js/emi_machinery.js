@@ -1,0 +1,1 @@
+/* EMI machinery stub */

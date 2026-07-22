@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Track Application | Credify Capital</title>
+
+  <link rel="stylesheet" href="/css/tailwind-built.css">
+  <script>
+    try {
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#142450",
+              secondary: "#b61722",
+              background: "#f8f9ff",
+              "on-background": "#0b1c30",
+              "outline-variant": "#c5c6d0",
+              "surface-container-low": "#eff4ff"
+            }
+          }
+        }
+      }
+    } catch (e) {}
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/tailwind-built.css">
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var menuBtn = document.getElementById('mobile-menu-btn');
+  var menuPanel = document.getElementById('mobile-menu-panel');
+  var menuIcon = document.getElementById('mobile-menu-icon');
+  if (menuBtn && menuPanel) {
+    menuBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var isOpen = !menuPanel.classList.contains('hidden');
+      menuPanel.classList.toggle('hidden');
+      menuBtn.setAttribute('aria-expanded', String(!isOpen));
+      if (menuIcon) menuIcon.textContent = isOpen ? 'close' : 'menu';
+    });
+    document.addEventListener('click', function(e) {
+      if (!menuPanel.classList.contains('hidden') && !menuBtn.contains(e.target) && !menuPanel.contains(e.target)) {
+        menuPanel.classList.add('hidden');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        if (menuIcon) menuIcon.textContent = 'menu';
+      }
+    });
+  }
+});
+</script>
+
+</head>
+
+<body class="bg-background text-on-background min-h-screen flex flex-col pt-[64px] lg:pt-[116px]">
+
+  <!-- HEADER -->
+  <%- include('../partials/header') %>
+
+<!-- TOAST NOTIFICATION -->
+  <div id="toast-container" class="fixed top-20 right-4 z-50 pointer-events-none space-y-2"></div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow max-w-4xl w-full mx-auto px-4 md:px-8 py-8 flex flex-col gap-8">
+    
+    <!-- PAGE HEADER -->
+    <div class="text-center space-y-3">
+      <div class="inline-flex items-center gap-2 bg-primary/5 text-primary px-4 py-1.5 rounded-full font-semibold text-xs tracking-wide">
+        <span class="material-symbols-outlined text-sm">assignment_turned_in</span> Real-Time Application Tracking
+      </div>
+      <h1 class="text-2xl md:text-4xl font-extrabold text-primary tracking-tight">
+        Track Your Loan Application
+      </h1>
+      <p class="text-gray-500 text-sm md:text-base max-w-xl mx-auto">
+        Enter your Application ID or mobile number to fetch the latest credit approval milestone, verification updates, and disbursal progress.
+      </p>
+    </div>
+
+    <!-- LOOKUP BOX -->
+    <div class="bg-white border border-outline-variant/20 rounded-2xl shadow-lg p-6 space-y-4">
+      <form id="track-form" onsubmit="handleTrack(event)" class="flex flex-col sm:flex-row gap-3">
+        <div class="relative flex-grow">
+          <span class="material-symbols-outlined absolute left-3.5 top-3 text-gray-400">search</span>
+          <input type="text" id="lookup-input" required class="w-full pl-11 pr-4 py-2.5 rounded-xl border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium" placeholder="Application ID or 10-digit Mobile Number">
+        </div>
+        <button type="submit" class="bg-primary hover:bg-primary/95 text-white px-6 py-2.5 rounded-xl font-bold shadow transition flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-lg">timeline</span> Track Application
+        </button>
+      </form>
+    </div>
+
+    <!-- MAIN DYNAMIC CONTENT CONTAINER -->
+    <div id="tracking-result-panel" class="hidden space-y-6 animate-fade-in">
+      
+      <!-- APPLICATION INFO CARD -->
+      <div class="bg-white border border-outline-variant/20 rounded-2xl shadow-md p-6 grid grid-cols-1 md:grid-cols-2 gap-6 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full transform translate-x-12 -translate-y-12"></div>
+        
+        <div class="space-y-4">
+          <div>
+            <span class="text-[10px] text-gray-400 uppercase font-extrabold tracking-wider" id="result-badge-product">BUSINESS LOAN</span>
+            <h2 class="text-xl font-extrabold text-primary" id="result-applicant-name">Ananya Sharma</h2>
+            <div class="flex items-center gap-2 text-xs text-gray-500 mt-1">
+              <span>ID: <strong class="text-gray-800 font-bold select-all" id="result-app-id">LD-8104</strong></span>
+              <span>&bull;</span>
+              <span id="result-created-date">Submitted on 2026-07-15</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 pt-2">
+            <div>
+              <span class="text-[10px] text-gray-400 block uppercase font-bold">Loan Amount</span>
+              <span class="text-lg font-extrabold text-primary" id="result-amount">₹25,00,000</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-gray-400 block uppercase font-bold">Estimated EMI</span>
+              <span class="text-sm font-bold text-gray-700" id="result-emi">₹81,250 / mo</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-gray-400 block uppercase font-bold">Tenure Choice</span>
+              <span class="text-sm font-bold text-gray-700" id="result-tenure">36 Months</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-gray-400 block uppercase font-bold">Interest Rate (Est.)</span>
+              <span class="text-sm font-bold text-emerald-700" id="result-rate">10.5% p.a.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col justify-between items-start md:items-end gap-4 border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6">
+          <div class="space-y-1.5 w-full md:text-right">
+            <span class="text-[10px] text-gray-400 block uppercase font-extrabold tracking-wider">Current Status</span>
+            <div id="result-status-pill" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black bg-emerald-100 text-emerald-800 border border-emerald-200">
+              <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+              <span>Disbursed</span>
+            </div>
+          </div>
+
+          <!-- ASSIGNED DSA AGENT INFO -->
+          <div class="p-3.5 bg-slate-50 border border-slate-200/50 rounded-xl w-full text-xs space-y-1.5">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-base">support_agent</span>
+              <span class="font-bold text-primary">Assigned Account Manager</span>
+            </div>
+            <p class="text-gray-600 leading-normal font-medium">
+              If you have any queries, please connect with your financial partner advisor.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRACKING TIMELINE -->
+      <div class="bg-white border border-outline-variant/20 rounded-2xl shadow-md p-6 space-y-6">
+        <h3 class="font-extrabold text-sm text-primary uppercase tracking-wider flex items-center gap-2">
+          <span class="material-symbols-outlined text-lg">route</span> Approval Milestone Pipeline
+        </h3>
+
+        <!-- Interactive Timeline -->
+        <div class="relative pl-8 space-y-8 before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-200" id="timeline-flow">
+          <!-- Timeline step elements will be dynamically loaded here -->
+        </div>
+      </div>
+
+      <!-- DOCUMENT VERIFICATION CHECKLIST & REAL UPLOAD INTERACTION -->
+      <div class="bg-white border border-outline-variant/20 rounded-2xl shadow-md p-6 space-y-6" id="docs-upload-panel">
+        <div>
+          <h3 class="font-extrabold text-sm text-primary uppercase tracking-wider flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg">cloud_upload</span> Document Verification Desk
+          </h3>
+          <p class="text-xs text-gray-500 mt-1">Please upload authentic PDF files or image captures of missing verification papers to fast-track credit review.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Checklist Status -->
+          <div class="space-y-3">
+            <span class="text-[11px] font-bold text-gray-400 uppercase tracking-wider">KYC Compliance Checklists</span>
+            <div class="space-y-2 text-xs" id="compliance-checklist">
+              <!-- Dynamically rendered list items with status checkboxes/badges -->
+            </div>
+          </div>
+
+          <!-- Drag and Drop upload block -->
+          <div class="bg-slate-50 border-2 border-dashed border-gray-300 hover:border-primary rounded-xl p-5 text-center flex flex-col justify-center items-center gap-3 transition relative overflow-hidden" id="dropzone">
+            <input type="file" id="file-input" class="hidden" accept=".pdf,image/*" onchange="handleFileSelect(event)">
+            <span class="material-symbols-outlined text-4xl text-gray-400">upload_file</span>
+            <div>
+              <button onclick="triggerFileSelect()" class="font-bold text-sm text-primary hover:text-secondary hover:underline transition">Click to upload files</button>
+              <p class="text-[10px] text-gray-400 mt-1">Accepts PDF or Image formats up to 5MB</p>
+            </div>
+            
+            <!-- Dynamic dropdown to select which doc is being uploaded -->
+            <div class="w-full max-w-xs mt-1">
+              <select id="upload-doc-type" class="w-full text-[11px] rounded border-gray-300 py-1 font-medium focus:ring-primary/20">
+                <option value="pan">PAN Card Identification</option>
+                <option value="bank">Last 6 Months Bank Statement</option>
+                <option value="itr">Latest Income Tax Return (ITR)</option>
+              </select>
+            </div>
+
+            <!-- Upload loader overlay -->
+            <div id="upload-loader" class="hidden absolute inset-0 bg-white/90 flex flex-col items-center justify-center gap-2">
+              <svg class="animate-spin h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span class="text-xs font-bold text-primary">Uploading & verifying file securely...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOAN PROCESS TIMELINE HISTORY LOGS -->
+      <div class="bg-white border border-outline-variant/20 rounded-2xl shadow-md p-6 space-y-4">
+        <h3 class="font-extrabold text-sm text-primary uppercase tracking-wider flex items-center gap-2">
+          <span class="material-symbols-outlined text-lg">history</span> Underwriting Action Logs
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="bg-gray-50 border-b border-gray-100 text-gray-400 font-bold">
+                <th class="p-2">Timestamp</th>
+                <th class="p-2">Verification Stage</th>
+                <th class="p-2">Action / Assessment Remarks</th>
+              </tr>
+            </thead>
+            <tbody id="action-logs-body" class="divide-y divide-gray-50">
+              <!-- Logs loaded dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ERROR PANEL (NOT FOUND) -->
+    <div id="not-found-panel" class="hidden bg-white border border-outline-variant/20 rounded-2xl shadow-md p-8 text-center space-y-4">
+      <span class="material-symbols-outlined text-5xl text-secondary">sentiment_dissatisfied</span>
+      <h3 class="font-extrabold text-primary text-lg">No Active Application Found</h3>
+      <p class="text-xs text-gray-500 max-w-md mx-auto">
+        We could not find any active file corresponding to the entered query. Please check your spelling or contact your assigned Partner Advisor.
+      </p>
+      <div class="pt-2">
+        <a href="apply.html" class="inline-flex items-center gap-2 bg-secondary text-white px-5 py-2 rounded-xl text-xs font-bold hover:brightness-110 transition">
+          <span class="material-symbols-outlined text-sm">edit_document</span> Submit New Application
+        </a>
+      </div>
+    </div>
+
+    <!-- GENERAL FAQ SECTION -->
+    <div class="bg-white border border-outline-variant/20 rounded-2xl shadow-md p-6 space-y-4">
+      <h3 class="font-extrabold text-sm text-primary uppercase tracking-wider">Application Tracking FAQ</h3>
+      <div class="divide-y divide-gray-100 text-xs text-gray-600">
+        <div class="py-3 space-y-1">
+          <h4 class="font-bold text-primary">How long does the digital KYC verification stage take?</h4>
+          <p>Normally, digital identity check via PAN/Aadhaar takes less than 2 hours. If manual review is requested, it can take up to 24 business hours.</p>
+        </div>
+        <div class="py-3 space-y-1">
+          <h4 class="font-bold text-primary">What happens if my document check is marked "Pending"?</h4>
+          <p>Please use our online secure document panel above to upload a clear scan of the required papers. The underwriting desk will be notified instantly.</p>
+        </div>
+        <div class="py-3 space-y-1">
+          <h4 class="font-bold text-primary">Is there a processing fee deducted before disbursal?</h4>
+          <p>Yes, a minor processing charge of 1.0% - 2.0% is adjusted from the final loan disbursal check depending on the credit category.</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <%- include('../partials/footer') %>
+
+  <!-- SCRIPT ENGINE -->
+  <script src="/js/credify-core.js"></script>
+  <script>
+    // MOBILE NAV TOGGLE
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+    mobileMenuBtn.addEventListener('click', () => {
+      const isExpanded = mobileMenuPanel.classList.contains('hidden');
+      if (isExpanded) {
+        mobileMenuPanel.classList.remove('hidden');
+        document.getElementById('mobile-menu-icon').textContent = 'close';
+      } else {
+        mobileMenuPanel.classList.add('hidden');
+        document.getElementById('mobile-menu-icon').textContent = 'menu';
+      }
+    });
+
+    // CONSTANTS
+    const PARTNER_STORAGE_KEY = 'credify_dsa_portal_state_v1';
+    const DIRECT_STORAGE_KEY = 'credify_user_applications';
+
+    // FALLBACK DEMO APPLICATION STATE
+    const FALLBACK_APPLICATIONS = [];
+
+    let currentTrackedItem = null;
+    let isFromPartnerDb = false;
+
+    // LOAD APPLICATIONS DATABASE
+    function getApplicationsList() {
+      let list = [];
+      
+      // 1. Fetch from Partner DSA database
+      const partnerDataStr = localStorage.getItem(PARTNER_STORAGE_KEY);
+      if (partnerDataStr) {
+        try {
+          const parsed = JSON.parse(partnerDataStr);
+          if (parsed && Array.isArray(parsed.leads)) {
+            list = list.concat(parsed.leads.map(lead => ({ ...lead, source: 'partner' })));
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      // 2. Fetch from Direct applications database
+      const directDataStr = localStorage.getItem(DIRECT_STORAGE_KEY);
+      if (directDataStr) {
+        try {
+          const parsed = JSON.parse(directDataStr);
+          if (Array.isArray(parsed)) {
+            list = list.concat(parsed.map(app => ({ ...app, source: 'direct' })));
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      // 3. Supplement with Fallback demos if not already loaded or overwritten
+      FALLBACK_APPLICATIONS.forEach(fallback => {
+        if (!list.some(item => item.id === fallback.id)) {
+          list.push({ ...fallback, source: 'fallback' });
+        }
+      });
+
+      return list;
+    }
+
+    // SEARCH TRACK HANDLER
+    function handleTrack(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('lookup-input').value.trim();
+      if (!input) return;
+
+      const list = getApplicationsList();
+      
+      // Match ID directly or 10-digit mobile number (strip non-digits for match)
+      const cleanPhone = input.replace(/\D/g, '');
+      const matched = list.find(app => {
+        const idMatch = app.id.toLowerCase() === input.toLowerCase();
+        const phoneMatch = cleanPhone.length >= 10 && app.phone.replace(/\D/g, '').includes(cleanPhone);
+        return idMatch || phoneMatch;
+      });
+
+      if (matched) {
+        currentTrackedItem = matched;
+        isFromPartnerDb = (matched.source === 'partner');
+        showTrackingResult(matched);
+      } else {
+        currentTrackedItem = null;
+        document.getElementById('tracking-result-panel').classList.add('hidden');
+        document.getElementById('not-found-panel').classList.remove('hidden');
+      }
+    }
+
+    // FILL DEMO SUGGESTION
+    function fillDemo(id) {
+      document.getElementById('lookup-input').value = id;
+      handleTrack();
+    }
+
+    // SHOW TOAST MESSAGE
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `flex items-center gap-2 px-4 py-3 rounded-xl text-white text-xs font-bold shadow-lg transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-auto ${
+        type === 'error' ? 'bg-secondary' : 'bg-primary'
+      }`;
+      const icon = type === 'error' ? 'error' : 'check_circle';
+      toast.innerHTML = `<span class="material-symbols-outlined text-sm">${icon}</span> <span>${message}</span>`;
+      container.appendChild(toast);
+      
+      // animate in
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 50);
+
+      // dismiss
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    // RENDER STATUS SCREEN
+    function showTrackingResult(item) {
+      document.getElementById('not-found-panel').classList.add('hidden');
+      const panel = document.getElementById('tracking-result-panel');
+      panel.classList.remove('hidden');
+
+      // Populate text details
+      document.getElementById('result-badge-product').textContent = item.product.toUpperCase();
+      document.getElementById('result-applicant-name').textContent = item.name;
+      document.getElementById('result-app-id').textContent = item.id;
+      document.getElementById('result-created-date').textContent = `Submitted on ${item.createdDate}`;
+      document.getElementById('result-amount').textContent = `₹${parseFloat(item.amount).toLocaleString('en-IN')}`;
+      
+      const emiVal = window.CredifyEngine ? window.CredifyEngine.calculateMonthlyPayment(item.amount, 10.5, 3) : Math.round(item.amount * 0.032);
+      document.getElementById('result-emi').textContent = `₹${emiVal.toLocaleString('en-IN')} / mo`;
+      document.getElementById('result-tenure').textContent = `${item.tenure} Months`;
+      
+      let apr = 10.5;
+      if (item.cibil === '710') apr = 13.5;
+      if (item.cibil === '660') apr = 17.5;
+      if (item.cibil === '580') apr = 22.0;
+      document.getElementById('result-rate').textContent = `${apr}% p.a.`;
+
+      // Render Status Badge
+      const statusPill = document.getElementById('result-status-pill');
+      const statusColors = {
+        'Submitted': 'bg-gray-100 text-gray-800 border-gray-200',
+        'Under Review': 'bg-blue-100 text-blue-800 border-blue-200',
+        'Approved': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        'Disbursed': 'bg-green-100 text-green-800 border-green-200',
+        'Rejected': 'bg-red-100 text-red-800 border-red-200'
+      };
+      
+      const dotColors = {
+        'Submitted': 'bg-gray-500',
+        'Under Review': 'bg-blue-600',
+        'Approved': 'bg-emerald-600',
+        'Disbursed': 'bg-green-600',
+        'Rejected': 'bg-red-600'
+      };
+
+      statusPill.className = `inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-black border ${statusColors[item.status] || 'bg-gray-100 text-gray-800'}`;
+      statusPill.innerHTML = `<span class="w-2 h-2 rounded-full ${dotColors[item.status] || 'bg-gray-500'} ${item.status === 'Under Review' ? 'animate-pulse' : ''}"></span> <span>${item.status}</span>`;
+
+      // Render Milestone Timeline progress
+      renderTimeline(item);
+
+      // Render Compliance Docs list
+      renderComplianceChecklist(item);
+
+      // Render Logs Table
+      renderActionLogs(item);
+    }
+
+    // TIMELINE PIPELINE GENERATOR
+    function renderTimeline(item) {
+      const timelineFlow = document.getElementById('timeline-flow');
+      timelineFlow.innerHTML = '';
+
+      const stages = [
+        { name: 'Application Submitted', key: 'Submitted', icon: 'edit_document', desc: 'Form successfully registered and processed.' },
+        { name: 'Document Verification & KYC', key: 'KYC', icon: 'verified_user', desc: 'Validating PAN identity cards & bank statements.' },
+        { name: 'Credit Underwriting & Risk Evaluation', key: 'Underwriting', icon: 'analytics', desc: 'Calculating debt capacity & monthly repayment ratios.' },
+        { name: 'E-Contract Signing', key: 'Approved', icon: 'draw', desc: 'Review offer parameters and perform digital signature.' },
+        { name: 'Direct Bank Disbursal', key: 'Disbursed', icon: 'payments', desc: 'Transferring cash directly to verified account credentials.' }
+      ];
+
+      // Determine current step index based on status
+      let currentStepIndex = 0;
+      if (item.status === 'Submitted') currentStepIndex = 0;
+      else if (item.status === 'Under Review') currentStepIndex = 1;
+      else if (item.status === 'Approved') currentStepIndex = 3;
+      else if (item.status === 'Disbursed') currentStepIndex = 4;
+      else if (item.status === 'Rejected') currentStepIndex = -1; // Special case
+
+      stages.forEach((stage, idx) => {
+        let isCompleted = idx <= currentStepIndex;
+        let isActive = idx === currentStepIndex + 1 && item.status !== 'Rejected';
+        let isFailed = item.status === 'Rejected' && idx === 1; // Show error here
+        
+        // Custom dates for steps
+        let stepDate = '';
+        if (isCompleted) {
+          if (idx === 0) stepDate = item.createdDate;
+          else if (idx === 1 && currentStepIndex >= 1) stepDate = item.createdDate;
+          else if (idx === 2 && currentStepIndex >= 2) stepDate = item.createdDate;
+          else stepDate = new Date().toISOString().split('T')[0];
+        }
+
+        const stepEl = document.createElement('div');
+        stepEl.className = `relative pl-2 ${isCompleted ? 'text-primary' : 'text-gray-400'}`;
+
+        let statusText = '';
+        let badgeStyle = '';
+        if (isCompleted) {
+          statusText = `<span class="text-emerald-700 font-bold">Completed</span>`;
+          badgeStyle = 'bg-primary text-white border-primary';
+        } else if (isActive) {
+          statusText = `<span class="text-blue-600 font-semibold animate-pulse">In Progress</span>`;
+          badgeStyle = 'bg-blue-50 text-blue-600 border-blue-500 ring-2 ring-blue-100';
+        } else if (isFailed) {
+          statusText = `<span class="text-red-600 font-bold">Rejected</span>`;
+          badgeStyle = 'bg-red-100 text-red-600 border-red-500';
+        } else {
+          statusText = `<span class="text-gray-400">Pending Stage</span>`;
+          badgeStyle = 'bg-slate-100 text-gray-400 border-gray-300';
+        }
+
+        stepEl.innerHTML = `
+          <!-- Bullet Node -->
+          <span class="absolute -left-[29px] top-1.5 w-6 h-6 rounded-full border flex items-center justify-center text-xs font-bold ${badgeStyle} z-10">
+            <span class="material-symbols-outlined text-xs">${stage.icon}</span>
+          </span>
+          <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-1">
+            <h4 class="font-extrabold text-sm ${isCompleted ? 'text-primary' : 'text-gray-500'}">${stage.name}</h4>
+            <div class="text-[10px] font-semibold flex items-center gap-2">
+              ${statusText}
+              ${stepDate ? `<span class="text-gray-400">${stepDate}</span>` : ''}
+            </div>
+          </div>
+          <p class="text-[11px] text-gray-500 mt-1 max-w-xl leading-relaxed">${stage.desc}</p>
+        `;
+        
+        timelineFlow.appendChild(stepEl);
+      });
+    }
+
+    // COMPLIANCE CHECKLIST GENERATOR
+    function renderComplianceChecklist(item) {
+      const listEl = document.getElementById('compliance-checklist');
+      listEl.innerHTML = '';
+
+      const docKeys = {
+        pan: { title: 'Permanent Account Number (PAN) Card', desc: 'Identity verification matches tax records.' },
+        bank: { title: 'Bank Statement (Last 6 Months)', desc: 'Validates monthly salary credit flows.' },
+        itr: { title: 'Latest ITR / Tax Assessment Filing', desc: 'Verifies annual gross revenue checks.' }
+      };
+
+      Object.entries(item.docs || {}).forEach(([key, val]) => {
+        const docInfo = docKeys[key] || { title: key.toUpperCase(), desc: 'Validation document.' };
+        const isUploaded = val === 'Uploaded';
+        
+        const row = document.createElement('div');
+        row.className = `flex items-start gap-3 p-3.5 rounded-xl border transition ${
+          isUploaded ? 'bg-emerald-50/50 border-emerald-100' : 'bg-slate-50 border-slate-200/50'
+        }`;
+
+        row.innerHTML = `
+          <span class="material-symbols-outlined text-xl ${isUploaded ? 'text-emerald-600' : 'text-gray-400'} mt-0.5">
+            ${isUploaded ? 'check_box' : 'pending_actions'}
+          </span>
+          <div class="flex-grow">
+            <span class="font-extrabold text-xs block ${isUploaded ? 'text-emerald-900' : 'text-primary'}">${docInfo.title}</span>
+            <span class="text-[10px] text-gray-400 block mt-0.5">${docInfo.desc}</span>
+          </div>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold ${
+            isUploaded ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+          }">
+            ${val}
+          </span>
+        `;
+        listEl.appendChild(row);
+      });
+    }
+
+    // ACTION LOGS GENERATOR
+    function renderActionLogs(item) {
+      const logsBody = document.getElementById('action-logs-body');
+      logsBody.innerHTML = '';
+
+      if (!item.history || item.history.length === 0) {
+        logsBody.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-gray-400">No events logged yet.</td></tr>`;
+        return;
+      }
+
+      // Reverse so newest logs appear first
+      [...item.history].reverse().forEach(log => {
+        const tr = document.createElement('tr');
+        tr.className = 'border-b border-gray-100 hover:bg-slate-50/50 transition-colors';
+        tr.innerHTML = `
+          <td class="p-2 text-gray-400 whitespace-nowrap font-medium">${log.date}</td>
+          <td class="p-2 font-bold text-primary">${log.stage}</td>
+          <td class="p-2 text-gray-600 leading-relaxed">${log.note}</td>
+        `;
+        logsBody.appendChild(tr);
+      });
+    }
+
+    // FILE UPLOAD HANDLER
+    function triggerFileSelect() {
+      document.getElementById('file-input').click();
+    }
+
+    function handleFileSelect(event) {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
+
+      const file = files[0];
+      const selectedDocType = document.getElementById('upload-doc-type').value;
+      
+      // Check maximum file limit (5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('File size is too large. Limit is 5MB.', 'error');
+        return;
+      }
+
+      // Show loader
+      const loader = document.getElementById('upload-loader');
+      loader.classList.remove('hidden');
+
+      setTimeout(() => {
+        // Hide loader
+        loader.classList.add('hidden');
+
+        if (!currentTrackedItem) return;
+
+        // 1. Update file status in local object
+        if (!currentTrackedItem.docs) {
+          currentTrackedItem.docs = { pan: 'Pending', bank: 'Pending', itr: 'Pending' };
+        }
+        currentTrackedItem.docs[selectedDocType] = 'Uploaded';
+
+        // 2. Insert trace log to history
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        
+        const docNames = {
+          pan: 'PAN Card Identification',
+          bank: '6 Months Bank Statement',
+          itr: 'ITR Assessment Filing'
+        };
+        const docName = docNames[selectedDocType] || selectedDocType.toUpperCase();
+
+        currentTrackedItem.history.push({
+          stage: 'Documents Verified',
+          date: dateStr,
+          note: `Applicant uploaded supplementary ${docName}. File received securely and compliance checked.`
+        });
+
+        // 3. Update status to 'Under Review' if currently 'Submitted' (signifying action received!)
+        if (currentTrackedItem.status === 'Submitted') {
+          currentTrackedItem.status = 'Under Review';
+          currentTrackedItem.history.push({
+            stage: 'Credit Underwriting',
+            date: dateStr,
+            note: 'Underwriting desk resumed manual credit-analysis post supplementary files acquisition.'
+          });
+        }
+
+        // 4. Save back to original database
+        saveUpdatedApplication(currentTrackedItem);
+
+        // 5. Re-render UI
+        showTrackingResult(currentTrackedItem);
+        showToast(`Successfully uploaded ${docName}! File attached to reference code: ${currentTrackedItem.id}.`);
+
+        // Reset file input
+        document.getElementById('file-input').value = '';
+      }, 1500);
+    }
+
+    // PERSIST MODIFIED APPLICATION BACK TO ORIGINAL STORAGE
+    function saveUpdatedApplication(updatedItem) {
+      if (isFromPartnerDb) {
+        // Save to partner database
+        const partnerDataStr = localStorage.getItem(PARTNER_STORAGE_KEY);
+        if (partnerDataStr) {
+          try {
+            const parsed = JSON.parse(partnerDataStr);
+            if (parsed && Array.isArray(parsed.leads)) {
+              const idx = parsed.leads.findIndex(l => l.id === updatedItem.id);
+              if (idx !== -1) {
+                // Keep original non-tracking fields (like commissionRate, agency name) but update status and docs
+                parsed.leads[idx].status = updatedItem.status;
+                parsed.leads[idx].docs = updatedItem.docs;
+                parsed.leads[idx].history = updatedItem.history;
+                localStorage.setItem(PARTNER_STORAGE_KEY, JSON.stringify(parsed));
+              }
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      } else {
+        // Save to direct borrower database
+        const directDataStr = localStorage.getItem(DIRECT_STORAGE_KEY) || '[]';
+        try {
+          let parsed = JSON.parse(directDataStr);
+          if (!Array.isArray(parsed)) parsed = [];
+          
+          const idx = parsed.findIndex(a => a.id === updatedItem.id);
+          if (idx !== -1) {
+            parsed[idx] = updatedItem;
+          } else {
+            parsed.push(updatedItem);
+          }
+          localStorage.setItem(DIRECT_STORAGE_KEY, JSON.stringify(parsed));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
+    // ON LOAD: check query param `?id=` to auto track
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const appId = urlParams.get('id');
+      if (appId) {
+        document.getElementById('lookup-input').value = appId;
+        handleTrack();
+      }
+    });
+  </script>
+</body>
+
+</html>
