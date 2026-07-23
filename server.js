@@ -2,12 +2,35 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import { GoogleGenAI } from '@google/genai';
+import helmet from 'helmet';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(process.cwd(), 'views'));
+
+// Security Headers
+app.use(helmet({
+  contentSecurityPolicy: {
+    useDefaults: true,
+    directives: {
+      "default-src": ["'self'"],
+      "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://*"],
+      "style-src": ["'self'", "'unsafe-inline'", "https://*"],
+      "font-src": ["'self'", "data:", "https://*"],
+      "img-src": ["'self'", "data:", "https://*"],
+      "connect-src": ["'self'", "https://*"],
+      "frame-src": ["'self'", "https://*"]
+    },
+  },
+}));
+
+// Permissions-Policy Header
+app.use((req, res, next) => {
+  res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+  next();
+});
 
 // Body parser for JSON endpoints
 app.use(express.json());
