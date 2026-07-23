@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="en"><head>
-<script src="/js/jquery-3.6.0.min.js"></script>
+<script nonce="<%= nonce %>" src="/js/jquery-3.6.0.min.js"></script>
 
       <!-- Metas -->
 
@@ -66,7 +66,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/tailwind-built.css">
 
-<script>
+<script nonce="<%= nonce %>">
 document.addEventListener("DOMContentLoaded", function () {
   var menuBtn = document.getElementById('mobile-menu-btn');
   var menuPanel = document.getElementById('mobile-menu-panel');
@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
     </main>
 
-    <script>
+    <script nonce="<%= nonce %>">
       document.getElementById('review-submit-form').addEventListener('submit', function(e) {
         e.preventDefault();
         document.getElementById('review-submit-form').classList.add('hidden');
@@ -200,38 +200,38 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     </script>
     <%- include('../partials/footer') %>
-<script defer="" src="/js/jquery.validate.js"></script>
-<script defer="" src="/js/additional-methods.js"></script>
+<script nonce="<%= nonce %>" defer="" src="/js/jquery.validate.js"></script>
+<script nonce="<%= nonce %>" defer="" src="/js/additional-methods.js"></script>
 
-      <script></script>
+      <script nonce="<%= nonce %>"></script>
 
       <!-- jQuery -->
 
       <!-- bootstrap -->
 
-      <script src="/js/bootstrap.min.js"></script>
+      <script nonce="<%= nonce %>" src="/js/bootstrap.min.js"></script>
 
       <!-- scrollIt -->
 
-      <script src="/js/scrollIt.min.js"></script>
+      <script nonce="<%= nonce %>" src="/js/scrollIt.min.js"></script>
 
       <!-- owl carousel -->
 
-      <script src="/js/owl.carousel.min.js"></script>
+      <script nonce="<%= nonce %>" src="/js/owl.carousel.min.js"></script>
 
       <!-- isotope.pkgd.min js -->
 
       <!-- custom scripts -->
 
-      <script src="/js/scripts.js"></script>
+      <script nonce="<%= nonce %>" src="/js/scripts.js"></script>
 
       <!-- emi scripts -->
 
-      <script type="text/javascript" src="/js/new-acco.js"></script>
+      <script nonce="<%= nonce %>" type="text/javascript" src="/js/new-acco.js"></script>
 
       <!-- owl scripts -->
 
-      <script>
+      <script nonce="<%= nonce %>">
 
          $('.pltype .owl-carousel').owlCarousel({
 

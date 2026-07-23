@@ -54,7 +54,8 @@ service cloud.firestore {
         && isValidLead(incoming())
         && incoming().createdAt == request.time;
       allow read: if request.auth != null;
-      allow update, delete: if false;
+      allow update: if request.auth != null && incoming().diff(resource.data).affectedKeys().hasOnly(['status']);
+      allow delete: if false;
     }
 
     // Match block for contactMessages collection
@@ -66,9 +67,25 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // Helper for partnerApplications validation
+    function isValidPartnerApplication(data) {
+      return data.keys().hasAll(['name', 'agency', 'email', 'mobile', 'city', 'bankName', 'bankAcc', 'dsaCode', 'status'])
+        && data.name is string && data.name.size() <= 200
+        && data.agency is string && data.agency.size() <= 200
+        && data.email is string && data.email.size() <= 200
+        && data.mobile is string && data.mobile.size() == 10
+        && data.city is string && data.city.size() <= 100
+        && data.bankName is string && data.bankName.size() <= 200
+        && data.bankAcc is string && data.bankAcc.size() <= 100
+        && data.dsaCode is string && data.dsaCode.size() <= 100
+        && data.status is string && data.status.size() <= 50;
+    }
+
     // Match block for partnerApplications collection
     match /partnerApplications/{applicationId} {
-      allow create: if true;
+      allow create: if isValidId(applicationId)
+        && isValidPartnerApplication(incoming())
+        && incoming().createdAt == request.time;
       allow read, update: if request.auth != null;
       allow delete: if false;
     }

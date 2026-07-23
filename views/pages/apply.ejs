@@ -15,7 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/tailwind-built.css">
 
-<script>
+<script nonce="<%= nonce %>">
 document.addEventListener("DOMContentLoaded", function () {
   var menuBtn = document.getElementById('mobile-menu-btn');
   var menuPanel = document.getElementById('mobile-menu-panel');
@@ -186,8 +186,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   <%- include('../partials/footer') %>
 
-  <script src="/js/credify-core.js"></script>
-  <script type="module">
+  <script nonce="<%= nonce %>" src="/js/credify-core.js"></script>
+  <script nonce="<%= nonce %>" type="module">
     import { submitLoanLead } from './firebaseConfig.js';
     (function () {
       var form = document.getElementById('apply-form');

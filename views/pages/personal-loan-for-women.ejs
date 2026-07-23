@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/tailwind-built.css">
 
-<script>
+<script nonce="<%= nonce %>">
 document.addEventListener("DOMContentLoaded", function () {
   var menuBtn = document.getElementById('mobile-menu-btn');
   var menuPanel = document.getElementById('mobile-menu-panel');
@@ -330,7 +330,7 @@ document.addEventListener("DOMContentLoaded", function () {
   <!-- FOOTER -->
   <%- include('../partials/footer') %>
 
-  <script>
+  <script nonce="<%= nonce %>">
     // Mobile Menu Toggle
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenuPanel = document.getElementById('mobile-menu-panel');

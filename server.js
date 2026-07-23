@@ -3,6 +3,8 @@ import path from 'path';
 import fs from 'fs';
 import { GoogleGenAI } from '@google/genai';
 import helmet from 'helmet';
+import crypto from 'crypto';
+import rateLimit from 'express-rate-limit';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,18 +12,41 @@ const PORT = process.env.PORT || 3000;
 app.set('view engine', 'ejs');
 app.set('views', path.join(process.cwd(), 'views'));
 
+// Generate a unique nonce per request for CSP
+app.use((req, res, next) => {
+  res.locals.nonce = crypto.randomBytes(16).toString('base64');
+  next();
+});
+
 // Security Headers
 app.use(helmet({
   contentSecurityPolicy: {
     useDefaults: true,
     directives: {
       "default-src": ["'self'"],
-      "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://*"],
-      "style-src": ["'self'", "'unsafe-inline'", "https://*"],
-      "font-src": ["'self'", "data:", "https://*"],
-      "img-src": ["'self'", "data:", "https://*"],
-      "connect-src": ["'self'", "https://*"],
-      "frame-src": ["'self'", "https://*"]
+      "script-src": [
+        "'self'", 
+        "'unsafe-inline'", // Ignored by modern browsers due to nonce, acts as fallback
+        (req, res) => `'nonce-${res.locals.nonce}'`,
+        "https://www.gstatic.com",
+        "https://*.googleapis.com",
+        "https://*.firebaseio.com"
+      ],
+      "script-src-attr": ["'unsafe-inline'"], // Scoped exception to allow inline event handlers (onclick, etc.) without exposing the whole policy
+      "style-src": [
+        "'self'", 
+        "'unsafe-inline'", // Ignored by modern browsers due to nonce, acts as fallback
+        (req, res) => `'nonce-${res.locals.nonce}'`,
+        "https://fonts.googleapis.com"
+      ],
+      "font-src": ["'self'", "data:", "https://fonts.gstatic.com"],
+      "img-src": ["'self'", "data:", "https://firebasestorage.googleapis.com", "https://*.googleapis.com"],
+      "connect-src": [
+        "'self'", 
+        "https://*.googleapis.com", 
+        "https://*.firebaseio.com"
+      ],
+      "frame-src": ["'self'"]
     },
   },
 }));
@@ -108,58 +133,74 @@ const redirects = {
   '/working-capital-business-loan.html': '/business-loan-for-working-capital.html'
 };
 
-// 1. Dynamic EJS Rendering middleware: serve .ejs files instead of .html, and inject chatbot.js
-app.use((req, res, next) => {
-  if (req.method !== 'GET') return next();
+// 1. Secure Static File Serving (Restrict access to public assets only)
+app.use('/css', express.static(path.join(process.cwd(), 'css')));
+app.use('/img', express.static(path.join(process.cwd(), 'img')));
+app.use('/js', express.static(path.join(process.cwd(), 'js')));
+app.use('/fonts', express.static(path.join(process.cwd(), 'fonts')));
 
-  let reqPath = decodeURIComponent(req.path);
+// 2. Page Router
+const pageRouter = express.Router();
 
-  // Handle Legacy Redirects First
+const renderPage = (res, viewName, next) => {
+  res.render('pages/' + viewName, {}, (err, html) => {
+    if (err) {
+      if (err.message.includes('Failed to lookup view')) {
+        return next();
+      }
+      return next(err);
+    }
+    
+    let finalData = html;
+    if (html.includes('</body>') && !html.includes('chatbot.js')) {
+      finalData = html.replace('</body>', '<script src="/js/chatbot.js"></script>\\n</body>');
+    }
+    res.setHeader('Content-Type', 'text/html');
+    return res.send(finalData);
+  });
+};
+
+// Root route
+pageRouter.get('/', (req, res, next) => renderPage(res, 'index', next));
+
+// Handle legacy redirects
+pageRouter.get('*', (req, res, next) => {
+  const reqPath = decodeURIComponent(req.path);
   if (redirects[reqPath]) {
     return res.redirect(301, redirects[reqPath]);
   }
+  next();
+});
 
-  if (reqPath.endsWith('/')) {
-    reqPath += 'index.html';
-  } else if (!path.extname(reqPath)) {
-    reqPath += '.html';
-  }
-
-  // Skip static asset directories to optimize performance
-  if (reqPath.startsWith('/node_modules') || reqPath.startsWith('/css') || reqPath.startsWith('/img') || reqPath.startsWith('/js') || reqPath.startsWith('/fonts')) {
+// Dynamic page routing
+pageRouter.get('/:page', (req, res, next) => {
+  const ext = path.extname(req.params.page);
+  if (ext && ext !== '.html') {
     return next();
   }
 
-  if (reqPath.endsWith('.html')) {
-    // Map .html route to EJS view inside views/pages/
-    const viewName = 'pages/' + reqPath.substring(1).replace(/\.html$/, '');
-
-    res.render(viewName, {}, (err, html) => {
-      if (err) {
-        // If view doesn't exist, let static middleware handle it or 404
-        return next();
-      }
-      
-      let finalData = html;
-      // Inject the chatbot script dynamically right before the closing body tag
-      if (html.includes('</body>') && !html.includes('chatbot.js')) {
-        const injectScript = `<script src="/js/chatbot.js"></script>\n</body>`;
-        finalData = html.replace('</body>', injectScript);
-      }
-      
-      res.setHeader('Content-Type', 'text/html');
-      return res.send(finalData);
-    });
-  } else {
-    next();
+  const viewName = req.params.page.replace(/\.html$/, '');
+  
+  // prevent directory traversal
+  if (viewName.includes('/') || viewName.includes('\\') || viewName.startsWith('.')) {
+    return next();
   }
+  
+  renderPage(res, viewName, next);
 });
 
-// Serve standard static assets
-app.use(express.static(process.cwd()));
+app.use(pageRouter);
 
 // 2. Chat API Proxy for the frontend chatbot
-app.post('/api/chat', async (req, res) => {
+const chatLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 30, // Limit each IP to 30 requests per `window` (here, per 15 minutes)
+  message: { error: 'Too many requests from this IP, please try again after 15 minutes' },
+  standardHeaders: true, 
+  legacyHeaders: false, 
+});
+
+app.post('/api/chat', chatLimiter, async (req, res) => {
   try {
     const { message, history } = req.body;
     if (!message) {
@@ -205,21 +246,24 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-// Single Page Application routing fallback
-app.get('*', (req, res) => {
-  res.render('pages/index', {}, (err, html) => {
-    if (err) return res.status(404).send('Page not found');
-    
+// 404 Error Handler
+app.use((req, res, next) => {
+  res.status(404).render('pages/404', {}, (err, html) => {
+    if (err) return res.status(404).send('404 - Page not found');
     let finalData = html;
     if (html.includes('</body>') && !html.includes('chatbot.js')) {
-      finalData = html.replace('</body>', '<script src="/js/chatbot.js"></script>\n</body>');
+      finalData = html.replace('</body>', '<script src="/js/chatbot.js"></script>\\n</body>');
     }
     res.setHeader('Content-Type', 'text/html');
     res.send(finalData);
   });
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Credify Capital server running on http://0.0.0.0:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Credify Capital server running on http://0.0.0.0:${PORT}`);
+  });
+}
+
+export default app;
 

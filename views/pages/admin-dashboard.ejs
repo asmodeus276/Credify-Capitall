@@ -179,7 +179,7 @@
   <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
   <!-- CORE SCRIPTS -->
-  <script type="module">
+  <script nonce="<%= nonce %>" type="module">
     import { auth, db } from "./firebaseConfig.js";
     import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { 

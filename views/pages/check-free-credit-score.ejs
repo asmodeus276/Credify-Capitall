@@ -1,5 +1,5 @@
 <!DOCTYPE html><html class="light scroll-smooth" lang="en"><head>
-<script src="/js/jquery-3.6.0.min.js"></script>
+<script nonce="<%= nonce %>" src="/js/jquery-3.6.0.min.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Check your credit score for free with Credify Capital. Complete soft check instantly, secure your detailed credit health report.">
@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/tailwind-built.css">
   
-  <script>
+  <script nonce="<%= nonce %>">
   document.addEventListener("DOMContentLoaded", function () {
     var menuBtn = document.getElementById('mobile-menu-btn');
     var menuPanel = document.getElementById('mobile-menu-panel');
@@ -578,7 +578,7 @@
       
       <div class="text-center pb-4 border-b border-gray-100">
         <h3 class="text-xl font-bold text-primary flex items-center justify-center gap-2">
-          <img src="/img/logo-mark.png" class="w-8 h-8 object-contain" alt="">
+          <img src="/img/logo-official.png" class="w-8 h-8 object-contain" alt="">
           Credify Capital
         </h3>
         <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest">CREDIT BUREAU STATEMENT</p>
@@ -665,8 +665,8 @@
 
 <%- include('../partials/footer') %>
 
-<script src="/js/credify-core.js"></script>
-<script>
+<script nonce="<%= nonce %>" src="/js/credify-core.js"></script>
+<script nonce="<%= nonce %>">
 (function() {
   let activeGender = '';
   let calculatedBaseScore = 765; 
