@@ -39,6 +39,7 @@ app.use(helmet({
         (req, res) => `'nonce-${res.locals.nonce}'`,
         "https://fonts.googleapis.com"
       ],
+      "style-src-attr": ["'unsafe-inline'"],
       "font-src": ["'self'", "data:", "https://fonts.gstatic.com"],
       "img-src": ["'self'", "data:", "https://firebasestorage.googleapis.com", "https://*.googleapis.com"],
       "connect-src": [
@@ -46,7 +47,7 @@ app.use(helmet({
         "https://*.googleapis.com", 
         "https://*.firebaseio.com"
       ],
-      "frame-src": ["'self'"]
+      "frame-src": ["'self'", "https://www.google.com"]
     },
   },
 }));
