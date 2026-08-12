@@ -154,7 +154,7 @@ const renderPage = (res, viewName, next) => {
     
     let finalData = html;
     if (html.includes('</body>') && !html.includes('chatbot.js')) {
-      finalData = html.replace('</body>', '<script src="/js/chatbot.js"></script>\\n</body>');
+      finalData = html.replace('</body>', '<script src="/js/chatbot.js"></script>\n</body>');
     }
     res.setHeader('Content-Type', 'text/html');
     return res.send(finalData);
@@ -174,16 +174,21 @@ pageRouter.get('*', (req, res, next) => {
 });
 
 // Dynamic page routing
-pageRouter.get('/:page', (req, res, next) => {
-  const ext = path.extname(req.params.page);
+pageRouter.get('*', (req, res, next) => {
+  const reqPath = decodeURIComponent(req.path);
+  const ext = path.extname(reqPath);
   if (ext && ext !== '.html') {
     return next();
   }
 
-  const viewName = req.params.page.replace(/\.html$/, '');
+  const viewName = reqPath.replace(/^\//, '').replace(/\.html$/, '');
   
   // prevent directory traversal
-  if (viewName.includes('/') || viewName.includes('\\') || viewName.startsWith('.')) {
+  if (viewName.includes('..') || viewName.includes('\\') || viewName.split('/').some(part => part.startsWith('.'))) {
+    return next();
+  }
+  
+  if (!viewName) {
     return next();
   }
   
@@ -253,7 +258,7 @@ app.use((req, res, next) => {
     if (err) return res.status(404).send('404 - Page not found');
     let finalData = html;
     if (html.includes('</body>') && !html.includes('chatbot.js')) {
-      finalData = html.replace('</body>', '<script src="/js/chatbot.js"></script>\\n</body>');
+      finalData = html.replace('</body>', '<script src="/js/chatbot.js"></script>\n</body>');
     }
     res.setHeader('Content-Type', 'text/html');
     res.send(finalData);

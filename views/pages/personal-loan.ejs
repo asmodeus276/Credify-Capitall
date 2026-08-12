@@ -163,30 +163,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/tailwind-built.css">
 
-<script nonce="<%= nonce %>">
-document.addEventListener("DOMContentLoaded", function () {
-  var menuBtn = document.getElementById('mobile-menu-btn');
-  var menuPanel = document.getElementById('mobile-menu-panel');
-  var menuIcon = document.getElementById('mobile-menu-icon');
-  if (menuBtn && menuPanel) {
-    menuBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var isOpen = !menuPanel.classList.contains('hidden');
-      menuPanel.classList.toggle('hidden');
-      menuBtn.setAttribute('aria-expanded', String(!isOpen));
-      if (menuIcon) menuIcon.textContent = isOpen ? 'close' : 'menu';
-    });
-    document.addEventListener('click', function(e) {
-      if (!menuPanel.classList.contains('hidden') && !menuBtn.contains(e.target) && !menuPanel.contains(e.target)) {
-        menuPanel.classList.add('hidden');
-        menuBtn.setAttribute('aria-expanded', 'false');
-        if (menuIcon) menuIcon.textContent = 'menu';
-      }
-    });
-  }
-});
-</script>
-
 </head>
 
 <body class="bg-background text-on-background font-body-md pt-[64px] lg:pt-[116px]">

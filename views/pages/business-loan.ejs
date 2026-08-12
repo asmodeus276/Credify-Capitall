@@ -64,30 +64,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/tailwind-built.css">
 
-<script nonce="<%= nonce %>">
-document.addEventListener("DOMContentLoaded", function () {
-  var menuBtn = document.getElementById('mobile-menu-btn');
-  var menuPanel = document.getElementById('mobile-menu-panel');
-  var menuIcon = document.getElementById('mobile-menu-icon');
-  if (menuBtn && menuPanel) {
-    menuBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var isOpen = !menuPanel.classList.contains('hidden');
-      menuPanel.classList.toggle('hidden');
-      menuBtn.setAttribute('aria-expanded', String(!isOpen));
-      if (menuIcon) menuIcon.textContent = isOpen ? 'close' : 'menu';
-    });
-    document.addEventListener('click', function(e) {
-      if (!menuPanel.classList.contains('hidden') && !menuBtn.contains(e.target) && !menuPanel.contains(e.target)) {
-        menuPanel.classList.add('hidden');
-        menuBtn.setAttribute('aria-expanded', 'false');
-        if (menuIcon) menuIcon.textContent = 'menu';
-      }
-    });
-  }
-});
-</script>
-
 </head>   
 
    <body class="bg-background text-on-background font-body-md pt-[64px] lg:pt-[116px]">
@@ -190,16 +166,89 @@ document.addEventListener("DOMContentLoaded", function () {
                   </div>
                   <div id="collapse-A" class="show" style="display:block" aria-labelledby="heading-A">
                      <div class="card-body">
+
+                        <!-- Item 1: Overview Intro -->
                         <div class="acco-item">
                            <h2 class="acco-link">Business Loan Overview</h2>
-    <div class="acco-body">
-        <div class="tab-inner-content">
-            <p><strong>Unlocking your business potential</strong></p>
-            <p>Fuel growth and working capital for your business with a Credify Capital Business Loan. Get fast approval and customized loan solutions to take your business to the next level.</p>
-            <p>We offer customized business loan solutions to help small and medium enterprises achieve their business goals without putting up collateral. With instant approvals and quick disbursals, you can ensure your business always stays ahead.</p>
-        </div>
+                           <div class="acco-body">
+                              <div class="tab-inner-content">
+                                 <p><strong>Unlocking your business potential</strong></p>
+                                 <p>Credify Capital is a trusted fintech platform that helps businesses of all sizes secure high-value, unsecured Business Loans from leading banks and NBFCs. By leveraging our network of lending partners, we ensure your business gets the working capital it needs at the most competitive interest rates.</p>
+                                 <p>Whether you're looking to expand operations, purchase inventory, hire staff, or upgrade machinery, our Business Loans come with flexible repayment options and require zero collateral.</p>
+                                 <p>Benefit from our fully digital, hassle-free application process and experience fast approvals within 24-48 hours to keep your business moving forward.</p>
+                              </div>
                            </div>
                         </div>
+
+                        <!-- Item 2: Interest Rates -->
+                        <div class="acco-item">
+                           <h2 class="acco-link">Business Loan Interest Rates & Charges</h2>
+                           <div class="acco-body">
+                              <div class="tab-inner-content">
+                                 <p>Get a Business Loan at highly attractive interest rates tailored to your business profile. Our transparent process ensures you know exactly what your borrowing costs are from day one.</p>
+                                 
+                                 <div class="table-responsive mt-3">
+                                    <table class="table table-striped">
+                                       <tbody>
+                                          <tr>
+                                             <td><strong>Business Loan Interest Rates</strong></td>
+                                             <td>Starting from 10.50%* p.a.</td>
+                                          </tr>
+                                          <tr>
+                                             <td><strong>Maximum Loan Amount</strong></td>
+                                             <td>Up to ₹1 Crore (Custom solutions up to ₹50 Crs)</td>
+                                          </tr>
+                                          <tr>
+                                             <td><strong>Loan Tenure</strong></td>
+                                             <td>12 to 84 months</td>
+                                          </tr>
+                                          <tr>
+                                             <td><strong>Collateral Required</strong></td>
+                                             <td>Nil (Unsecured Loan)</td>
+                                          </tr>
+                                          <tr>
+                                             <td><strong>Processing Fees</strong></td>
+                                             <td>Up to 2% to 3% of the loan amount</td>
+                                          </tr>
+                                       </tbody>
+                                    </table>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+
+                        <!-- Item 3: Features & Benefits -->
+                        <div class="acco-item">
+                           <h2 class="acco-link">Features and Benefits of a Business Loan</h2>
+                           <div class="acco-body">
+                              <div class="tab-inner-content">
+                                 <p>Credify Capital makes acquiring business finance simple and straightforward:</p>
+                                 <ul class="list-disc pl-5 mt-2 space-y-2">
+                                    <li><strong>Collateral-Free:</strong> No need to pledge residential, commercial, or industrial properties.</li>
+                                    <li><strong>Fast Processing:</strong> With minimal documentation, your loan can be approved and disbursed in just a few days.</li>
+                                    <li><strong>Flexible Repayment:</strong> Choose a tenure that matches your business cash flow cycles.</li>
+                                    <li><strong>Zero End-Use Restriction:</strong> Use the funds for any legitimate business purpose, from marketing to inventory.</li>
+                                 </ul>
+                              </div>
+                           </div>
+                        </div>
+
+                        <!-- Item 4: Use Cases -->
+                        <div class="acco-item">
+                           <h2 class="acco-link">Scale Your Operations</h2>
+                           <div class="acco-body">
+                              <div class="tab-inner-content">
+                                 <p>A Business Loan can be the catalyst for your company's next big leap. Common use cases include:</p>
+                                 <ul class="list-disc pl-5 mt-2 space-y-2">
+                                    <li><strong>Working Capital:</strong> Maintain healthy daily operations during slow seasons.</li>
+                                    <li><strong>Equipment Upgrade:</strong> Purchase the latest machinery or software to boost efficiency.</li>
+                                    <li><strong>Expansion:</strong> Open new branch locations or expand your warehousing facilities.</li>
+                                    <li><strong>Inventory Stocking:</strong> Bulk purchase raw materials at a discount before peak season.</li>
+                                 </ul>
+                              </div>
+                           </div>
+                        </div>
+
                      </div>
                   </div>
                </div>

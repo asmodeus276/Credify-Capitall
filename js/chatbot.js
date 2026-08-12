@@ -106,7 +106,7 @@
   // Chat Window Container
   const chatWindow = document.createElement('div');
   chatWindow.id = 'credify-chat-window';
-  chatWindow.className = 'credify-chatbot-container w-[360px] h-[480px] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-6rem)] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-100 hidden';
+  chatWindow.className = 'credify-chatbot-container w-[360px] h-[480px] max-w-[calc(100vw-2rem)] max-h-[calc(100dvh-6rem)] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-100 hidden';
   chatWindow.style.transformOrigin = 'bottom right';
   chatbotWrapper.appendChild(chatWindow);
 

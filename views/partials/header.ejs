@@ -1,4 +1,17 @@
 <!-- START HEADER -->
+<!-- iOS Compatibility Fixes -->
+<style>
+  @media screen and (max-width: 768px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+</style>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.body.setAttribute("ontouchstart", "");
+  });
+</script>
 <header class="fixed top-0 left-0 w-full z-50 transition-all duration-300 shadow-md">
   <!-- Top Tier: Brand & Utilities (White Background) -->
   <div class="bg-white">
@@ -29,8 +42,8 @@
   <!-- Mobile Menu Panel -->
   <div id="mobile-menu-panel" class="hidden lg:hidden bg-white border-t border-outline-variant shadow-xl">
     <nav class="flex flex-col divide-y divide-outline-variant">
-      <a href="/personal-loan.html" class="px-margin-mobile py-3 font-semibold text-primary">Personal Loan</a>
       <a href="/business-loan.html" class="px-margin-mobile py-3 font-semibold text-primary">Business Loan</a>
+      <a href="/personal-loan.html" class="px-margin-mobile py-3 font-semibold text-primary">Personal Loan</a>
       <a href="/professional-loan.html" class="px-margin-mobile py-3 font-semibold text-primary">Professional Loan</a>
       <a href="/medical-equipment-loan.html" class="px-margin-mobile py-3 font-semibold text-primary">Medical Equipment Loan</a>
       <a href="/car-loan.html" class="px-margin-mobile py-3 font-semibold text-primary">Car Loan</a>
@@ -38,7 +51,9 @@
       <a href="/about.html" class="px-margin-mobile py-3 text-on-surface-variant">About Us</a>
       <a href="/track-application.html" class="px-margin-mobile py-3 font-semibold text-secondary">Track Status</a>
       <a href="/contact-us.html" class="px-margin-mobile py-3 text-on-surface-variant">Contact Us</a>
-      <a href="/apply.html" class="mx-margin-mobile my-3 bg-secondary text-white text-center py-2.5 rounded-lg font-bold">Apply Now</a>
+      <div class="px-margin-mobile py-3 border-t border-outline-variant">
+        <a href="/apply.html" class="flex justify-center items-center w-full bg-secondary text-white py-2.5 rounded-lg font-bold hover:brightness-110 active:scale-95 transition-all">Apply Now</a>
+      </div>
     </nav>
   </div>
 
@@ -48,6 +63,36 @@
       
       <!-- Desktop Navigation Menu -->
       <nav class="hidden lg:flex items-stretch font-label-md text-[12px] xl:text-[13px] tracking-wide w-full">
+        <!-- Business Loan (Mega Menu) -->
+        <div class="group flex items-center border-r border-[#1c2c56]/50 hover:bg-[#1c2c56] transition-colors cursor-pointer relative !bg-transparent text-white">
+          <a href="/business-loan.html" class="py-4 px-3 lg:px-4 font-semibold inline-block whitespace-nowrap !text-white group-hover:!text-white">Business Loan</a>
+          
+          <!-- Mega Menu Dropdown -->
+          <div class="absolute top-full left-0 w-max bg-surface text-on-surface shadow-2xl border-t-2 border-secondary hidden group-hover:flex p-8 gap-12 rounded-b-xl z-50">
+             <!-- Column 1 -->
+             <div class="flex flex-col gap-3 min-w-[220px]">
+                 <a href="/business-loan.html" class="font-semibold text-primary hover:text-secondary transition-colors py-1">Business Loan Overview</a>
+                 <a href="/business-loan-features-and-benefits.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Features & Benefits</a>
+                 <a href="/business-loan-eligibility-and-documents.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Eligibility & Documents</a>
+                 <a href="/business-loan-interest-rates-and-charges.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Interest Rates & Charges</a>
+                 <a href="/calculator.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">EMI Calculator</a>
+                 <a href="/business-loan-faq.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">FAQs</a>
+                 <a href="/apply.html?type=Business+Loan" class="mt-4 bg-primary text-white text-center py-2.5 rounded-lg hover:bg-opacity-90 font-bold shadow-md transition-all">Apply Now</a>
+             </div>
+
+             <!-- Column 2 -->
+             <div class="flex flex-col gap-3 min-w-[220px]">
+                 <a href="/unsecured-business-loan.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Unsecured Business Loan</a>
+                 <a href="/small-business-loans.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Small Business Loans</a>
+                 <a href="/business-loan-for-women.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Business Loan for Women</a>
+                 <a href="/business-loan-for-working-capital.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Business Loan for Working Capital</a>
+                 <a href="/business-loan-scheme-for-msme.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Business Loan Scheme for MSME</a>
+                 <a href="/business-loan-for-proprietorship.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Business Loan for Proprietorship</a>
+                 <a href="/business-loan-for-retail-shop.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Business Loan for Retail Shop</a>
+             </div>
+          </div>
+        </div>
+
         <!-- Personal Loan (Mega Menu) -->
         <div class="group flex items-center border-r border-[#1c2c56]/50 hover:bg-[#1c2c56] transition-colors cursor-pointer relative !bg-transparent text-white">
           <a href="/personal-loan.html" class="py-4 px-3 lg:px-4 font-semibold inline-block whitespace-nowrap !text-white group-hover:!text-white">Personal Loan</a>
@@ -85,36 +130,6 @@
                  <a href="/personal-loan-for-travel.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Personal Loan for Travel</a>
                  <a href="/personal-loan-for-medical-emergency.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Personal Loan for Medical Emergency</a>
                  <a href="/personal-loan-for-women.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Personal Loan For Women</a>
-             </div>
-          </div>
-        </div>
-
-        <!-- Business Loan (Mega Menu) -->
-        <div class="group flex items-center border-r border-[#1c2c56]/50 hover:bg-[#1c2c56] transition-colors cursor-pointer relative !bg-transparent text-white">
-          <a href="/business-loan.html" class="py-4 px-3 lg:px-4 font-semibold inline-block whitespace-nowrap !text-white group-hover:!text-white">Business Loan</a>
-          
-          <!-- Mega Menu Dropdown -->
-          <div class="absolute top-full left-0 w-max bg-surface text-on-surface shadow-2xl border-t-2 border-secondary hidden group-hover:flex p-8 gap-12 rounded-b-xl z-50">
-             <!-- Column 1 -->
-             <div class="flex flex-col gap-3 min-w-[220px]">
-                 <a href="/business-loan.html" class="font-semibold text-primary hover:text-secondary transition-colors py-1">Business Loan Overview</a>
-                 <a href="/business-loan-features-and-benefits.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Features & Benefits</a>
-                 <a href="/business-loan-eligibility-and-documents.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Eligibility & Documents</a>
-                 <a href="/business-loan-interest-rates-and-charges.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Interest Rates & Charges</a>
-                 <a href="/calculator.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">EMI Calculator</a>
-                 <a href="/business-loan-faq.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">FAQs</a>
-                 <a href="/apply.html?type=Business+Loan" class="mt-4 bg-primary text-white text-center py-2.5 rounded-lg hover:bg-opacity-90 font-bold shadow-md transition-all">Apply Now</a>
-             </div>
-
-             <!-- Column 2 -->
-             <div class="flex flex-col gap-3 min-w-[220px]">
-                 <a href="/unsecured-business-loan.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Unsecured Business Loan</a>
-                 <a href="/small-business-loans.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Small Business Loans</a>
-                 <a href="/business-loan-for-women.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Business Loan for Women</a>
-                 <a href="/business-loan-for-working-capital.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Business Loan for Working Capital</a>
-                 <a href="/business-loan-scheme-for-msme.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Business Loan Scheme for MSME</a>
-                 <a href="/business-loan-for-proprietorship.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Business Loan for Proprietorship</a>
-                 <a href="/business-loan-for-retail-shop.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Business Loan for Retail Shop</a>
              </div>
           </div>
         </div>
@@ -250,3 +265,32 @@
   </div>
 </header>
 <!-- END HEADER -->
+<script nonce="<%= nonce %>">
+document.addEventListener("DOMContentLoaded", function () {
+  var menuBtn = document.getElementById('mobile-menu-btn');
+  var menuPanel = document.getElementById('mobile-menu-panel');
+  var menuIcon = document.getElementById('mobile-menu-icon');
+  if (menuBtn && menuPanel) {
+    menuBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var isHidden = menuPanel.classList.contains('hidden');
+      if (isHidden) {
+        menuPanel.classList.remove('hidden');
+        menuBtn.setAttribute('aria-expanded', 'true');
+        if (menuIcon) menuIcon.textContent = 'close';
+      } else {
+        menuPanel.classList.add('hidden');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        if (menuIcon) menuIcon.textContent = 'menu';
+      }
+    });
+    document.addEventListener('click', function(e) {
+      if (!menuPanel.classList.contains('hidden') && !menuBtn.contains(e.target) && !menuPanel.contains(e.target)) {
+        menuPanel.classList.add('hidden');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        if (menuIcon) menuIcon.textContent = 'menu';
+      }
+    });
+  }
+});
+</script>
