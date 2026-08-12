@@ -8,7 +8,8 @@ export default {
     "./*.html",
     "./blogs/**/*.html",
     "./personal-loan-faq/**/*.html",
-    "./js/**/*.js"
+    "./js/**/*.js",
+    "./views/**/*.ejs"
   ],
   theme: {
     extend: {
@@ -99,8 +100,12 @@ export default {
       }
     }
   },
+  corePlugins: {
+    preflight: false,
+    container: false,
+    visibility: false,
+  },
   plugins: [
-    tailwindcssForms,
     tailwindcssContainerQueries
   ]
 };
