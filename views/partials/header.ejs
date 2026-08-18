@@ -1,13 +1,13 @@
 <!-- START HEADER -->
 <!-- iOS Compatibility Fixes -->
-<style>
+<style nonce="<%= nonce %>">
   @media screen and (max-width: 768px) {
     input, select, textarea {
       font-size: 16px !important;
     }
   }
 </style>
-<script>
+<script nonce="<%= nonce %>">
   document.addEventListener("DOMContentLoaded", function() {
     document.body.setAttribute("ontouchstart", "");
   });
@@ -83,7 +83,7 @@
              <!-- Column 2 -->
              <div class="flex flex-col gap-3 min-w-[220px]">
                  <a href="/unsecured-business-loan.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Unsecured Business Loan</a>
-                 <a href="/small-business-loans.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Small Business Loans</a>
+                 <a href="/business-loan.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Small Business Loans</a>
                  <a href="/business-loan-for-women.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Business Loan for Women</a>
                  <a href="/business-loan-for-working-capital.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Business Loan for Working Capital</a>
                  <a href="/business-loan-scheme-for-msme.html" class="hover:text-secondary transition-colors py-1 text-on-surface-variant">Business Loan Scheme for MSME</a>
@@ -271,6 +271,13 @@ document.addEventListener("DOMContentLoaded", function () {
   var menuPanel = document.getElementById('mobile-menu-panel');
   var menuIcon = document.getElementById('mobile-menu-icon');
   if (menuBtn && menuPanel) {
+    // Clone the button to strip ALL previously attached event listeners
+    // (fixes double-binding when pages have their own inline menu scripts)
+    var freshBtn = menuBtn.cloneNode(true);
+    menuBtn.parentNode.replaceChild(freshBtn, menuBtn);
+    menuBtn = freshBtn;
+    menuIcon = document.getElementById('mobile-menu-icon');
+
     menuBtn.addEventListener('click', function (e) {
       e.stopPropagation();
       var isHidden = menuPanel.classList.contains('hidden');
@@ -291,6 +298,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (menuIcon) menuIcon.textContent = 'menu';
       }
     });
+    // Mark as initialized to prevent scripts.js from adding another listener
+    menuBtn.dataset.menuInitialized = "true";
   }
 });
 </script>

@@ -30,17 +30,18 @@ app.use(helmet({
         (req, res) => `'nonce-${res.locals.nonce}'`,
         "https://www.gstatic.com",
         "https://*.googleapis.com",
-        "https://*.firebaseio.com"
+        "https://*.firebaseio.com",
+        "https://cdnjs.cloudflare.com"
       ],
       "script-src-attr": ["'unsafe-inline'"], // Scoped exception to allow inline event handlers (onclick, etc.) without exposing the whole policy
       "style-src": [
         "'self'", 
-        "'unsafe-inline'", // Ignored by modern browsers due to nonce, acts as fallback
-        (req, res) => `'nonce-${res.locals.nonce}'`,
-        "https://fonts.googleapis.com"
+        "'unsafe-inline'",
+        "https://fonts.googleapis.com",
+        "https://cdnjs.cloudflare.com"
       ],
       "style-src-attr": ["'unsafe-inline'"],
-      "font-src": ["'self'", "data:", "https://fonts.gstatic.com"],
+      "font-src": ["'self'", "data:", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
       "img-src": ["'self'", "data:", "https://firebasestorage.googleapis.com", "https://*.googleapis.com"],
       "connect-src": [
         "'self'", 

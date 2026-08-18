@@ -97,3 +97,45 @@ window.validDigits = validDigits;
     initMobileMenu();
   }
 })();
+
+
+// Accordion Fix
+document.addEventListener('DOMContentLoaded', function() {
+    var headers = document.querySelectorAll('.js-accordion-header');
+    headers.forEach(function(header) {
+        header.addEventListener('click', function(e) {
+            e.preventDefault();
+            var item = this.parentElement;
+            item.classList.toggle('active');
+        });
+    });
+});
+
+// Remove placeholder from inputs with a static label to prevent overlap
+document.addEventListener('DOMContentLoaded', function() {
+    var inputs = document.querySelectorAll('input, textarea');
+    inputs.forEach(function(input) {
+        if (input.id) {
+            var label = document.querySelector('label[for="' + input.id + '"]');
+            if (label) {
+                input.removeAttribute('placeholder');
+            }
+        }
+    });
+    // Use MutationObserver to remove placeholder if added dynamically later
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'placeholder') {
+                var el = mutation.target;
+                if (el.id && document.querySelector('label[for="' + el.id + '"]')) {
+                    el.removeAttribute('placeholder');
+                }
+            }
+        });
+    });
+    inputs.forEach(function(input) {
+        if (input.id && document.querySelector('label[for="' + input.id + '"]')) {
+            observer.observe(input, { attributes: true });
+        }
+    });
+});

@@ -68,7 +68,7 @@
 
   <!-- FIREBASE SCRIPTS -->
   <script nonce="<%= nonce %>" type="module">
-    import { auth } from "./firebaseConfig.js";
+    import { auth } from "/js/firebaseConfig.js";
     import { signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const errorBox = document.getElementById('error-box');
