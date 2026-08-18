@@ -11,3 +11,7 @@
 .inner_banner { padding-top: 136px !important; }
 @media (max-width: 991px) { .inner_banner { padding-top: 86px !important; } }
 
+
+body { padding-top: 116px; }
+@media (max-width: 1024px) { body { padding-top: 80px; } }
+
