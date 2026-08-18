@@ -153,12 +153,8 @@ const renderPage = (res, viewName, next) => {
       return next(err);
     }
     
-    let finalData = html;
-    if (html.includes('</body>') && !html.includes('chatbot.js')) {
-      finalData = html.replace('</body>', '<script src="/js/chatbot.js"></script>\n</body>');
-    }
     res.setHeader('Content-Type', 'text/html');
-    return res.send(finalData);
+    return res.send(html);
   });
 };
 
@@ -198,71 +194,14 @@ pageRouter.get('*', (req, res, next) => {
 
 app.use(pageRouter);
 
-// 2. Chat API Proxy for the frontend chatbot
-const chatLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 30, // Limit each IP to 30 requests per `window` (here, per 15 minutes)
-  message: { error: 'Too many requests from this IP, please try again after 15 minutes' },
-  standardHeaders: true, 
-  legacyHeaders: false, 
-});
 
-app.post('/api/chat', chatLimiter, async (req, res) => {
-  try {
-    const { message, history } = req.body;
-    if (!message) {
-      return res.status(400).json({ error: 'Message is required' });
-    }
-
-    const ai = getGeminiClient();
-
-    // Map the conversation history to standard format required by the GoogleGenAI SDK
-    const contents = [];
-    if (Array.isArray(history)) {
-      history.forEach(item => {
-        if (item.text && (item.role === 'user' || item.role === 'model')) {
-          contents.push({
-            role: item.role,
-            parts: [{ text: item.text }]
-          });
-        }
-      });
-    }
-
-    // Append the current message
-    contents.push({
-      role: 'user',
-      parts: [{ text: message }]
-    });
-
-    // Request text response from Gemini 3.5
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash',
-      contents: contents,
-      config: {
-        systemInstruction: systemInstruction,
-        temperature: 0.7
-      }
-    });
-
-    const replyText = response.text || "How can I help you with your loan options today?";
-    res.json({ text: replyText });
-  } catch (err) {
-    console.error('Gemini Assistant Error:', err.message);
-    res.status(500).json({ error: 'I am unable to answer right now. Please check if the GEMINI_API_KEY secret is configured in the Settings menu.' });
-  }
-});
 
 // 404 Error Handler
 app.use((req, res, next) => {
   res.status(404).render('pages/404', {}, (err, html) => {
     if (err) return res.status(404).send('404 - Page not found');
-    let finalData = html;
-    if (html.includes('</body>') && !html.includes('chatbot.js')) {
-      finalData = html.replace('</body>', '<script src="/js/chatbot.js"></script>\n</body>');
-    }
     res.setHeader('Content-Type', 'text/html');
-    res.send(finalData);
+    res.send(html);
   });
 });
 
