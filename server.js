@@ -31,7 +31,8 @@ app.use(helmet({
         "https://www.gstatic.com",
         "https://*.googleapis.com",
         "https://*.firebaseio.com",
-        "https://cdnjs.cloudflare.com"
+        "https://cdnjs.cloudflare.com",
+        "https://cdn.jsdelivr.net"
       ],
       "script-src-attr": ["'unsafe-inline'"], // Scoped exception to allow inline event handlers (onclick, etc.) without exposing the whole policy
       "style-src": [
@@ -48,7 +49,7 @@ app.use(helmet({
         "https://*.googleapis.com", 
         "https://*.firebaseio.com"
       ],
-      "frame-src": ["'self'", "https://www.google.com"]
+      "frame-src": ["'self'", "https://www.google.com", "https://maps.google.com"]
     },
   },
 }));
