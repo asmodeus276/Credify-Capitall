@@ -856,6 +856,16 @@
 
       showToast(`Welcome! Your registered DSA Partner Code is: ${customDsa}`);
       render();
+
+      try {
+        fetch('/api/submit-partner', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, agency, email, mobile, city, dsaCode: customDsa })
+        }).catch(e => console.error(e));
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     function handleLogout() {

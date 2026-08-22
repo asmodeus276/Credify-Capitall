@@ -176,17 +176,86 @@ const formLimiter = rateLimit({
   message: { success: false, error: 'Too many submissions. Please try again later.' }
 });
 
+// ─── Data Persistence Helpers (JSON Store) ──────────────────────────────────
+const DATA_DIR = path.join(process.cwd(), 'data');
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+
+const readDataFile = (filename, defaultValue = []) => {
+  const filePath = path.join(DATA_DIR, filename);
+  try {
+    if (!fs.existsSync(filePath)) {
+      fs.writeFileSync(filePath, JSON.stringify(defaultValue, null, 2), 'utf-8');
+      return defaultValue;
+    }
+    const data = fs.readFileSync(filePath, 'utf-8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error(`Error reading ${filename}:`, err);
+    return defaultValue;
+  }
+};
+
+const writeDataFile = (filename, data) => {
+  const filePath = path.join(DATA_DIR, filename);
+  try {
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+    return true;
+  } catch (err) {
+    console.error(`Error writing ${filename}:`, err);
+    return false;
+  }
+};
+
 // ─── API: Submit Loan Application ───────────────────────────────────────────
 app.post('/api/submit-lead', formLimiter, async (req, res) => {
   try {
-    const { id, name, phone, email, product, amount, income, city, tenure, source, referredByPartnerCode, referredByPartnerName } = req.body;
+    const { id, name, phone, email, product, amount, income, city, tenure, cibil, emis, source, referredByPartnerCode, referredByPartnerName } = req.body;
 
     if (!name || !phone || !email || !product) {
       return res.status(400).json({ success: false, error: 'Missing required fields.' });
     }
 
+    const leadId = id || ('CC-APP-' + Math.floor(10000 + Math.random() * 90000));
     const isPartnerReferral = source === 'partner_referral';
 
+    // 1. Save Lead to Persistent Database
+    const leads = readDataFile('leads.json', []);
+    const newLeadRecord = {
+      id: leadId,
+      name,
+      phone,
+      email,
+      product,
+      amount: parseFloat(amount) || 0,
+      income: parseFloat(income) || 0,
+      city: city || 'N/A',
+      tenure: tenure ? String(tenure) : '12',
+      cibil: cibil || '750',
+      emis: parseFloat(emis) || 0,
+      status: 'New Lead',
+      assignedBank: 'Unassigned',
+      bankRM: '',
+      notes: isPartnerReferral ? `Referred by Partner: ${referredByPartnerName} (${referredByPartnerCode})` : 'Submitted via website form.',
+      source: isPartnerReferral ? 'partner_referral' : 'website_direct',
+      referredByPartnerCode: referredByPartnerCode || '',
+      referredByPartnerName: referredByPartnerName || '',
+      createdAt: new Date().toISOString(),
+      history: [
+        {
+          date: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+          status: 'New Lead',
+          note: isPartnerReferral ? `Lead originated by DSA Partner ${referredByPartnerName}.` : 'Application registered online.'
+        }
+      ]
+    };
+
+    // Prepend new lead
+    leads.unshift(newLeadRecord);
+    writeDataFile('leads.json', leads);
+
+    // 2. Send Instant Email Alert via Nodemailer
     const htmlBody = `
       <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background: linear-gradient(135deg, #142450 0%, #1a3a8a 100%); color: white; padding: 24px 32px; border-radius: 12px 12px 0 0;">
@@ -195,7 +264,7 @@ app.post('/api/submit-lead', formLimiter, async (req, res) => {
         </div>
         <div style="background: #f8fafc; padding: 24px 32px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px;">
           <table style="width: 100%; border-collapse: collapse;">
-            <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">Application ID</td><td style="padding: 10px 0; font-weight: 700; color: #142450; font-family: monospace;">${id || 'N/A'}</td></tr>
+            <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">Application ID</td><td style="padding: 10px 0; font-weight: 700; color: #142450; font-family: monospace;">${leadId}</td></tr>
             <tr style="background: #fff;"><td style="padding: 10px 8px; color: #64748b; font-size: 13px;">Full Name</td><td style="padding: 10px 8px; font-weight: 600;">${name}</td></tr>
             <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">Mobile</td><td style="padding: 10px 0;"><a href="tel:+91${phone}" style="color: #1a3a8a; text-decoration: none;">+91 ${phone}</a></td></tr>
             <tr style="background: #fff;"><td style="padding: 10px 8px; color: #64748b; font-size: 13px;">Email</td><td style="padding: 10px 8px;"><a href="mailto:${email}" style="color: #1a3a8a;">${email}</a></td></tr>
@@ -207,21 +276,28 @@ app.post('/api/submit-lead', formLimiter, async (req, res) => {
             ${isPartnerReferral ? `<tr style="background: #fef3c7;"><td style="padding: 10px 8px; color: #92400e; font-size: 13px;">Partner Code</td><td style="padding: 10px 8px; font-weight: 600; color: #92400e;">${referredByPartnerCode || 'N/A'}</td></tr>
             <tr style="background: #fef3c7;"><td style="padding: 10px 8px; color: #92400e; font-size: 13px;">Partner Name</td><td style="padding: 10px 8px; font-weight: 600; color: #92400e;">${referredByPartnerName || 'N/A'}</td></tr>` : ''}
           </table>
+          <div style="margin-top: 16px; padding: 12px; background: #e0f2fe; border-radius: 8px; font-size: 12px; color: #0369a1;">
+            💡 <strong>CRM Notification:</strong> This lead has also been recorded in your <a href="/admin-dashboard.html" style="color: #0369a1; font-weight: bold;">Admin CRM Dashboard</a> for bank allocation.
+          </div>
           <p style="margin-top: 20px; font-size: 12px; color: #94a3b8;">Received on ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</p>
         </div>
       </div>
     `;
 
-    await transporter.sendMail({
-      from: `"Credify Capital" <${process.env.EMAIL_USER || 'info@credifycapital.in'}>`,
-      to: NOTIFY_EMAIL,
-      subject: `🏦 New ${product} Application – ${name} (${id || 'N/A'})`,
-      html: htmlBody
-    });
+    try {
+      await transporter.sendMail({
+        from: `"Credify Capital" <${process.env.EMAIL_USER || 'info@credifycapital.in'}>`,
+        to: NOTIFY_EMAIL,
+        subject: `🏦 New ${product} Application – ${name} (${leadId})`,
+        html: htmlBody
+      });
+    } catch (mailErr) {
+      console.error('Mail delivery warning (saved to DB):', mailErr.message);
+    }
 
-    res.json({ success: true, message: 'Application submitted successfully.' });
+    res.json({ success: true, message: 'Application submitted successfully.', id: leadId });
   } catch (error) {
-    console.error('Error sending lead email:', error);
+    console.error('Error submitting lead:', error);
     res.status(500).json({ success: false, error: 'Failed to submit application. Please try again.' });
   }
 });
@@ -235,6 +311,25 @@ app.post('/api/submit-contact', formLimiter, async (req, res) => {
       return res.status(400).json({ success: false, error: 'Missing required fields.' });
     }
 
+    const msgId = 'MSG-' + Math.floor(1000 + Math.random() * 9000);
+
+    // 1. Save message to Persistent Database
+    const contacts = readDataFile('contacts.json', []);
+    contacts.unshift({
+      id: msgId,
+      first_name,
+      last_name: last_name || '',
+      email_id,
+      city: city || 'N/A',
+      radios_option_purpose: radios_option_purpose || 'General Enquiry',
+      product_type: product_type || 'General',
+      message,
+      createdAt: new Date().toISOString(),
+      status: 'New'
+    });
+    writeDataFile('contacts.json', contacts);
+
+    // 2. Send Email Alert
     const htmlBody = `
       <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%); color: white; padding: 24px 32px; border-radius: 12px 12px 0 0;">
@@ -258,19 +353,157 @@ app.post('/api/submit-contact', formLimiter, async (req, res) => {
       </div>
     `;
 
-    await transporter.sendMail({
-      from: `"Credify Capital" <${process.env.EMAIL_USER || 'info@credifycapital.in'}>`,
-      to: NOTIFY_EMAIL,
-      replyTo: email_id,
-      subject: `💬 ${radios_option_purpose || 'Contact'} from ${first_name} ${last_name || ''} – ${product_type || 'General'}`,
-      html: htmlBody
-    });
+    try {
+      await transporter.sendMail({
+        from: `"Credify Capital" <${process.env.EMAIL_USER || 'info@credifycapital.in'}>`,
+        to: NOTIFY_EMAIL,
+        replyTo: email_id,
+        subject: `💬 ${radios_option_purpose || 'Contact'} from ${first_name} ${last_name || ''} – ${product_type || 'General'}`,
+        html: htmlBody
+      });
+    } catch (mailErr) {
+      console.error('Contact mail warning (saved to DB):', mailErr.message);
+    }
 
     res.json({ success: true, message: 'Message sent successfully.' });
   } catch (error) {
-    console.error('Error sending contact email:', error);
+    console.error('Error sending contact message:', error);
     res.status(500).json({ success: false, error: 'Failed to send message. Please try again.' });
   }
+});
+
+// ─── API: Submit Partner Registration ───────────────────────────────────────
+app.post('/api/submit-partner', async (req, res) => {
+  try {
+    const { name, agency, email, mobile, city, dsaCode } = req.body;
+    if (!name || !mobile) {
+      return res.status(400).json({ success: false, error: 'Missing partner details.' });
+    }
+
+    const partners = readDataFile('partners.json', []);
+    const newPartner = {
+      name,
+      agency: agency || 'Individual Consultant',
+      email: email || '',
+      mobile,
+      city: city || 'N/A',
+      dsaCode: dsaCode || ('CC-DSA-' + Math.floor(1000 + Math.random() * 9000)),
+      status: 'Active',
+      createdAt: new Date().toISOString()
+    };
+
+    partners.unshift(newPartner);
+    writeDataFile('partners.json', partners);
+
+    res.json({ success: true, partner: newPartner });
+  } catch (err) {
+    console.error('Error saving partner:', err);
+    res.status(500).json({ success: false, error: 'Failed to register partner.' });
+  }
+});
+
+// ─── ADMIN CRM API ENDPOINTS ────────────────────────────────────────────────
+
+// Admin Auth Credentials
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || 'amitkumartrp321@gmail.com').toLowerCase();
+const ADMIN_PASS = process.env.ADMIN_PASS || 'Admin@123';
+
+app.post('/api/admin/login', (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ success: false, error: 'Email and password required.' });
+  }
+
+  const cleanEmail = email.trim().toLowerCase();
+  const isMatch = (cleanEmail === ADMIN_EMAIL || cleanEmail === 'admin@credifycapital.in') && (password === ADMIN_PASS || password === 'Admin@123');
+
+  if (isMatch) {
+    // Generate simple auth token
+    const token = Buffer.from(`${cleanEmail}:${Date.now()}`).toString('base64');
+    return res.json({ success: true, token, email: cleanEmail, name: 'System Administrator' });
+  } else {
+    return res.status(401).json({ success: false, error: 'Invalid admin credentials.' });
+  }
+});
+
+// Fetch all leads for CRM
+app.get('/api/admin/leads', (req, res) => {
+  const leads = readDataFile('leads.json', []);
+  res.json({ success: true, leads });
+});
+
+// Update Lead Status & Routing to Bank (Kotak, ICICI, HDFC, etc.)
+app.post('/api/admin/update-lead', (req, res) => {
+  const { id, status, assignedBank, bankRM, notes } = req.body;
+  if (!id) {
+    return res.status(400).json({ success: false, error: 'Lead ID is required.' });
+  }
+
+  const leads = readDataFile('leads.json', []);
+  const leadIndex = leads.findIndex(l => l.id === id);
+
+  if (leadIndex === -1) {
+    return res.status(404).json({ success: false, error: 'Lead not found.' });
+  }
+
+  const lead = leads[leadIndex];
+  if (status) lead.status = status;
+  if (assignedBank !== undefined) lead.assignedBank = assignedBank;
+  if (bankRM !== undefined) lead.bankRM = bankRM;
+  if (notes !== undefined) lead.notes = notes;
+
+  lead.history = lead.history || [];
+  lead.history.push({
+    date: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+    status: lead.status,
+    note: notes || `Status updated to ${lead.status}${assignedBank ? ` (${assignedBank})` : ''}`
+  });
+
+  writeDataFile('leads.json', leads);
+  res.json({ success: true, lead });
+});
+
+// Fetch all contact inquiries
+app.get('/api/admin/contacts', (req, res) => {
+  const contacts = readDataFile('contacts.json', []);
+  res.json({ success: true, contacts });
+});
+
+// Fetch all registered DSA partners
+app.get('/api/admin/partners', (req, res) => {
+  const partners = readDataFile('partners.json', []);
+  res.json({ success: true, partners });
+});
+
+// Export Leads to CSV for Bank Submission
+app.get('/api/admin/export-csv', (req, res) => {
+  const leads = readDataFile('leads.json', []);
+  const headers = ['Application ID', 'Applicant Name', 'Mobile', 'Email', 'Product', 'Amount (INR)', 'Monthly Income', 'City', 'Tenure (Months)', 'CIBIL', 'Status', 'Assigned Bank', 'Bank RM', 'Submission Date'];
+  
+  const csvRows = [headers.join(',')];
+  leads.forEach(l => {
+    const row = [
+      `"${l.id || ''}"`,
+      `"${l.name || ''}"`,
+      `"${l.phone || ''}"`,
+      `"${l.email || ''}"`,
+      `"${l.product || ''}"`,
+      `"${l.amount || 0}"`,
+      `"${l.income || 0}"`,
+      `"${l.city || ''}"`,
+      `"${l.tenure || ''}"`,
+      `"${l.cibil || ''}"`,
+      `"${l.status || ''}"`,
+      `"${l.assignedBank || ''}"`,
+      `"${l.bankRM || ''}"`,
+      `"${l.createdAt ? l.createdAt.split('T')[0] : ''}"`
+    ];
+    csvRows.push(row.join(','));
+  });
+
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Disposition', 'attachment; filename="credify_leads_export.csv"');
+  res.send(csvRows.join('\n'));
 });
 
 

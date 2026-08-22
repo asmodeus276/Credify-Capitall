@@ -1,0 +1,14 @@
+[
+  {
+    "id": "MSG-1001",
+    "first_name": "Rohan",
+    "last_name": "Mehta",
+    "email_id": "rohan.mehta@example.com",
+    "city": "Pune",
+    "radios_option_purpose": "Loan Enquiry",
+    "product_type": "Business Loan",
+    "message": "Looking for a working capital line of credit of around 50 Lakhs for pharmaceutical manufacturing unit.",
+    "createdAt": "2026-08-21T16:00:00.000Z",
+    "status": "New"
+  }
+]

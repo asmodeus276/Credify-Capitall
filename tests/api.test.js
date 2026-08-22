@@ -43,4 +43,43 @@ describe('API Tests', () => {
     const data = await res.json();
     assert.strictEqual(data.success, false);
   });
+
+  it('POST /api/admin/login should validate admin credentials', async () => {
+    const res = await fetch(`${baseUrl}/api/admin/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'amitkumartrp321@gmail.com', password: 'Admin@123' })
+    });
+
+    assert.strictEqual(res.status, 200);
+    const data = await res.json();
+    assert.strictEqual(data.success, true);
+    assert.ok(data.token);
+  });
+
+  it('GET /api/admin/leads should return list of leads', async () => {
+    const res = await fetch(`${baseUrl}/api/admin/leads`);
+    assert.strictEqual(res.status, 200);
+    const data = await res.json();
+    assert.strictEqual(data.success, true);
+    assert.ok(Array.isArray(data.leads));
+  });
+
+  it('POST /api/admin/update-lead should update bank assignment', async () => {
+    const res = await fetch(`${baseUrl}/api/admin/update-lead`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: 'CC-APP-8104',
+        assignedBank: 'Kotak Mahindra Bank',
+        status: 'Forwarded to Bank',
+        notes: 'Assigned to Kotak SME Desk'
+      })
+    });
+
+    assert.strictEqual(res.status, 200);
+    const data = await res.json();
+    assert.strictEqual(data.success, true);
+    assert.strictEqual(data.lead.assignedBank, 'Kotak Mahindra Bank');
+  });
 });

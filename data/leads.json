@@ -1,0 +1,108 @@
+[
+  {
+    "id": "CC-APP-8104",
+    "name": "Ananya Sharma",
+    "phone": "9876543210",
+    "email": "ananya.sharma@example.com",
+    "product": "Business Loan",
+    "amount": 2500000,
+    "income": 180000,
+    "city": "Mumbai",
+    "tenure": "36",
+    "cibil": "760",
+    "status": "Forwarded to Bank",
+    "assignedBank": "Kotak Mahindra Bank",
+    "bankRM": "Rajesh Nair (Kotak SME Branch)",
+    "source": "partner_referral",
+    "referredByPartnerCode": "CC-DSA-9842",
+    "referredByPartnerName": "Suresh Patel",
+    "notes": "Assigned to Kotak SME Desk",
+    "createdAt": "2026-08-15T11:30:00.000Z",
+    "history": [
+      {
+        "date": "2026-08-15 11:30",
+        "status": "New Lead",
+        "note": "Lead submitted via partner portal."
+      },
+      {
+        "date": "2026-08-16 14:10",
+        "status": "Forwarded to Bank",
+        "note": "Forwarded to Kotak Mahindra Bank SME desk."
+      },
+      {
+        "date": "2026-08-18 10:00",
+        "status": "Sanctioned",
+        "note": "Sanction letter issued."
+      },
+      {
+        "date": "2026-08-19 16:45",
+        "status": "Disbursed",
+        "note": "Funds disbursed to borrower account."
+      },
+      {
+        "date": "22/8/2026, 1:50:11 pm",
+        "status": "Forwarded to Bank",
+        "note": "Assigned to Kotak SME Desk"
+      }
+    ]
+  },
+  {
+    "id": "CC-APP-31330",
+    "name": "Trilok Singh",
+    "phone": "9312614747",
+    "email": "trilok.singh@example.com",
+    "product": "Business Loan",
+    "amount": 500000,
+    "income": 50000,
+    "city": "Delhi NCR",
+    "tenure": "36",
+    "cibil": "720",
+    "status": "Forwarded to Bank",
+    "assignedBank": "ICICI Bank",
+    "bankRM": "Pooja Verma (ICICI Business Banking)",
+    "source": "website_direct",
+    "referredByPartnerCode": "",
+    "referredByPartnerName": "",
+    "notes": "Profile eligible for ICICI InstaBIZ unsecured scheme. Underwriter reviewing.",
+    "createdAt": "2026-08-20T09:15:00.000Z",
+    "history": [
+      {
+        "date": "2026-08-20 09:15",
+        "status": "New Lead",
+        "note": "Direct website application."
+      },
+      {
+        "date": "2026-08-21 11:30",
+        "status": "Forwarded to Bank",
+        "note": "Forwarded to ICICI Bank."
+      }
+    ]
+  },
+  {
+    "id": "CC-APP-2045",
+    "name": "Rajesh Verma",
+    "phone": "9811223344",
+    "email": "rajesh.verma@example.com",
+    "product": "Personal Loan",
+    "amount": 350000,
+    "income": 45000,
+    "city": "Ghaziabad",
+    "tenure": "24",
+    "cibil": "740",
+    "status": "New Lead",
+    "assignedBank": "Unassigned",
+    "bankRM": "",
+    "source": "website_direct",
+    "referredByPartnerCode": "",
+    "referredByPartnerName": "",
+    "notes": "Awaiting salary slip verification.",
+    "createdAt": "2026-08-21T14:20:00.000Z",
+    "history": [
+      {
+        "date": "2026-08-21 14:20",
+        "status": "New Lead",
+        "note": "Application received."
+      }
+    ]
+  }
+]
