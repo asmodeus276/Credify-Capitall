@@ -149,7 +149,7 @@ pageRouter.get('*', (req, res, next) => {
   renderPage(res, viewName, next);
 });
 
-app.use(pageRouter);
+// (Page router will be mounted after API routes below)
 
 // ─── Nodemailer Transporter Setup ───────────────────────────────────────────
 const transporter = nodemailer.createTransport({
@@ -507,6 +507,9 @@ app.get('/api/admin/export-csv', (req, res) => {
 });
 
 
+
+// Mount Page Router
+app.use(pageRouter);
 
 // 404 Error Handler
 app.use((req, res, next) => {
