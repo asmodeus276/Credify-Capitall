@@ -48,6 +48,11 @@
         "date": "22/8/2026, 1:58:31 pm",
         "status": "Forwarded to Bank",
         "note": "Assigned to Kotak SME Desk"
+      },
+      {
+        "date": "22/8/2026, 2:00:52 pm",
+        "status": "Forwarded to Bank",
+        "note": "Assigned to Kotak SME Desk"
       }
     ]
   },
@@ -80,6 +85,11 @@
         "date": "2026-08-21 11:30",
         "status": "Forwarded to Bank",
         "note": "Forwarded to ICICI Bank."
+      },
+      {
+        "date": "22/8/2026, 1:59:27 pm",
+        "status": "Forwarded to Bank",
+        "note": "Profile eligible for ICICI InstaBIZ unsecured scheme. Underwriter reviewing."
       }
     ]
   },
