@@ -65,13 +65,13 @@
       </div>
 
       <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-        <button id="btn-export-csv" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition">
+        <button id="btn-export-csv" onclick="downloadLeadsCSV()" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition cursor-pointer">
           <span class="material-symbols-outlined text-sm">download</span> Export Leads (CSV)
         </button>
-        <button id="btn-export-pdf" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition">
+        <button id="btn-export-pdf" onclick="downloadLeadsPDF()" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition cursor-pointer">
           <span class="material-symbols-outlined text-sm">picture_as_pdf</span> Export Report (PDF)
         </button>
-        <button id="btn-admin-logout" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition">
+        <button id="btn-admin-logout" onclick="handleAdminLogout()" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition cursor-pointer">
           <span class="material-symbols-outlined text-sm">logout</span> Secure Logout
         </button>
       </div>
@@ -364,46 +364,59 @@
     window.handleAdminLogout = handleAdminLogout;
 
     // Export Leads to CSV (Client-side Blob download)
-    function downloadLeadsCSV() {
-      if (!leadsData || leadsData.length === 0) {
-        showToast('No leads available to export.', 'error');
-        return;
+    async function downloadLeadsCSV() {
+      try {
+        if (!leadsData || leadsData.length === 0) {
+          const res = await fetch('/api/admin/leads');
+          const json = await res.json();
+          leadsData = (json && json.leads) || [];
+        }
+
+        if (!leadsData || leadsData.length === 0) {
+          showToast('No leads available to export.', 'error');
+          return;
+        }
+
+        const headers = ['Application ID', 'Applicant Name', 'Mobile', 'Email', 'Product', 'Amount (INR)', 'Monthly Income', 'City', 'Tenure (Months)', 'CIBIL', 'Status', 'Assigned Bank', 'Bank RM', 'Submission Date', 'Notes'];
+        const rows = [headers.join(',')];
+
+        leadsData.forEach(l => {
+          const row = [
+            `"${l.id || ''}"`,
+            `"${(l.name || '').replace(/"/g, '""')}"`,
+            `"${l.phone || ''}"`,
+            `"${l.email || ''}"`,
+            `"${l.product || ''}"`,
+            `"${l.amount || 0}"`,
+            `"${l.income || 0}"`,
+            `"${l.city || ''}"`,
+            `"${l.tenure || ''}"`,
+            `"${l.cibil || ''}"`,
+            `"${l.status || ''}"`,
+            `"${l.assignedBank || ''}"`,
+            `"${(l.bankRM || '').replace(/"/g, '""')}"`,
+            `"${l.createdAt ? l.createdAt.split('T')[0] : ''}"`,
+            `"${(l.notes || '').replace(/"/g, '""')}"`
+          ];
+          rows.push(row.join(','));
+        });
+
+        const csvBlob = new Blob([rows.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+        const downloadUrl = URL.createObjectURL(csvBlob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.setAttribute('download', `credify_leads_export_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(() => {
+          document.body.removeChild(link);
+          URL.revokeObjectURL(downloadUrl);
+        }, 300);
+        showToast('Leads exported to CSV successfully.');
+      } catch (err) {
+        console.error('CSV export error:', err);
+        window.location.href = '/api/admin/export-csv';
       }
-
-      const headers = ['Application ID', 'Applicant Name', 'Mobile', 'Email', 'Product', 'Amount (INR)', 'Monthly Income', 'City', 'Tenure (Months)', 'CIBIL', 'Status', 'Assigned Bank', 'Bank RM', 'Submission Date', 'Notes'];
-      const rows = [headers.join(',')];
-
-      leadsData.forEach(l => {
-        const row = [
-          `"${l.id || ''}"`,
-          `"${(l.name || '').replace(/"/g, '""')}"`,
-          `"${l.phone || ''}"`,
-          `"${l.email || ''}"`,
-          `"${l.product || ''}"`,
-          `"${l.amount || 0}"`,
-          `"${l.income || 0}"`,
-          `"${l.city || ''}"`,
-          `"${l.tenure || ''}"`,
-          `"${l.cibil || ''}"`,
-          `"${l.status || ''}"`,
-          `"${l.assignedBank || ''}"`,
-          `"${(l.bankRM || '').replace(/"/g, '""')}"`,
-          `"${l.createdAt ? l.createdAt.split('T')[0] : ''}"`,
-          `"${(l.notes || '').replace(/"/g, '""')}"`
-        ];
-        rows.push(row.join(','));
-      });
-
-      const csvBlob = new Blob([rows.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
-      const downloadUrl = URL.createObjectURL(csvBlob);
-      const link = document.createElement('a');
-      link.href = downloadUrl;
-      link.setAttribute('download', `credify_leads_export_${new Date().toISOString().split('T')[0]}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(downloadUrl);
-      showToast('Leads exported to CSV successfully.');
     }
     window.downloadLeadsCSV = downloadLeadsCSV;
 
@@ -731,21 +744,17 @@
       }
     }
 
-    // BIND ALL DOM EVENT LISTENERS (Strict CSP Compliant)
-    document.addEventListener('DOMContentLoaded', () => {
-      // Logout Button
+    // BIND ALL DOM EVENT LISTENERS (Strict CSP & immediate execution compliant)
+    function attachAllDashboardListeners() {
       const logoutBtn = document.getElementById('btn-admin-logout');
       if (logoutBtn) logoutBtn.addEventListener('click', handleAdminLogout);
 
-      // Export CSV Button
       const exportCsvBtn = document.getElementById('btn-export-csv');
       if (exportCsvBtn) exportCsvBtn.addEventListener('click', downloadLeadsCSV);
 
-      // Export PDF Button
       const exportPdfBtn = document.getElementById('btn-export-pdf');
       if (exportPdfBtn) exportPdfBtn.addEventListener('click', downloadLeadsPDF);
 
-      // Tabs
       const tabLeads = document.getElementById('tab-leads');
       if (tabLeads) tabLeads.addEventListener('click', () => switchTab('leads'));
       const tabContacts = document.getElementById('tab-contacts');
@@ -753,7 +762,6 @@
       const tabPartners = document.getElementById('tab-partners');
       if (tabPartners) tabPartners.addEventListener('click', () => switchTab('partners'));
 
-      // Search & Filters
       const searchInput = document.getElementById('search-input');
       if (searchInput) searchInput.addEventListener('input', renderTabContent);
       const statusFilter = document.getElementById('status-filter');
@@ -761,7 +769,6 @@
       const bankFilter = document.getElementById('bank-filter');
       if (bankFilter) bankFilter.addEventListener('change', renderTabContent);
 
-      // Modal Events
       const modalCloseX = document.getElementById('modal-close-x-btn');
       if (modalCloseX) modalCloseX.addEventListener('click', closeBankModal);
       const modalCancel = document.getElementById('modal-cancel-btn');
@@ -769,7 +776,6 @@
       const routingForm = document.getElementById('bank-routing-form');
       if (routingForm) routingForm.addEventListener('submit', saveBankAssignment);
 
-      // Event delegation for dynamic table rows (Route / Edit button)
       document.addEventListener('click', (e) => {
         const btn = e.target.closest('.btn-route-lead');
         if (btn) {
@@ -777,7 +783,13 @@
           if (leadId) openBankModal(leadId);
         }
       });
-    });
+    }
+
+    // Call immediately and also on DOM ready
+    attachAllDashboardListeners();
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', attachAllDashboardListeners);
+    }
   </script>
 </body>
 </html>
