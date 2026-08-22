@@ -65,13 +65,13 @@
       </div>
 
       <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-        <button id="btn-export-csv" onclick="downloadLeadsCSV()" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition cursor-pointer">
+        <a href="/api/admin/export-csv" download="credify_leads_export.csv" id="btn-export-csv" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition">
           <span class="material-symbols-outlined text-sm">download</span> Export Leads (CSV)
-        </button>
-        <button id="btn-export-pdf" onclick="downloadLeadsPDF()" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition cursor-pointer">
+        </a>
+        <button type="button" id="btn-export-pdf" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition cursor-pointer">
           <span class="material-symbols-outlined text-sm">picture_as_pdf</span> Export Report (PDF)
         </button>
-        <button id="btn-admin-logout" onclick="handleAdminLogout()" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition cursor-pointer">
+        <button type="button" id="btn-admin-logout" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition cursor-pointer">
           <span class="material-symbols-outlined text-sm">logout</span> Secure Logout
         </button>
       </div>
@@ -255,7 +255,7 @@
           <h3 class="font-extrabold text-base text-primary">Route Lead to Partner Bank</h3>
           <p class="text-xs text-gray-500" id="modal-lead-title">Lead ID: CC-APP-0000</p>
         </div>
-        <button id="modal-close-x-btn" class="text-gray-400 hover:text-gray-600">
+        <button type="button" id="modal-close-x-btn" class="text-gray-400 hover:text-gray-600">
           <span class="material-symbols-outlined">close</span>
         </button>
       </div>
@@ -307,6 +307,27 @@
     </div>
   </div>
 
+  <!-- MODAL: CONFIRM SECURE LOGOUT -->
+  <div id="logout-confirm-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl animate-fade-in relative">
+      <div class="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto">
+        <span class="material-symbols-outlined text-3xl">logout</span>
+      </div>
+      <div>
+        <h3 class="font-extrabold text-lg text-primary">Sign Out of Admin Portal?</h3>
+        <p class="text-xs text-gray-500 mt-1">You will need to enter your admin credentials again to access the CRM.</p>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" id="btn-cancel-logout" class="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-bold text-xs transition cursor-pointer">
+          Cancel
+        </button>
+        <button type="button" id="btn-confirm-logout" class="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold text-xs shadow transition cursor-pointer">
+          Yes, Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <%- include('../partials/footer') %>
 
@@ -348,77 +369,27 @@
       fetchDashboardData();
     }
 
-    // Secure Logout
-    function handleAdminLogout() {
-      if (confirm('Are you sure you want to securely log out of the Admin CRM?')) {
-        localStorage.removeItem('credify_admin_token');
-        localStorage.removeItem('credify_admin_email');
-        localStorage.removeItem('credify_admin_name');
-        sessionStorage.clear();
-        showToast('Signed out of Administrator CRM');
-        setTimeout(() => {
-          window.location.replace("admin-login.html");
-        }, 300);
-      }
+    // Modal Logout Controllers
+    function openLogoutModal() {
+      const modal = document.getElementById('logout-confirm-modal');
+      if (modal) modal.classList.remove('hidden');
     }
-    window.handleAdminLogout = handleAdminLogout;
 
-    // Export Leads to CSV (Client-side Blob download)
-    async function downloadLeadsCSV() {
-      try {
-        if (!leadsData || leadsData.length === 0) {
-          const res = await fetch('/api/admin/leads');
-          const json = await res.json();
-          leadsData = (json && json.leads) || [];
-        }
-
-        if (!leadsData || leadsData.length === 0) {
-          showToast('No leads available to export.', 'error');
-          return;
-        }
-
-        const headers = ['Application ID', 'Applicant Name', 'Mobile', 'Email', 'Product', 'Amount (INR)', 'Monthly Income', 'City', 'Tenure (Months)', 'CIBIL', 'Status', 'Assigned Bank', 'Bank RM', 'Submission Date', 'Notes'];
-        const rows = [headers.join(',')];
-
-        leadsData.forEach(l => {
-          const row = [
-            `"${l.id || ''}"`,
-            `"${(l.name || '').replace(/"/g, '""')}"`,
-            `"${l.phone || ''}"`,
-            `"${l.email || ''}"`,
-            `"${l.product || ''}"`,
-            `"${l.amount || 0}"`,
-            `"${l.income || 0}"`,
-            `"${l.city || ''}"`,
-            `"${l.tenure || ''}"`,
-            `"${l.cibil || ''}"`,
-            `"${l.status || ''}"`,
-            `"${l.assignedBank || ''}"`,
-            `"${(l.bankRM || '').replace(/"/g, '""')}"`,
-            `"${l.createdAt ? l.createdAt.split('T')[0] : ''}"`,
-            `"${(l.notes || '').replace(/"/g, '""')}"`
-          ];
-          rows.push(row.join(','));
-        });
-
-        const csvBlob = new Blob([rows.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
-        const downloadUrl = URL.createObjectURL(csvBlob);
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.setAttribute('download', `credify_leads_export_${new Date().toISOString().split('T')[0]}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        setTimeout(() => {
-          document.body.removeChild(link);
-          URL.revokeObjectURL(downloadUrl);
-        }, 300);
-        showToast('Leads exported to CSV successfully.');
-      } catch (err) {
-        console.error('CSV export error:', err);
-        window.location.href = '/api/admin/export-csv';
-      }
+    function closeLogoutModal() {
+      const modal = document.getElementById('logout-confirm-modal');
+      if (modal) modal.classList.add('hidden');
     }
-    window.downloadLeadsCSV = downloadLeadsCSV;
+
+    function executeLogout() {
+      localStorage.removeItem('credify_admin_token');
+      localStorage.removeItem('credify_admin_email');
+      localStorage.removeItem('credify_admin_name');
+      sessionStorage.clear();
+      showToast('Signed out successfully.');
+      setTimeout(() => {
+        window.location.replace("admin-login.html");
+      }, 200);
+    }
 
     // Export Leads to PDF / Print Report
     function downloadLeadsPDF() {
@@ -426,7 +397,6 @@
       if (printDateEl) printDateEl.textContent = `Generated: ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`;
       window.print();
     }
-    window.downloadLeadsPDF = downloadLeadsPDF;
 
     // Fetch all CRM databases
     async function fetchDashboardData() {
@@ -495,7 +465,6 @@
 
       renderTabContent();
     }
-    window.switchTab = switchTab;
 
     function renderTabContent() {
       const searchInput = document.getElementById('search-input');
@@ -582,7 +551,7 @@
               </span>
             </td>
             <td class="px-5 py-4 text-right no-print">
-              <button data-action="route-lead" data-id="${lead.id}" class="btn-route-lead inline-flex items-center gap-1 bg-primary hover:bg-primary/95 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-xs transition">
+              <button data-action="route-lead" data-id="${lead.id}" class="btn-route-lead inline-flex items-center gap-1 bg-primary hover:bg-primary/95 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-xs transition cursor-pointer">
                 <span class="material-symbols-outlined text-sm">edit_note</span> Route / Edit
               </button>
             </td>
@@ -708,15 +677,14 @@
       document.getElementById('modal-rm-input').value = lead.bankRM || '';
       document.getElementById('modal-notes-input').value = lead.notes || '';
 
-      document.getElementById('bank-modal').classList.remove('hidden');
+      const modal = document.getElementById('bank-modal');
+      if (modal) modal.classList.remove('hidden');
     }
-    window.openBankModal = openBankModal;
 
     function closeBankModal() {
       const modal = document.getElementById('bank-modal');
       if (modal) modal.classList.add('hidden');
     }
-    window.closeBankModal = closeBankModal;
 
     async function saveBankAssignment(e) {
       if (e) e.preventDefault();
@@ -744,17 +712,25 @@
       }
     }
 
-    // BIND ALL DOM EVENT LISTENERS (Strict CSP & immediate execution compliant)
+    // BIND ALL DOM EVENT LISTENERS
     function attachAllDashboardListeners() {
+      // Logout Trigger Button (Opens Confirmation Modal)
       const logoutBtn = document.getElementById('btn-admin-logout');
-      if (logoutBtn) logoutBtn.addEventListener('click', handleAdminLogout);
+      if (logoutBtn) logoutBtn.addEventListener('click', openLogoutModal);
 
-      const exportCsvBtn = document.getElementById('btn-export-csv');
-      if (exportCsvBtn) exportCsvBtn.addEventListener('click', downloadLeadsCSV);
+      // Confirm Logout Button in Modal
+      const confirmLogoutBtn = document.getElementById('btn-confirm-logout');
+      if (confirmLogoutBtn) confirmLogoutBtn.addEventListener('click', executeLogout);
 
+      // Cancel Logout Button in Modal
+      const cancelLogoutBtn = document.getElementById('btn-cancel-logout');
+      if (cancelLogoutBtn) cancelLogoutBtn.addEventListener('click', closeLogoutModal);
+
+      // Export PDF Button
       const exportPdfBtn = document.getElementById('btn-export-pdf');
       if (exportPdfBtn) exportPdfBtn.addEventListener('click', downloadLeadsPDF);
 
+      // Tabs
       const tabLeads = document.getElementById('tab-leads');
       if (tabLeads) tabLeads.addEventListener('click', () => switchTab('leads'));
       const tabContacts = document.getElementById('tab-contacts');
@@ -762,6 +738,7 @@
       const tabPartners = document.getElementById('tab-partners');
       if (tabPartners) tabPartners.addEventListener('click', () => switchTab('partners'));
 
+      // Search & Filters
       const searchInput = document.getElementById('search-input');
       if (searchInput) searchInput.addEventListener('input', renderTabContent);
       const statusFilter = document.getElementById('status-filter');
@@ -769,6 +746,7 @@
       const bankFilter = document.getElementById('bank-filter');
       if (bankFilter) bankFilter.addEventListener('change', renderTabContent);
 
+      // Bank Modal Events
       const modalCloseX = document.getElementById('modal-close-x-btn');
       if (modalCloseX) modalCloseX.addEventListener('click', closeBankModal);
       const modalCancel = document.getElementById('modal-cancel-btn');
@@ -776,6 +754,7 @@
       const routingForm = document.getElementById('bank-routing-form');
       if (routingForm) routingForm.addEventListener('submit', saveBankAssignment);
 
+      // Event delegation for dynamic table rows (Route / Edit button)
       document.addEventListener('click', (e) => {
         const btn = e.target.closest('.btn-route-lead');
         if (btn) {
@@ -785,7 +764,7 @@
       });
     }
 
-    // Call immediately and also on DOM ready
+    // Call immediately & ensure listeners are bound
     attachAllDashboardListeners();
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', attachAllDashboardListeners);

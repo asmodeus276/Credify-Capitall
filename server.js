@@ -484,7 +484,7 @@ app.get('/api/admin/export-csv', (req, res) => {
   leads.forEach(l => {
     const row = [
       `"${l.id || ''}"`,
-      `"${l.name || ''}"`,
+      `"${(l.name || '').replace(/"/g, '""')}"`,
       `"${l.phone || ''}"`,
       `"${l.email || ''}"`,
       `"${l.product || ''}"`,
@@ -495,15 +495,17 @@ app.get('/api/admin/export-csv', (req, res) => {
       `"${l.cibil || ''}"`,
       `"${l.status || ''}"`,
       `"${l.assignedBank || ''}"`,
-      `"${l.bankRM || ''}"`,
+      `"${(l.bankRM || '').replace(/"/g, '""')}"`,
       `"${l.createdAt ? l.createdAt.split('T')[0] : ''}"`
     ];
     csvRows.push(row.join(','));
   });
 
-  res.setHeader('Content-Type', 'text/csv');
+  // UTF-8 BOM (\uFEFF) ensures Excel opens special characters and columns cleanly
+  const csvData = '\uFEFF' + csvRows.join('\r\n');
+  res.setHeader('Content-Type', 'text/csv; charset=utf-8');
   res.setHeader('Content-Disposition', 'attachment; filename="credify_leads_export.csv"');
-  res.send(csvRows.join('\n'));
+  res.send(csvData);
 });
 
 
