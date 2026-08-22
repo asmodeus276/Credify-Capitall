@@ -1,10 +1,12 @@
+import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
-import { GoogleGenAI } from '@google/genai';
+import { fileURLToPath } from 'url';
 import helmet from 'helmet';
 import crypto from 'crypto';
 import rateLimit from 'express-rate-limit';
+import nodemailer from 'nodemailer';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -62,55 +64,9 @@ app.use((req, res, next) => {
 
 // Body parser for JSON endpoints
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Lazy-loaded Gemini client setup
-let aiClient = null;
-function getGeminiClient() {
-  if (!aiClient) {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error('GEMINI_API_KEY environment variable is required to run the support chat.');
-    }
-    aiClient = new GoogleGenAI({
-      apiKey: apiKey,
-      httpOptions: {
-        headers: {
-          'User-Agent': 'aistudio-build'
-        }
-      }
-    });
-  }
-  return aiClient;
-}
 
-// System instructions for the Credify Capital Assistant
-const systemInstruction = `You are the official smart Customer Support Assistant for Credify Capital (https://www.credifycapital.in). Your job is to help users with loan queries, calculate approximate EMIs, and guide them on eligibility or documentation.
-
-Company Details:
-- Office Location: 1107, S3 Tower, Cloud9, Vaishali (GZB), 201010
-- Phone: +91 9931372218
-- Email: info@credifycapital.in
-
-Loan Offerings & Rates:
-1. Personal Loans: Instant disbursal up to ₹25 Lakhs, competitive interest rates starting at 10.5%, flexible tenure (12 to 60 months). Zero collateral, fully paperless/digital application.
-2. Business Loans: Working Capital, Retail shop loans, MSME & Proprietorship loans. Collateral-free.
-3. Professional Loans: Specially designed for Doctors, Chartered Accountants (CA), and Company Secretaries (CS).
-4. Machinery / Medical Equipment Loans: Up to ₹1 Crore for buying new/used machinery or diagnostic medical equipment.
-5. Loan Against Property (LAP): Loans up to ₹5 Crores against residential or commercial properties.
-
-Important Website Pages (ALWAYS recommend these as relative paths/links when relevant):
-- Check Free Credit Score: /credit-score.html
-- Online Loan Calculator: /calculator.html
-- Instant Digital Application: /apply.html
-- Contact Us: /contact-us.html
-- Main Blogs & Resources: /blogs.html
-
-Interaction Guidelines:
-- Be extremely polite, professional, and business-focused.
-- If the user asks about calculations (e.g., monthly payments, EMIs), provide a helpful estimate if they share the amount and tenure, but ALWAYS encourage them to use the Online Loan Calculator at /calculator.html for exact calculations and PDF exports!
-- If they are ready to apply or ask how to proceed, provide a nice link to the digital application: /apply.html.
-- Keep responses concise, clear, and perfectly formatted using bold text (**keyword**) for readability and markdown bullet points for structured lists.
-- NEVER make up interest rates or features not specified. If unsure, tell them to email info@credifycapital.in or call +91 9931372218.`;
 
 // Map of legacy dummy HTML files to their new redirect targets
 const redirects = {
@@ -195,6 +151,128 @@ pageRouter.get('*', (req, res, next) => {
 
 app.use(pageRouter);
 
+// ─── Nodemailer Transporter Setup ───────────────────────────────────────────
+const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false, // use STARTTLS
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  },
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 10000,
+  socketTimeout: 15000,
+  logger: process.env.NODE_ENV !== 'production',
+  debug: process.env.NODE_ENV !== 'production'
+});
+
+const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || 'amitkumartrp321@gmail.com';
+
+// Rate limiter for form submission APIs
+const formLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // max 10 submissions per IP per 15 min
+  message: { success: false, error: 'Too many submissions. Please try again later.' }
+});
+
+// ─── API: Submit Loan Application ───────────────────────────────────────────
+app.post('/api/submit-lead', formLimiter, async (req, res) => {
+  try {
+    const { id, name, phone, email, product, amount, income, city, tenure, source, referredByPartnerCode, referredByPartnerName } = req.body;
+
+    if (!name || !phone || !email || !product) {
+      return res.status(400).json({ success: false, error: 'Missing required fields.' });
+    }
+
+    const isPartnerReferral = source === 'partner_referral';
+
+    const htmlBody = `
+      <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #142450 0%, #1a3a8a 100%); color: white; padding: 24px 32px; border-radius: 12px 12px 0 0;">
+          <h1 style="margin: 0; font-size: 22px;">🏦 New Loan Application${isPartnerReferral ? ' (Partner Referral)' : ''}</h1>
+          <p style="margin: 8px 0 0; opacity: 0.85; font-size: 14px;">Credify Capital Lead Notification</p>
+        </div>
+        <div style="background: #f8fafc; padding: 24px 32px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">Application ID</td><td style="padding: 10px 0; font-weight: 700; color: #142450; font-family: monospace;">${id || 'N/A'}</td></tr>
+            <tr style="background: #fff;"><td style="padding: 10px 8px; color: #64748b; font-size: 13px;">Full Name</td><td style="padding: 10px 8px; font-weight: 600;">${name}</td></tr>
+            <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">Mobile</td><td style="padding: 10px 0;"><a href="tel:+91${phone}" style="color: #1a3a8a; text-decoration: none;">+91 ${phone}</a></td></tr>
+            <tr style="background: #fff;"><td style="padding: 10px 8px; color: #64748b; font-size: 13px;">Email</td><td style="padding: 10px 8px;"><a href="mailto:${email}" style="color: #1a3a8a;">${email}</a></td></tr>
+            <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">Loan Type</td><td style="padding: 10px 0; font-weight: 600; color: #142450;">${product}</td></tr>
+            <tr style="background: #fff;"><td style="padding: 10px 8px; color: #64748b; font-size: 13px;">Loan Amount</td><td style="padding: 10px 8px; font-weight: 700; color: #059669;">₹${amount ? Number(amount).toLocaleString('en-IN') : 'N/A'}</td></tr>
+            <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">Monthly Income</td><td style="padding: 10px 0;">₹${income ? Number(income).toLocaleString('en-IN') : 'N/A'}</td></tr>
+            <tr style="background: #fff;"><td style="padding: 10px 8px; color: #64748b; font-size: 13px;">City</td><td style="padding: 10px 8px;">${city || 'N/A'}</td></tr>
+            <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">Tenure</td><td style="padding: 10px 0;">${tenure ? tenure + ' months' : 'N/A'}</td></tr>
+            ${isPartnerReferral ? `<tr style="background: #fef3c7;"><td style="padding: 10px 8px; color: #92400e; font-size: 13px;">Partner Code</td><td style="padding: 10px 8px; font-weight: 600; color: #92400e;">${referredByPartnerCode || 'N/A'}</td></tr>
+            <tr style="background: #fef3c7;"><td style="padding: 10px 8px; color: #92400e; font-size: 13px;">Partner Name</td><td style="padding: 10px 8px; font-weight: 600; color: #92400e;">${referredByPartnerName || 'N/A'}</td></tr>` : ''}
+          </table>
+          <p style="margin-top: 20px; font-size: 12px; color: #94a3b8;">Received on ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</p>
+        </div>
+      </div>
+    `;
+
+    await transporter.sendMail({
+      from: `"Credify Capital" <${process.env.EMAIL_USER || 'info@credifycapital.in'}>`,
+      to: NOTIFY_EMAIL,
+      subject: `🏦 New ${product} Application – ${name} (${id || 'N/A'})`,
+      html: htmlBody
+    });
+
+    res.json({ success: true, message: 'Application submitted successfully.' });
+  } catch (error) {
+    console.error('Error sending lead email:', error);
+    res.status(500).json({ success: false, error: 'Failed to submit application. Please try again.' });
+  }
+});
+
+// ─── API: Submit Contact Form ───────────────────────────────────────────────
+app.post('/api/submit-contact', formLimiter, async (req, res) => {
+  try {
+    const { first_name, last_name, email_id, city, radios_option_purpose, product_type, message } = req.body;
+
+    if (!first_name || !email_id || !message) {
+      return res.status(400).json({ success: false, error: 'Missing required fields.' });
+    }
+
+    const htmlBody = `
+      <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%); color: white; padding: 24px 32px; border-radius: 12px 12px 0 0;">
+          <h1 style="margin: 0; font-size: 22px;">💬 New Contact Message</h1>
+          <p style="margin: 8px 0 0; opacity: 0.85; font-size: 14px;">Credify Capital Website Enquiry</p>
+        </div>
+        <div style="background: #f8fafc; padding: 24px 32px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">Name</td><td style="padding: 10px 0; font-weight: 600;">${first_name} ${last_name || ''}</td></tr>
+            <tr style="background: #fff;"><td style="padding: 10px 8px; color: #64748b; font-size: 13px;">Email</td><td style="padding: 10px 8px;"><a href="mailto:${email_id}" style="color: #0f766e;">${email_id}</a></td></tr>
+            <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">City</td><td style="padding: 10px 0;">${city || 'N/A'}</td></tr>
+            <tr style="background: #fff;"><td style="padding: 10px 8px; color: #64748b; font-size: 13px;">Purpose</td><td style="padding: 10px 8px; font-weight: 600;">${radios_option_purpose || 'N/A'}</td></tr>
+            ${product_type ? `<tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">Product Type</td><td style="padding: 10px 0; font-weight: 600; color: #142450;">${product_type}</td></tr>` : ''}
+          </table>
+          <div style="margin-top: 16px; padding: 16px; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <p style="margin: 0 0 8px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px;">Message</p>
+            <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #1e293b;">${message}</p>
+          </div>
+          <p style="margin-top: 20px; font-size: 12px; color: #94a3b8;">Received on ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</p>
+        </div>
+      </div>
+    `;
+
+    await transporter.sendMail({
+      from: `"Credify Capital" <${process.env.EMAIL_USER || 'info@credifycapital.in'}>`,
+      to: NOTIFY_EMAIL,
+      replyTo: email_id,
+      subject: `💬 ${radios_option_purpose || 'Contact'} from ${first_name} ${last_name || ''} – ${product_type || 'General'}`,
+      html: htmlBody
+    });
+
+    res.json({ success: true, message: 'Message sent successfully.' });
+  } catch (error) {
+    console.error('Error sending contact email:', error);
+    res.status(500).json({ success: false, error: 'Failed to send message. Please try again.' });
+  }
+});
+
 
 
 // 404 Error Handler
@@ -206,7 +284,12 @@ app.use((req, res, next) => {
   });
 });
 
-if (process.env.NODE_ENV !== 'test') {
+const isMainModule = process.argv[1] && (
+  fileURLToPath(import.meta.url) === process.argv[1] ||
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+);
+
+if (isMainModule && process.env.NODE_ENV !== 'test') {
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Credify Capital server running on http://0.0.0.0:${PORT}`);
   });

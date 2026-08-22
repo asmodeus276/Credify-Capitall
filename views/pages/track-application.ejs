@@ -73,12 +73,18 @@
       <form id="track-form" onsubmit="handleTrack(event)" class="flex flex-col sm:flex-row gap-3">
         <div class="relative flex-grow">
           <span class="material-symbols-outlined absolute left-3.5 top-3 text-gray-400">search</span>
-          <input type="text" id="lookup-input" required class="w-full pl-11 pr-4 py-2.5 rounded-xl border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium" placeholder="Application ID or 10-digit Mobile Number">
+          <input type="text" id="lookup-input" required class="w-full pl-11 pr-4 py-2.5 rounded-xl border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium" placeholder="Application ID (e.g. CC-APP-8104) or 10-digit Mobile Number">
         </div>
         <button type="submit" class="bg-primary hover:bg-primary/95 text-white px-6 py-2.5 rounded-xl font-bold shadow transition flex items-center justify-center gap-2">
           <span class="material-symbols-outlined text-lg">timeline</span> Track Application
         </button>
       </form>
+      <div class="flex flex-wrap items-center gap-2 pt-1 text-xs text-gray-500">
+        <span>Quick Demo Lookups:</span>
+        <button type="button" onclick="fillDemo('CC-APP-8104')" class="px-2.5 py-1 bg-slate-100 hover:bg-primary/10 hover:text-primary rounded-lg font-mono text-[11px] font-bold text-gray-700 transition">CC-APP-8104</button>
+        <button type="button" onclick="fillDemo('CC-APP-31330')" class="px-2.5 py-1 bg-slate-100 hover:bg-primary/10 hover:text-primary rounded-lg font-mono text-[11px] font-bold text-gray-700 transition">CC-APP-31330</button>
+        <button type="button" onclick="fillDemo('CC-APP-2045')" class="px-2.5 py-1 bg-slate-100 hover:bg-primary/10 hover:text-primary rounded-lg font-mono text-[11px] font-bold text-gray-700 transition">CC-APP-2045</button>
+      </div>
     </div>
 
     <!-- MAIN DYNAMIC CONTENT CONTAINER -->
@@ -268,23 +274,81 @@
     // MOBILE NAV TOGGLE
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileMenuPanel = document.getElementById('mobile-menu-panel');
-    mobileMenuBtn.addEventListener('click', () => {
-      const isExpanded = mobileMenuPanel.classList.contains('hidden');
-      if (isExpanded) {
-        mobileMenuPanel.classList.remove('hidden');
-        document.getElementById('mobile-menu-icon').textContent = 'close';
-      } else {
-        mobileMenuPanel.classList.add('hidden');
-        document.getElementById('mobile-menu-icon').textContent = 'menu';
-      }
-    });
+    if (mobileMenuBtn && mobileMenuPanel) {
+      mobileMenuBtn.addEventListener('click', () => {
+        const isExpanded = !mobileMenuPanel.classList.contains('hidden');
+        mobileMenuPanel.classList.toggle('hidden');
+        const icon = document.getElementById('mobile-menu-icon');
+        if (icon) icon.textContent = isExpanded ? 'menu' : 'close';
+      });
+    }
 
     // CONSTANTS
     const PARTNER_STORAGE_KEY = 'credify_dsa_portal_state_v1';
     const DIRECT_STORAGE_KEY = 'credify_user_applications';
 
-    // FALLBACK DEMO APPLICATION STATE
-    const FALLBACK_APPLICATIONS = [];
+    // FALLBACK DEMO APPLICATIONS
+    const FALLBACK_APPLICATIONS = [
+      {
+        id: 'CC-APP-8104',
+        name: 'Ananya Sharma',
+        phone: '9876543210',
+        email: 'ananya.sharma@example.com',
+        product: 'Business Loan',
+        amount: 2500000,
+        income: 180000,
+        tenure: 36,
+        cibil: '760',
+        createdDate: '2026-08-15',
+        status: 'Disbursed',
+        docs: { pan: 'Uploaded', bank: 'Uploaded', itr: 'Uploaded' },
+        history: [
+          { stage: 'Application Submitted', date: '2026-08-15 11:30', note: 'Application form submitted online.' },
+          { stage: 'Document Verification & KYC', date: '2026-08-16 14:10', note: 'PAN card and 6-month bank statements verified successfully.' },
+          { stage: 'Credit Underwriting & Risk Evaluation', date: '2026-08-17 12:00', note: 'Underwriter approved loan eligibility with debt-to-income clearance.' },
+          { stage: 'Sanction Letter Issued & Agreement', date: '2026-08-18 10:00', note: 'Sanction letter issued at 10.5% APR.' },
+          { stage: 'Direct Bank Disbursal', date: '2026-08-19 16:45', note: 'Funds disbursed directly into verified borrower account.' }
+        ]
+      },
+      {
+        id: 'CC-APP-31330',
+        name: 'Trilok Singh',
+        phone: '9312614747',
+        email: 'trilok.singh@example.com',
+        product: 'Business Loan',
+        amount: 500000,
+        income: 50000,
+        tenure: 36,
+        cibil: '720',
+        createdDate: '2026-08-20',
+        status: 'Approved',
+        docs: { pan: 'Uploaded', bank: 'Uploaded', itr: 'Pending' },
+        history: [
+          { stage: 'Application Submitted', date: '2026-08-20 09:15', note: 'Loan application submitted.' },
+          { stage: 'Document Verification & KYC', date: '2026-08-21 11:30', note: 'KYC verified. Awaiting optional final ITR.' },
+          { stage: 'Credit Underwriting & Risk Evaluation', date: '2026-08-21 16:00', note: 'Credit engine approved loan sanction.' },
+          { stage: 'Sanction Letter Issued & Agreement', date: '2026-08-22 09:00', note: 'Sanction letter issued. Disbursal scheduled.' }
+        ]
+      },
+      {
+        id: 'CC-APP-2045',
+        name: 'Rajesh Verma',
+        phone: '9811223344',
+        email: 'rajesh.verma@example.com',
+        product: 'Personal Loan',
+        amount: 350000,
+        income: 45000,
+        tenure: 24,
+        cibil: '740',
+        createdDate: '2026-08-21',
+        status: 'Under Review',
+        docs: { pan: 'Uploaded', bank: 'Pending', itr: 'Pending' },
+        history: [
+          { stage: 'Application Submitted', date: '2026-08-21 14:20', note: 'Personal loan application received.' },
+          { stage: 'Document Verification & KYC', date: '2026-08-22 08:45', note: 'Identity verified. Bank statement upload requested.' }
+        ]
+      }
+    ];
 
     let currentTrackedItem = null;
     let isFromPartnerDb = false;
@@ -447,9 +511,9 @@
       const stages = [
         { name: 'Application Submitted', key: 'Submitted', icon: 'edit_document', desc: 'Form successfully registered and processed.' },
         { name: 'Document Verification & KYC', key: 'KYC', icon: 'verified_user', desc: 'Validating PAN identity cards & bank statements.' },
-        { name: 'Credit Underwriting & Risk Evaluation', key: 'Underwriting', icon: 'analytics', desc: 'Calculating debt capacity & monthly repayment ratios.' },
-        { name: 'E-Contract Signing', key: 'Approved', icon: 'draw', desc: 'Review offer parameters and perform digital signature.' },
-        { name: 'Direct Bank Disbursal', key: 'Disbursed', icon: 'payments', desc: 'Transferring cash directly to verified account credentials.' }
+        { name: 'Credit Underwriting & Risk Evaluation', key: 'Underwriting', icon: 'analytics', desc: 'Calculating debt capacity & eligibility ratios.' },
+        { name: 'Sanction Letter Issued & Agreement', key: 'Approved', icon: 'draw', desc: 'Review offer parameters and perform digital verification.' },
+        { name: 'Direct Bank Disbursal', key: 'Disbursed', icon: 'payments', desc: 'Funds transferred directly into verified borrower account.' }
       ];
 
       // Determine current step index based on status

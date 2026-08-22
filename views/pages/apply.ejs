@@ -164,7 +164,6 @@
 
   <script nonce="<%= nonce %>" src="/js/credify-core.js"></script>
   <script nonce="<%= nonce %>" type="module">
-    import { submitLoanLead } from '/js/firebaseConfig.js';
     (function () {
       var form = document.getElementById('apply-form');
       var loanTypeEl = document.getElementById('loanType');
@@ -323,7 +322,14 @@
           submitBtn.innerHTML = 'Submitting... <span class="material-symbols-outlined animate-spin inline-block align-middle ml-2 text-sm">autorenew</span>';
           formStatus.classList.add('hidden');
 
-          await submitLoanLead(appObject);
+          // Send lead data to server (email notification via Nodemailer)
+          var response = await fetch('/api/submit-lead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(appObject)
+          });
+          var result = await response.json();
+          if (!response.ok) throw new Error(result.error || 'Submission failed');
 
           // Success State
           summaryCard.classList.add('hidden');
@@ -340,9 +346,9 @@
           form.reset();
           form.querySelectorAll('input, select').forEach(function (el) { el.disabled = true; });
 
-        } catch (firebaseErr) {
+        } catch (submitErr) {
           // Error State
-          console.error("Firebase lead capture failed:", firebaseErr);
+          console.error("Lead submission failed:", submitErr);
           formStatus.innerHTML = '<div class="p-3 bg-error text-white rounded-lg">There was an error submitting your application. Please check your connection and try again.</div>';
           formStatus.classList.remove('hidden');
         } finally {

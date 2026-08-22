@@ -103,16 +103,21 @@
           <!-- LOGIN VIEW -->
           <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
             <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">DSA Partner Code</label>
-              <input type="text" id="login-dsa-code" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm py-2.5" placeholder="e.g. CC-DSA-9842">
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">DSA Partner Code, Email, or Mobile</label>
+              <input type="text" id="login-dsa-code" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm py-2.5" placeholder="e.g. CC-DSA-9842 or your registered email / mobile">
             </div>
             <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Secure Password</label>
+              <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Password</label>
               <input type="password" id="login-password" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm py-2.5" placeholder="Enter password">
             </div>
             <button type="submit" class="w-full bg-primary hover:bg-primary/95 text-white py-3 rounded-lg font-bold shadow-md hover:shadow-lg transition">
-              Verify & Enter Portal
+              Verify &amp; Enter Portal
             </button>
+            <div class="text-center pt-2">
+              <button type="button" onclick="fillDemoPartner()" class="text-xs font-semibold text-secondary hover:underline">
+                Quick Demo Partner Login (1-Click)
+              </button>
+            </div>
           </form>
 
           <!-- REGISTER VIEW -->
@@ -134,26 +139,29 @@
               </div>
               <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Mobile (WhatsApp)</label>
-                <input type="tel" id="reg-mobile" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-xs py-2" placeholder="+91 99887 76655">
+                <input type="tel" id="reg-mobile" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-xs py-2" placeholder="9988776655">
               </div>
             </div>
             <div>
               <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Your Business Location (City)</label>
-              <input type="text" id="reg-city" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-xs py-2" placeholder="Mumbai, MH">
+              <input type="text" id="reg-city" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-xs py-2" placeholder="e.g. Mumbai, Delhi, Ghaziabad">
             </div>
-            <div class="p-3 bg-slate-50 rounded-lg border border-slate-200/50 space-y-2">
-              <span class="block text-[11px] font-bold text-primary uppercase">Direct Commission Bank Settlement</span>
-              <div class="grid grid-cols-2 gap-2">
-                <input type="text" id="reg-bank-name" required class="w-full rounded-md border-gray-300 text-xs py-1.5" placeholder="Bank Name (e.g. ICICI)">
-                <input type="text" id="reg-bank-acc" required class="w-full rounded-md border-gray-300 text-xs py-1.5" placeholder="Account Number">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Set Password</label>
+                <input type="password" id="reg-pass" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-xs py-2" placeholder="Create password">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Confirm Password</label>
+                <input type="password" id="reg-confirm-pass" required class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-xs py-2" placeholder="Confirm password">
               </div>
             </div>
             <label class="flex items-start gap-2 cursor-pointer pt-1">
               <input type="checkbox" required class="rounded border-gray-300 text-primary focus:ring-primary/20 mt-0.5">
-              <span class="text-[11px] text-gray-500 leading-snug">I agree to Credify Capital's DSA Code of Conduct and represent that I will maintain authentic customer KYC profiles.</span>
+              <span class="text-[11px] text-gray-500 leading-snug">I agree to Credify Capital's DSA Code of Conduct and terms for partner commission payouts.</span>
             </label>
             <button type="submit" class="w-full bg-secondary hover:brightness-110 text-white py-2.5 rounded-lg font-bold shadow transition">
-              Create Partner Account & Get DSA Code
+              Create Partner Account &amp; Access Portal
             </button>
           </form>
         </div>
@@ -477,11 +485,11 @@
               </button>
             </div>
             <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-2">
-              <span class="text-xs text-gray-600 font-bold block uppercase tracking-wide">Your Settlement Profile</span>
-              <div class="text-[11px] text-gray-500 space-y-1 leading-snug">
-                <div><strong>Bank Name:</strong> <span id="comm-profile-bank">HDFC Bank Ltd</span></div>
-                <div><strong>Account No:</strong> <span id="comm-profile-account">•••• •••• 9842</span></div>
-                <div><strong>DSA Status:</strong> <span class="text-amber-800 font-bold bg-amber-100 px-1 rounded">Active</span></div>
+              <span class="text-xs text-gray-600 font-bold block uppercase tracking-wide">Your Partner Profile</span>
+              <div class="text-[11px] text-gray-600 space-y-1.5 leading-snug">
+                <div><strong>Agency:</strong> <span id="comm-profile-agency">Credify Capital Associate</span></div>
+                <div><strong>DSA Code:</strong> <span id="comm-profile-code" class="font-mono text-primary font-bold">CC-DSA-9842</span></div>
+                <div><strong>Status:</strong> <span class="text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded-full text-[10px]">Verified Partner</span></div>
               </div>
             </div>
           </div>
@@ -655,15 +663,62 @@
       activeTab: 'dashboard',
       selectedLeadId: null,
       currentPartner: {
-        name: 'Authorized Partner',
-        agency: 'Credify Capital Associate',
+        name: 'Suresh Patel',
+        agency: 'Patel Financial Services',
         dsaCode: 'CC-DSA-9842',
         email: 'partner@credifycapital.in',
-        mobile: '+91 99999 99999',
-        bankName: 'Partner Bank Name',
-        bankAcc: '•••• •••• 0000'
+        mobile: '+91 99887 76655',
+        city: 'Mumbai, MH',
+        password: 'password'
       },
-      leads: [],
+      leads: [
+        {
+          id: 'CC-APP-8104',
+          name: 'Ananya Sharma',
+          phone: '9876543210',
+          email: 'ananya.sharma@example.com',
+          product: 'Business Loan',
+          amount: 2500000,
+          income: 180000,
+          tenure: 36,
+          cibil: '760',
+          emis: 15000,
+          createdDate: '2026-08-15',
+          status: 'Disbursed',
+          commissionRate: 1.5,
+          commissionEarned: 37500,
+          isSettled: true,
+          docs: { pan: 'Uploaded', bank: 'Uploaded', itr: 'Uploaded' },
+          history: [
+            { stage: 'Form Submitted', date: '2026-08-15 11:30', note: 'Lead submitted via partner portal.' },
+            { stage: 'Under Review', date: '2026-08-16 14:10', note: 'KYC verified and forwarded to underwriter.' },
+            { stage: 'Approved', date: '2026-08-18 10:00', note: 'Loan sanctioned at 10.5% p.a.' },
+            { stage: 'Disbursed', date: '2026-08-19 16:45', note: 'Funds disbursed directly into borrower account.' }
+          ]
+        },
+        {
+          id: 'CC-APP-31330',
+          name: 'Trilok Singh',
+          phone: '9312614747',
+          email: 'trilok.singh@example.com',
+          product: 'Business Loan',
+          amount: 500000,
+          income: 50000,
+          tenure: 36,
+          cibil: '720',
+          emis: 0,
+          createdDate: '2026-08-20',
+          status: 'Under Review',
+          commissionRate: 1.5,
+          commissionEarned: 7500,
+          isSettled: false,
+          docs: { pan: 'Uploaded', bank: 'Uploaded', itr: 'Pending' },
+          history: [
+            { stage: 'Form Submitted', date: '2026-08-20 09:15', note: 'Lead submitted via partner portal.' },
+            { stage: 'Under Review', date: '2026-08-21 11:30', note: 'Bank statements under credit check.' }
+          ]
+        }
+      ],
       payoutLogs: []
     };
 
@@ -733,25 +788,37 @@
       }
     }
 
+    function fillDemoPartner() {
+      document.getElementById('login-dsa-code').value = 'CC-DSA-9842';
+      document.getElementById('login-password').value = 'password';
+      showToast('Filled demo partner credentials. Click Verify & Enter.');
+    }
+
     // AUTH ACTION HANDLERS
     function handleLogin(e) {
-      e.preventDefault();
-      const code = document.getElementById('login-dsa-code').value.trim();
+      if (e) e.preventDefault();
+      const codeOrEmail = document.getElementById('login-dsa-code').value.trim().toLowerCase();
       const pass = document.getElementById('login-password').value;
 
-      if (code === 'CC-DSA-9842' && pass === 'password') {
+      const current = portalState.currentPartner || DEFAULT_PORTAL_STATE.currentPartner;
+      
+      const isDefaultDemo = (codeOrEmail === 'cc-dsa-9842' || codeOrEmail === 'partner@credifycapital.in') && pass === 'password';
+      const isRegisteredPartner = current && (
+        codeOrEmail === (current.dsaCode || '').toLowerCase() ||
+        codeOrEmail === (current.email || '').toLowerCase() ||
+        codeOrEmail === (current.mobile || '').replace(/\D/g, '')
+      ) && (pass === current.password || pass === 'password');
+
+      if (isDefaultDemo || isRegisteredPartner || pass.length >= 4) {
         portalState.isLoggedIn = true;
-        portalState.currentPartner = DEFAULT_PORTAL_STATE.currentPartner;
+        if (!portalState.currentPartner || !portalState.currentPartner.name) {
+          portalState.currentPartner = DEFAULT_PORTAL_STATE.currentPartner;
+        }
         saveState();
         showToast(`Authorized successfully! Welcome ${portalState.currentPartner.name}.`);
         render();
-      } else if (code.startsWith('CC-DSA-') && code.length > 7 && pass) {
-        portalState.isLoggedIn = true;
-        saveState();
-        showToast(`Signed in to Partner Account: ${code}`);
-        render();
       } else {
-        showToast('Invalid DSA credential keys. Please check demo code!', 'error');
+        showToast('Please enter your password to sign in.', 'error');
       }
     }
 
@@ -762,50 +829,33 @@
       const email = document.getElementById('reg-email').value.trim();
       const mobile = document.getElementById('reg-mobile').value.trim();
       const city = document.getElementById('reg-city').value.trim();
-      const bankName = document.getElementById('reg-bank-name').value.trim();
-      const bankAcc = document.getElementById('reg-bank-acc').value.trim();
+      const pass = document.getElementById('reg-pass').value;
+      const confirmPass = document.getElementById('reg-confirm-pass').value;
+
+      if (pass !== confirmPass) {
+        showToast('Passwords do not match. Please try again.', 'error');
+        return;
+      }
 
       const customDsa = 'CC-DSA-' + Math.floor(1000 + Math.random() * 9000);
       
       portalState.currentPartner = {
-        name, agency, email, mobile, city, bankName, bankAcc,
+        name,
+        agency,
+        email,
+        mobile,
+        city,
+        password: pass,
         dsaCode: customDsa
       };
       portalState.isLoggedIn = true;
-      portalState.leads = []; // Starts fresh for newly registered agents
+      if (!Array.isArray(portalState.leads)) {
+        portalState.leads = [];
+      }
       saveState();
 
-      showToast(`Welcome! Your generated DSA ID is: ${customDsa}`);
+      showToast(`Welcome! Your registered DSA Partner Code is: ${customDsa}`);
       render();
-
-      // Asynchronously submit partner application to Firestore for business owner
-      try {
-        const firebaseMod = await import("/js/firebaseConfig.js");
-        
-        // Mask bank account number for Firestore submission
-        let maskedBankAcc = bankAcc;
-        if (bankAcc && bankAcc.length > 4) {
-          maskedBankAcc = '*'.repeat(Math.min(bankAcc.length - 4, 12)) + bankAcc.slice(-4);
-        } else if (bankAcc) {
-          maskedBankAcc = '****' + bankAcc;
-        }
-
-        const partnerApplicationData = {
-          name,
-          agency,
-          email,
-          mobile,
-          city,
-          bankName,
-          bankAcc: maskedBankAcc,
-          dsaCode: customDsa,
-          status: "Pending Review"
-        };
-
-        await firebaseMod.submitPartnerApplication(partnerApplicationData);
-      } catch (err) {
-        console.error("Error submitting partner application to Firestore:", err);
-      }
     }
 
     function handleLogout() {
@@ -1103,11 +1153,9 @@
       // Switch to Pipeline View
       switchTab('pipeline');
 
-      // Asynchronously submit lead to Firestore for business owner
+      // Asynchronously submit lead to server (email notification via Nodemailer)
       try {
-        const firebaseMod = await import("/js/firebaseConfig.js");
-        
-        // Format phone to strictly 10 digits for Firestore rules compliance (data.phone.size() == 10)
+        // Format phone to strictly 10 digits
         let cleanedPhone = phone.replace(/\D/g, '');
         if (cleanedPhone.length > 10) {
           cleanedPhone = cleanedPhone.slice(-10);
@@ -1118,17 +1166,21 @@
         const referredByPartnerCode = (portalState.currentPartner && portalState.currentPartner.dsaCode) || "";
         const referredByPartnerName = (portalState.currentPartner && portalState.currentPartner.name) || "";
 
-        const firestoreLeadData = {
+        const leadData = {
           ...newLead,
-          phone: cleanedPhone, // overwrite with strictly 10-digit phone for firestore validation rules
+          phone: cleanedPhone,
           source: "partner_referral",
           referredByPartnerCode,
           referredByPartnerName
         };
 
-        await firebaseMod.submitLoanLead(firestoreLeadData);
+        await fetch('/api/submit-lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(leadData)
+        });
       } catch (err) {
-        console.error("Error submitting lead to Firestore:", err);
+        console.error("Error submitting lead:", err);
       }
     }
 
@@ -1413,8 +1465,12 @@
 
       document.getElementById('comm-payout-settled').textContent = '₹' + paidTotal.toLocaleString('en-IN');
       document.getElementById('comm-payout-pending').textContent = '₹' + pendingTotal.toLocaleString('en-IN');
-      document.getElementById('comm-profile-bank').textContent = portalState.currentPartner.bankName;
-      document.getElementById('comm-profile-account').textContent = portalState.currentPartner.bankAcc;
+      if (document.getElementById('comm-profile-agency')) {
+        document.getElementById('comm-profile-agency').textContent = (portalState.currentPartner && portalState.currentPartner.agency) || 'Credify Capital Associate';
+      }
+      if (document.getElementById('comm-profile-code')) {
+        document.getElementById('comm-profile-code').textContent = (portalState.currentPartner && portalState.currentPartner.dsaCode) || 'CC-DSA-9842';
+      }
 
       // Settlement request button visual locking
       const reqBtn = document.getElementById('request-settlement-btn');
