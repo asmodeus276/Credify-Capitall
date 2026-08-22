@@ -79,12 +79,6 @@
           <span class="material-symbols-outlined text-lg">timeline</span> Track Application
         </button>
       </form>
-      <div class="flex flex-wrap items-center gap-2 pt-1 text-xs text-gray-500">
-        <span>Quick Demo Lookups:</span>
-        <button type="button" onclick="fillDemo('CC-APP-8104')" class="px-2.5 py-1 bg-slate-100 hover:bg-primary/10 hover:text-primary rounded-lg font-mono text-[11px] font-bold text-gray-700 transition">CC-APP-8104</button>
-        <button type="button" onclick="fillDemo('CC-APP-31330')" class="px-2.5 py-1 bg-slate-100 hover:bg-primary/10 hover:text-primary rounded-lg font-mono text-[11px] font-bold text-gray-700 transition">CC-APP-31330</button>
-        <button type="button" onclick="fillDemo('CC-APP-2045')" class="px-2.5 py-1 bg-slate-100 hover:bg-primary/10 hover:text-primary rounded-lg font-mono text-[11px] font-bold text-gray-700 transition">CC-APP-2045</button>
-      </div>
     </div>
 
     <!-- MAIN DYNAMIC CONTENT CONTAINER -->
@@ -418,12 +412,6 @@
         document.getElementById('tracking-result-panel').classList.add('hidden');
         document.getElementById('not-found-panel').classList.remove('hidden');
       }
-    }
-
-    // FILL DEMO SUGGESTION
-    function fillDemo(id) {
-      document.getElementById('lookup-input').value = id;
-      handleTrack();
     }
 
     // SHOW TOAST MESSAGE

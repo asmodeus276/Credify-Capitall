@@ -18,6 +18,16 @@
       window.location.replace("admin-login.html");
     }
   </script>
+
+  <style>
+    @media print {
+      body { background: white !important; }
+      header, footer, #toast-container, .no-print { display: none !important; }
+      main { padding-top: 0 !important; max-width: 100% !important; }
+      .tab-view { display: block !important; }
+      #print-report-header { display: block !important; }
+    }
+  </style>
 </head>
 <body class="bg-slate-50 text-primary min-h-screen flex flex-col justify-between font-sans">
 
@@ -27,8 +37,22 @@
   <!-- MAIN WORKSPACE -->
   <main class="flex-grow max-w-7xl w-full mx-auto px-4 md:px-8 pb-12 space-y-6" style="padding-top: 190px !important;">
     
+    <!-- PRINTABLE REPORT HEADER (Only visible when printing/saving PDF) -->
+    <div id="print-report-header" class="hidden border-b-2 border-primary pb-4 mb-6">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-2xl font-extrabold text-primary">CREDIFY CAPITAL</h1>
+          <p class="text-xs text-gray-500">Official Loan Origination &amp; Bank Routing Dossier</p>
+        </div>
+        <div class="text-right text-xs text-gray-500">
+          <p id="print-date">Date: 2026-08-22</p>
+          <p>Confidential &bull; Partner Bank Submission</p>
+        </div>
+      </div>
+    </div>
+
     <!-- ADMIN HEADER & CONTROLS -->
-    <div class="bg-white border border-outline-variant/30 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div class="bg-white border border-outline-variant/30 rounded-2xl p-6 shadow-sm flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 no-print">
       <div>
         <div class="flex items-center gap-2">
           <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">
@@ -40,18 +64,21 @@
         <p class="text-xs text-gray-500 mt-0.5">Manage customer leads, route applications to partner banks (Kotak, ICICI, HDFC), and monitor inquiries.</p>
       </div>
 
-      <div class="flex items-center gap-3 w-full md:w-auto">
-        <a href="/api/admin/export-csv" class="flex-1 md:flex-none inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition">
-          <span class="material-symbols-outlined text-sm">download</span> Export Leads to CSV
-        </a>
-        <button onclick="handleAdminLogout()" class="flex-1 md:flex-none inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition">
+      <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+        <button id="btn-export-csv" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition">
+          <span class="material-symbols-outlined text-sm">download</span> Export Leads (CSV)
+        </button>
+        <button id="btn-export-pdf" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition">
+          <span class="material-symbols-outlined text-sm">picture_as_pdf</span> Export Report (PDF)
+        </button>
+        <button id="btn-admin-logout" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition">
           <span class="material-symbols-outlined text-sm">logout</span> Secure Logout
         </button>
       </div>
     </div>
 
     <!-- DASHBOARD STATS OVERVIEW -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 no-print">
       <!-- Card 1 -->
       <div class="bg-white border border-outline-variant/30 rounded-2xl p-5 shadow-xs flex items-center gap-4">
         <div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center shrink-0">
@@ -102,15 +129,15 @@
     </div>
 
     <!-- TABS CONTROLLER -->
-    <div class="border-b border-outline-variant/30">
+    <div class="border-b border-outline-variant/30 no-print">
       <div class="flex gap-2" role="tablist">
-        <button id="tab-leads" onclick="switchTab('leads')" class="py-3 px-4 border-b-2 border-primary font-bold text-sm text-primary transition-all flex items-center gap-2" role="tab">
+        <button id="tab-leads" class="py-3 px-4 border-b-2 border-primary font-bold text-sm text-primary transition-all flex items-center gap-2" role="tab">
           <span class="material-symbols-outlined text-lg">assignment</span> Loan Applications &amp; Bank Routing
         </button>
-        <button id="tab-contacts" onclick="switchTab('contacts')" class="py-3 px-4 border-b-2 border-transparent font-semibold text-sm text-gray-500 hover:text-primary hover:border-gray-300 transition-all flex items-center gap-2" role="tab">
+        <button id="tab-contacts" class="py-3 px-4 border-b-2 border-transparent font-semibold text-sm text-gray-500 hover:text-primary hover:border-gray-300 transition-all flex items-center gap-2" role="tab">
           <span class="material-symbols-outlined text-lg">forum</span> Contact Messages
         </button>
-        <button id="tab-partners" onclick="switchTab('partners')" class="py-3 px-4 border-b-2 border-transparent font-semibold text-sm text-gray-500 hover:text-primary hover:border-gray-300 transition-all flex items-center gap-2" role="tab">
+        <button id="tab-partners" class="py-3 px-4 border-b-2 border-transparent font-semibold text-sm text-gray-500 hover:text-primary hover:border-gray-300 transition-all flex items-center gap-2" role="tab">
           <span class="material-symbols-outlined text-lg">group_add</span> DSA Partners Network
         </button>
       </div>
@@ -120,14 +147,14 @@
     <div class="bg-white border border-outline-variant/30 rounded-2xl shadow-sm overflow-hidden min-h-[450px] flex flex-col justify-between">
       
       <!-- ACTION PANEL (FILTER & SEARCH) -->
-      <div class="p-4 border-b border-outline-variant/20 bg-gray-50/50 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="p-4 border-b border-outline-variant/20 bg-gray-50/50 flex flex-col sm:flex-row items-center justify-between gap-4 no-print">
         <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto flex-grow max-w-2xl">
           <div class="relative w-full sm:w-80">
             <span class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-lg">search</span>
-            <input type="text" id="search-input" oninput="handleFilterChange()" class="w-full pl-10 pr-4 py-2 rounded-xl border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-xs font-medium" placeholder="Search by name, phone, email, city, ID...">
+            <input type="text" id="search-input" class="w-full pl-10 pr-4 py-2 rounded-xl border-gray-300 focus:ring-2 focus:ring-primary/20 focus:border-primary text-xs font-medium" placeholder="Search by name, phone, email, city, ID...">
           </div>
           
-          <select id="status-filter" onchange="handleFilterChange()" class="w-full sm:w-auto rounded-xl border-gray-300 text-xs py-2 focus:ring-primary/20">
+          <select id="status-filter" class="w-full sm:w-auto rounded-xl border-gray-300 text-xs py-2 focus:ring-primary/20">
             <option value="ALL">All Statuses</option>
             <option value="New Lead">New Leads</option>
             <option value="Under Review">Under Review</option>
@@ -137,7 +164,7 @@
             <option value="Rejected">Rejected</option>
           </select>
 
-          <select id="bank-filter" onchange="handleFilterChange()" class="w-full sm:w-auto rounded-xl border-gray-300 text-xs py-2 focus:ring-primary/20">
+          <select id="bank-filter" class="w-full sm:w-auto rounded-xl border-gray-300 text-xs py-2 focus:ring-primary/20">
             <option value="ALL">All Banks</option>
             <option value="Kotak Mahindra Bank">Kotak Mahindra</option>
             <option value="ICICI Bank">ICICI Bank</option>
@@ -164,7 +191,7 @@
               <th class="px-5 py-3.5">Loan &amp; Financials</th>
               <th class="px-5 py-3.5">Assigned Bank</th>
               <th class="px-5 py-3.5">Current Status</th>
-              <th class="px-5 py-3.5 text-right">Actions</th>
+              <th class="px-5 py-3.5 text-right no-print">Actions</th>
             </tr>
           </thead>
           <tbody id="table-leads-body" class="divide-y divide-gray-100 text-xs">
@@ -182,7 +209,7 @@
               <th class="px-5 py-3.5">Purpose &amp; Product</th>
               <th class="px-5 py-3.5">Message Content</th>
               <th class="px-5 py-3.5">Date Received</th>
-              <th class="px-5 py-3.5 text-right">Direct Action</th>
+              <th class="px-5 py-3.5 text-right no-print">Direct Action</th>
             </tr>
           </thead>
           <tbody id="table-contacts-body" class="divide-y divide-gray-100 text-xs">
@@ -228,12 +255,12 @@
           <h3 class="font-extrabold text-base text-primary">Route Lead to Partner Bank</h3>
           <p class="text-xs text-gray-500" id="modal-lead-title">Lead ID: CC-APP-0000</p>
         </div>
-        <button onclick="closeBankModal()" class="text-gray-400 hover:text-gray-600">
+        <button id="modal-close-x-btn" class="text-gray-400 hover:text-gray-600">
           <span class="material-symbols-outlined">close</span>
         </button>
       </div>
 
-      <form id="bank-routing-form" onsubmit="saveBankAssignment(event)" class="space-y-4 text-xs">
+      <form id="bank-routing-form" class="space-y-4 text-xs">
         <input type="hidden" id="modal-lead-id">
 
         <div>
@@ -269,11 +296,11 @@
 
         <div>
           <label class="block font-bold text-gray-700 uppercase tracking-wide mb-1">Internal Operations Notes</label>
-          <textarea id="modal-notes-input" rows="3" class="w-full rounded-lg border-gray-300 py-2 text-xs focus:ring-primary/20" placeholder="e.g. GST returns match 50L criteria. Forwarded to Kotak branch credit manager on 22-Aug."></textarea>
+          <textarea id="modal-notes-input" rows="3" class="w-full rounded-lg border-gray-300 py-2 text-xs focus:ring-primary/20" placeholder="e.g. GST returns match 50L criteria. Forwarded to Kotak branch credit manager."></textarea>
         </div>
 
         <div class="flex justify-end gap-3 pt-2 border-t border-gray-100">
-          <button type="button" onclick="closeBankModal()" class="px-4 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg font-bold">Cancel</button>
+          <button type="button" id="modal-cancel-btn" class="px-4 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg font-bold">Cancel</button>
           <button type="submit" class="px-5 py-2 bg-primary hover:bg-primary/95 text-white rounded-lg font-bold shadow">Save &amp; Update Lead</button>
         </div>
       </form>
@@ -310,28 +337,83 @@
       }, 3000);
     }
 
-    // Check Auth
+    // Check Auth Token
     const token = localStorage.getItem('credify_admin_token');
     if (!token) {
-      window.location.href = "admin-login.html";
+      window.location.replace("admin-login.html");
     } else {
       const adminEmail = localStorage.getItem('credify_admin_email') || 'amitkumartrp321@gmail.com';
-      document.getElementById('admin-user-email').textContent = adminEmail;
+      const el = document.getElementById('admin-user-email');
+      if (el) el.textContent = adminEmail;
       fetchDashboardData();
     }
 
+    // Secure Logout
     function handleAdminLogout() {
       if (confirm('Are you sure you want to securely log out of the Admin CRM?')) {
         localStorage.removeItem('credify_admin_token');
         localStorage.removeItem('credify_admin_email');
         localStorage.removeItem('credify_admin_name');
         sessionStorage.clear();
-        showToast('Logged out securely.');
+        showToast('Signed out of Administrator CRM');
         setTimeout(() => {
           window.location.replace("admin-login.html");
         }, 300);
       }
     }
+    window.handleAdminLogout = handleAdminLogout;
+
+    // Export Leads to CSV (Client-side Blob download)
+    function downloadLeadsCSV() {
+      if (!leadsData || leadsData.length === 0) {
+        showToast('No leads available to export.', 'error');
+        return;
+      }
+
+      const headers = ['Application ID', 'Applicant Name', 'Mobile', 'Email', 'Product', 'Amount (INR)', 'Monthly Income', 'City', 'Tenure (Months)', 'CIBIL', 'Status', 'Assigned Bank', 'Bank RM', 'Submission Date', 'Notes'];
+      const rows = [headers.join(',')];
+
+      leadsData.forEach(l => {
+        const row = [
+          `"${l.id || ''}"`,
+          `"${(l.name || '').replace(/"/g, '""')}"`,
+          `"${l.phone || ''}"`,
+          `"${l.email || ''}"`,
+          `"${l.product || ''}"`,
+          `"${l.amount || 0}"`,
+          `"${l.income || 0}"`,
+          `"${l.city || ''}"`,
+          `"${l.tenure || ''}"`,
+          `"${l.cibil || ''}"`,
+          `"${l.status || ''}"`,
+          `"${l.assignedBank || ''}"`,
+          `"${(l.bankRM || '').replace(/"/g, '""')}"`,
+          `"${l.createdAt ? l.createdAt.split('T')[0] : ''}"`,
+          `"${(l.notes || '').replace(/"/g, '""')}"`
+        ];
+        rows.push(row.join(','));
+      });
+
+      const csvBlob = new Blob([rows.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+      const downloadUrl = URL.createObjectURL(csvBlob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', `credify_leads_export_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(downloadUrl);
+      showToast('Leads exported to CSV successfully.');
+    }
+    window.downloadLeadsCSV = downloadLeadsCSV;
+
+    // Export Leads to PDF / Print Report
+    function downloadLeadsPDF() {
+      const printDateEl = document.getElementById('print-date');
+      if (printDateEl) printDateEl.textContent = `Generated: ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}`;
+      window.print();
+    }
+    window.downloadLeadsPDF = downloadLeadsPDF;
 
     // Fetch all CRM databases
     async function fetchDashboardData() {
@@ -359,19 +441,26 @@
     }
 
     function renderStats() {
-      document.getElementById('stat-leads-count').textContent = leadsData.length;
-      document.getElementById('stat-contact-count').textContent = contactsData.length;
+      const statLeads = document.getElementById('stat-leads-count');
+      const statContact = document.getElementById('stat-contact-count');
+      const statLeadsVol = document.getElementById('stat-leads-vol');
+      const statBankCount = document.getElementById('stat-bank-count');
+      const statDisbursed = document.getElementById('stat-disbursed-count');
+      const statDisbursedVol = document.getElementById('stat-disbursed-vol');
+
+      if (statLeads) statLeads.textContent = leadsData.length;
+      if (statContact) statContact.textContent = contactsData.length;
 
       const totalReqVol = leadsData.reduce((acc, l) => acc + (parseFloat(l.amount) || 0), 0);
-      document.getElementById('stat-leads-vol').textContent = `₹${(totalReqVol / 100000).toFixed(1)}L Requested`;
+      if (statLeadsVol) statLeadsVol.textContent = `₹${(totalReqVol / 100000).toFixed(1)}L Requested`;
 
       const routedToBank = leadsData.filter(l => l.assignedBank && l.assignedBank !== 'Unassigned').length;
-      document.getElementById('stat-bank-count').textContent = routedToBank;
+      if (statBankCount) statBankCount.textContent = routedToBank;
 
       const disbursedList = leadsData.filter(l => l.status === 'Disbursed');
       const disbursedVol = disbursedList.reduce((acc, l) => acc + (parseFloat(l.amount) || 0), 0);
-      document.getElementById('stat-disbursed-count').textContent = disbursedList.length;
-      document.getElementById('stat-disbursed-vol').textContent = `₹${(disbursedVol / 100000).toFixed(1)}L Disbursed`;
+      if (statDisbursed) statDisbursed.textContent = disbursedList.length;
+      if (statDisbursedVol) statDisbursedVol.textContent = `₹${(disbursedVol / 100000).toFixed(1)}L Disbursed`;
     }
 
     function switchTab(tab) {
@@ -381,6 +470,7 @@
       tabs.forEach(t => {
         const btn = document.getElementById(`tab-${t}`);
         const view = document.getElementById(`view-${t}`);
+        if (!btn || !view) return;
         if (t === tab) {
           btn.className = "py-3 px-4 border-b-2 border-primary font-bold text-sm text-primary transition-all flex items-center gap-2";
           view.classList.remove('hidden');
@@ -390,21 +480,24 @@
         }
       });
 
-      handleFilterChange();
-    }
-
-    function handleFilterChange() {
       renderTabContent();
     }
+    window.switchTab = switchTab;
 
     function renderTabContent() {
-      const searchVal = (document.getElementById('search-input').value || '').toLowerCase().trim();
-      const statusFilter = document.getElementById('status-filter').value;
-      const bankFilter = document.getElementById('bank-filter').value;
+      const searchInput = document.getElementById('search-input');
+      const statusFilterEl = document.getElementById('status-filter');
+      const bankFilterEl = document.getElementById('bank-filter');
       const emptyState = document.getElementById('empty-state');
+
+      const searchVal = (searchInput ? searchInput.value : '').toLowerCase().trim();
+      const statusFilter = statusFilterEl ? statusFilterEl.value : 'ALL';
+      const bankFilter = bankFilterEl ? bankFilterEl.value : 'ALL';
 
       if (currentTab === 'leads') {
         const tbody = document.getElementById('table-leads-body');
+        if (!tbody) return;
+
         const filtered = leadsData.filter(l => {
           const matchSearch = !searchVal || 
             (l.name && l.name.toLowerCase().includes(searchVal)) ||
@@ -420,17 +513,22 @@
           return matchSearch && matchStatus && matchBank;
         });
 
-        document.getElementById('record-count-display').textContent = `Showing ${filtered.length} of ${leadsData.length} leads`;
+        const countDisplay = document.getElementById('record-count-display');
+        if (countDisplay) countDisplay.textContent = `Showing ${filtered.length} of ${leadsData.length} leads`;
 
         if (filtered.length === 0) {
           tbody.innerHTML = '';
-          emptyState.classList.remove('hidden');
-          emptyState.classList.add('flex');
+          if (emptyState) {
+            emptyState.classList.remove('hidden');
+            emptyState.classList.add('flex');
+          }
           return;
         }
 
-        emptyState.classList.add('hidden');
-        emptyState.classList.remove('flex');
+        if (emptyState) {
+          emptyState.classList.add('hidden');
+          emptyState.classList.remove('flex');
+        }
 
         const statusBadges = {
           'New Lead': 'bg-gray-100 text-gray-700 border-gray-200',
@@ -470,8 +568,8 @@
                 ${lead.status || 'New Lead'}
               </span>
             </td>
-            <td class="px-5 py-4 text-right">
-              <button onclick="openBankModal('${lead.id}')" class="inline-flex items-center gap-1 bg-primary hover:bg-primary/95 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-xs transition">
+            <td class="px-5 py-4 text-right no-print">
+              <button data-action="route-lead" data-id="${lead.id}" class="btn-route-lead inline-flex items-center gap-1 bg-primary hover:bg-primary/95 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-xs transition">
                 <span class="material-symbols-outlined text-sm">edit_note</span> Route / Edit
               </button>
             </td>
@@ -479,6 +577,8 @@
         `).join('');
       } else if (currentTab === 'contacts') {
         const tbody = document.getElementById('table-contacts-body');
+        if (!tbody) return;
+
         const filtered = contactsData.filter(c => {
           const name = `${c.first_name || ''} ${c.last_name || ''}`.toLowerCase();
           return !searchVal || 
@@ -487,17 +587,22 @@
             (c.message && c.message.toLowerCase().includes(searchVal));
         });
 
-        document.getElementById('record-count-display').textContent = `Showing ${filtered.length} of ${contactsData.length} messages`;
+        const countDisplay = document.getElementById('record-count-display');
+        if (countDisplay) countDisplay.textContent = `Showing ${filtered.length} of ${contactsData.length} messages`;
 
         if (filtered.length === 0) {
           tbody.innerHTML = '';
-          emptyState.classList.remove('hidden');
-          emptyState.classList.add('flex');
+          if (emptyState) {
+            emptyState.classList.remove('hidden');
+            emptyState.classList.add('flex');
+          }
           return;
         }
 
-        emptyState.classList.add('hidden');
-        emptyState.classList.remove('flex');
+        if (emptyState) {
+          emptyState.classList.add('hidden');
+          emptyState.classList.remove('flex');
+        }
 
         tbody.innerHTML = filtered.map(c => `
           <tr class="hover:bg-slate-50/80 transition">
@@ -516,7 +621,7 @@
             <td class="px-5 py-4 text-gray-400 text-[11px]">
               ${c.createdAt ? c.createdAt.split('T')[0] : 'Recent'}
             </td>
-            <td class="px-5 py-4 text-right">
+            <td class="px-5 py-4 text-right no-print">
               <a href="mailto:${c.email_id}?subject=Re: Credify Capital Enquiry" class="inline-flex items-center gap-1 bg-secondary text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:brightness-110 transition">
                 <span class="material-symbols-outlined text-sm">reply</span> Reply
               </a>
@@ -525,6 +630,8 @@
         `).join('');
       } else if (currentTab === 'partners') {
         const tbody = document.getElementById('table-partners-body');
+        if (!tbody) return;
+
         const filtered = partnersData.filter(p => {
           return !searchVal || 
             (p.name && p.name.toLowerCase().includes(searchVal)) ||
@@ -532,17 +639,22 @@
             (p.dsaCode && p.dsaCode.toLowerCase().includes(searchVal));
         });
 
-        document.getElementById('record-count-display').textContent = `Showing ${filtered.length} of ${partnersData.length} partners`;
+        const countDisplay = document.getElementById('record-count-display');
+        if (countDisplay) countDisplay.textContent = `Showing ${filtered.length} of ${partnersData.length} partners`;
 
         if (filtered.length === 0) {
           tbody.innerHTML = '';
-          emptyState.classList.remove('hidden');
-          emptyState.classList.add('flex');
+          if (emptyState) {
+            emptyState.classList.remove('hidden');
+            emptyState.classList.add('flex');
+          }
           return;
         }
 
-        emptyState.classList.add('hidden');
-        emptyState.classList.remove('flex');
+        if (emptyState) {
+          emptyState.classList.add('hidden');
+          emptyState.classList.remove('flex');
+        }
 
         tbody.innerHTML = filtered.map(p => `
           <tr class="hover:bg-slate-50/80 transition">
@@ -585,13 +697,16 @@
 
       document.getElementById('bank-modal').classList.remove('hidden');
     }
+    window.openBankModal = openBankModal;
 
     function closeBankModal() {
-      document.getElementById('bank-modal').classList.add('hidden');
+      const modal = document.getElementById('bank-modal');
+      if (modal) modal.classList.add('hidden');
     }
+    window.closeBankModal = closeBankModal;
 
     async function saveBankAssignment(e) {
-      e.preventDefault();
+      if (e) e.preventDefault();
       const id = document.getElementById('modal-lead-id').value;
       const assignedBank = document.getElementById('modal-bank-select').value;
       const status = document.getElementById('modal-status-select').value;
@@ -615,6 +730,54 @@
         showToast(err.message || 'Failed to update lead', 'error');
       }
     }
+
+    // BIND ALL DOM EVENT LISTENERS (Strict CSP Compliant)
+    document.addEventListener('DOMContentLoaded', () => {
+      // Logout Button
+      const logoutBtn = document.getElementById('btn-admin-logout');
+      if (logoutBtn) logoutBtn.addEventListener('click', handleAdminLogout);
+
+      // Export CSV Button
+      const exportCsvBtn = document.getElementById('btn-export-csv');
+      if (exportCsvBtn) exportCsvBtn.addEventListener('click', downloadLeadsCSV);
+
+      // Export PDF Button
+      const exportPdfBtn = document.getElementById('btn-export-pdf');
+      if (exportPdfBtn) exportPdfBtn.addEventListener('click', downloadLeadsPDF);
+
+      // Tabs
+      const tabLeads = document.getElementById('tab-leads');
+      if (tabLeads) tabLeads.addEventListener('click', () => switchTab('leads'));
+      const tabContacts = document.getElementById('tab-contacts');
+      if (tabContacts) tabContacts.addEventListener('click', () => switchTab('contacts'));
+      const tabPartners = document.getElementById('tab-partners');
+      if (tabPartners) tabPartners.addEventListener('click', () => switchTab('partners'));
+
+      // Search & Filters
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) searchInput.addEventListener('input', renderTabContent);
+      const statusFilter = document.getElementById('status-filter');
+      if (statusFilter) statusFilter.addEventListener('change', renderTabContent);
+      const bankFilter = document.getElementById('bank-filter');
+      if (bankFilter) bankFilter.addEventListener('change', renderTabContent);
+
+      // Modal Events
+      const modalCloseX = document.getElementById('modal-close-x-btn');
+      if (modalCloseX) modalCloseX.addEventListener('click', closeBankModal);
+      const modalCancel = document.getElementById('modal-cancel-btn');
+      if (modalCancel) modalCancel.addEventListener('click', closeBankModal);
+      const routingForm = document.getElementById('bank-routing-form');
+      if (routingForm) routingForm.addEventListener('submit', saveBankAssignment);
+
+      // Event delegation for dynamic table rows (Route / Edit button)
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn-route-lead');
+        if (btn) {
+          const leadId = btn.getAttribute('data-id');
+          if (leadId) openBankModal(leadId);
+        }
+      });
+    });
   </script>
 </body>
 </html>

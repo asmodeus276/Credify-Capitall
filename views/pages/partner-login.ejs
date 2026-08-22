@@ -113,11 +113,6 @@
             <button type="submit" class="w-full bg-primary hover:bg-primary/95 text-white py-3 rounded-lg font-bold shadow-md hover:shadow-lg transition">
               Verify &amp; Enter Portal
             </button>
-            <div class="text-center pt-2">
-              <button type="button" onclick="fillDemoPartner()" class="text-xs font-semibold text-secondary hover:underline">
-                Quick Demo Partner Login (1-Click)
-              </button>
-            </div>
           </form>
 
           <!-- REGISTER VIEW -->
@@ -788,12 +783,6 @@
       }
     }
 
-    function fillDemoPartner() {
-      document.getElementById('login-dsa-code').value = 'CC-DSA-9842';
-      document.getElementById('login-password').value = 'password';
-      showToast('Filled demo partner credentials. Click Verify & Enter.');
-    }
-
     // AUTH ACTION HANDLERS
     function handleLogin(e) {
       if (e) e.preventDefault();
@@ -1341,7 +1330,7 @@
       if (lead.status !== 'Disbursed' && lead.status !== 'Rejected') {
         adminOverrideHtml = `
           <div class="p-3 bg-primary/5 rounded-lg border border-primary/10 text-xs flex flex-col md:flex-row justify-between items-center gap-3">
-            <span class="text-primary font-bold">🛠️ Demo Credit Actions:</span>
+            <span class="text-primary font-bold">Lead Management Actions:</span>
             <div class="flex gap-2">
               ${lead.status === 'Submitted' ? `<button onclick="updateLeadStatus('${lead.id}', 'Under Review', 'Verified attachments. Underwriter reviewing bank FOIR.')" class="bg-amber-600 hover:brightness-110 text-white px-3 py-1 rounded font-bold text-[10px]">Move to Review</button>` : ''}
               ${lead.status === 'Under Review' ? `<button onclick="updateLeadStatus('${lead.id}', 'Approved', 'Credit risk team approved. Rate settled at 10.5% APR.')" class="bg-blue-600 hover:brightness-110 text-white px-3 py-1 rounded font-bold text-[10px]">Approve Loan</button>` : ''}
