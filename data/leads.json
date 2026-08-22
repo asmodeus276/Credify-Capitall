@@ -53,6 +53,11 @@
         "date": "22/8/2026, 2:00:52 pm",
         "status": "Forwarded to Bank",
         "note": "Assigned to Kotak SME Desk"
+      },
+      {
+        "date": "22/8/2026, 2:03:59 pm",
+        "status": "Forwarded to Bank",
+        "note": "Assigned to Kotak SME Desk"
       }
     ]
   },
@@ -104,7 +109,7 @@
     "city": "Ghaziabad",
     "tenure": "24",
     "cibil": "740",
-    "status": "New Lead",
+    "status": "Rejected",
     "assignedBank": "Unassigned",
     "bankRM": "",
     "source": "website_direct",
@@ -117,6 +122,11 @@
         "date": "2026-08-21 14:20",
         "status": "New Lead",
         "note": "Application received."
+      },
+      {
+        "date": "22/8/2026, 2:02:36 pm",
+        "status": "Rejected",
+        "note": "Awaiting salary slip verification."
       }
     ]
   }

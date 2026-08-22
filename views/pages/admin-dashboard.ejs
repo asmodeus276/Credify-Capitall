@@ -11,6 +11,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/tailwind-built.css">
+  
+  <!-- STRICT SYNCHRONOUS AUTH GUARD -->
+  <script nonce="<%= nonce %>">
+    if (!localStorage.getItem('credify_admin_token')) {
+      window.location.replace("admin-login.html");
+    }
+  </script>
 </head>
 <body class="bg-slate-50 text-primary min-h-screen flex flex-col justify-between font-sans">
 
@@ -27,7 +34,7 @@
           <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">
             <span class="material-symbols-outlined text-sm">shield</span> Super Admin CRM
           </span>
-          <span class="text-xs text-gray-400 font-medium">Logged in as: <strong id="admin-user-email" class="text-gray-700">admin@credifycapital.in</strong></span>
+          <span class="text-xs text-gray-400 font-medium">Active Session: <strong id="admin-user-email" class="text-gray-700">admin@credifycapital.in</strong></span>
         </div>
         <h1 class="text-2xl font-extrabold text-primary tracking-tight mt-1">Loan Origination &amp; Bank Routing Desk</h1>
         <p class="text-xs text-gray-500 mt-0.5">Manage customer leads, route applications to partner banks (Kotak, ICICI, HDFC), and monitor inquiries.</p>
@@ -37,8 +44,8 @@
         <a href="/api/admin/export-csv" class="flex-1 md:flex-none inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition">
           <span class="material-symbols-outlined text-sm">download</span> Export Leads to CSV
         </a>
-        <button onclick="handleAdminLogout()" class="flex-1 md:flex-none inline-flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold px-4 py-2.5 rounded-xl transition">
-          <span class="material-symbols-outlined text-sm">logout</span> Sign Out
+        <button onclick="handleAdminLogout()" class="flex-1 md:flex-none inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow transition">
+          <span class="material-symbols-outlined text-sm">logout</span> Secure Logout
         </button>
       </div>
     </div>
@@ -314,13 +321,16 @@
     }
 
     function handleAdminLogout() {
-      localStorage.removeItem('credify_admin_token');
-      localStorage.removeItem('credify_admin_email');
-      localStorage.removeItem('credify_admin_name');
-      showToast('Signed out of Administrator CRM');
-      setTimeout(() => {
-        window.location.href = "admin-login.html";
-      }, 500);
+      if (confirm('Are you sure you want to securely log out of the Admin CRM?')) {
+        localStorage.removeItem('credify_admin_token');
+        localStorage.removeItem('credify_admin_email');
+        localStorage.removeItem('credify_admin_name');
+        sessionStorage.clear();
+        showToast('Logged out securely.');
+        setTimeout(() => {
+          window.location.replace("admin-login.html");
+        }, 300);
+      }
     }
 
     // Fetch all CRM databases
