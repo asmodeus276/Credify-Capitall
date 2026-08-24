@@ -1,283 +1,245 @@
-<!DOCTYPE html><html lang="en"><head>
-<script nonce="<%= nonce %>" src="/js/jquery-3.6.0.min.js"></script>
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content="#142450">
+  <meta name="description" content="Learn about Credify Capital - India's leading digital lending platform providing fast, transparent, and seamless credit solutions.">
+  <title>About Us | Credify Capital</title>
+  <link rel="shortcut icon" href="/img/favicon.ico">
 
-      <!-- Metas -->
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 
-      <meta charset="utf-8">
-
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-      <!-- Chrome, Firefox, OS & Opera -->
-
-      <meta name="theme-color" content="#253A71">
-
-      <!-- Windows Phone -->
-
-      <meta name="msapplication-navbutton-color" content="#253A71">
-
-      <!-- Safari/iOS -->
-
-      <meta name="description" content="Credify Capital.com Customer Care Email ID and Customer Care Number (Toll-Free). Reach out to us today for any query, request, or complaint.">
-
-      <!-- Title  -->
-
-      <title>About Us - Credify Capital</title>
-
-      <!-- Favicon -->
-
-      <link rel="shortcut icon" href="/img/favicon.ico">
-
-      <!-- Plugins -->
-
-      <link rel="stylesheet" href="/css/plugins.css">
-      <link rel="stylesheet" href="/css/plugins/bootstrap.min.css">
-      <link rel="stylesheet" href="/css/plugins/responsive.css">
-
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-      <!-- Core Style Css -->
-
-      <link rel="stylesheet" href="/css/style.css">
-
-      <link rel="stylesheet" href="/css/style-new.css">
-
-      <link href="/css/jquery-ui.css" rel="Stylesheet">
-
-<link rel="stylesheet" href="/css/tailwind-built.css">
-
-  <link rel="stylesheet" href="/css/loan-page-common.css">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/tailwind-built.css">
-
-<script nonce="<%= nonce %>">
-document.addEventListener("DOMContentLoaded", function () {
-  var menuBtn = document.getElementById('mobile-menu-btn');
-  var menuPanel = document.getElementById('mobile-menu-panel');
-  var menuIcon = document.getElementById('mobile-menu-icon');
-  if (menuBtn && menuPanel) {
-    menuBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var isOpen = !menuPanel.classList.contains('hidden');
-      menuPanel.classList.toggle('hidden');
-      menuBtn.setAttribute('aria-expanded', String(!isOpen));
-      if (menuIcon) menuIcon.textContent = isOpen ? 'close' : 'menu';
-    });
-    document.addEventListener('click', function(e) {
-      if (!menuPanel.classList.contains('hidden') && !menuBtn.contains(e.target) && !menuPanel.contains(e.target)) {
-        menuPanel.classList.add('hidden');
-        menuBtn.setAttribute('aria-expanded', 'false');
-        if (menuIcon) menuIcon.textContent = 'menu';
-      }
-    });
-  }
-});
-</script>
-
+  <!-- Tailwind Built CSS -->
+  <link rel="stylesheet" href="/css/tailwind-built.css">
 </head>
 
-   <body class="bg-background text-on-background font-body-md pt-[64px] lg:pt-[116px]">
-<%- include('../partials/header') %>
+<body class="bg-background text-on-background font-body-md pt-[80px] lg:pt-[154px]">
+  <%- include('../partials/header') %>
 
-      <!--search section style end here--> 
+  <!-- START BANNER -->
+  <section class="relative bg-gradient-to-r from-[#142450] via-[#1b2f66] to-[#253A71] text-white py-14 md:py-20 px-4 md:px-8 overflow-hidden">
+    <!-- Geometric background subtle glow accent -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent)] pointer-events-none"></div>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <div class="max-w-7xl mx-auto relative z-10 text-center md:text-left">
+      <div class="inline-flex items-center gap-2 bg-white/10 border border-white/15 text-red-200 px-4 py-1.5 rounded-full text-xs font-bold tracking-wide mb-4 backdrop-blur-sm">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        Institutional Trust, Startup Speed
+      </div>
+      
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+        About <span class="text-red-400 font-extrabold">Credify Capital</span>
+      </h1>
+      
+      <p class="text-base md:text-lg text-gray-200 max-w-2xl leading-relaxed mb-6 font-normal">
+        Empowering businesses and individuals across the nation with fast, seamless, and transparent digital credit solutions.
+      </p>
 
-      <!-- START BANNER -->
-      <section class="relative bg-primary text-white py-16 px-4 md:px-8 overflow-hidden">
-         <!-- Geometric background accent -->
-         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-secondary/15 via-transparent to-transparent opacity-60"></div>
-         
-         <div class="max-w-7xl mx-auto relative z-10 text-center md:text-left">
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-4">
-               About <span class="text-secondary">Credify Capital</span>
-            </h1>
-            <p class="text-lg md:text-xl text-white/90 max-w-2xl leading-relaxed mb-6 font-light">
-               Empowering businesses and individuals across the nation with fast, seamless, and transparent digital credit solutions.
-            </p>
+      <!-- Breadcrumbs -->
+      <div class="flex items-center justify-center md:justify-start gap-2 text-xs md:text-sm text-white/70">
+        <a href="/index.html" class="hover:text-white transition">Home</a>
+        <span class="text-white/40">/</span>
+        <span class="text-white font-semibold">About Us</span>
+      </div>
+    </div>
+  </section>
+  <!-- END BANNER -->
+
+  <!-- WHO WE ARE SECTION -->
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Brand Intro Copy -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center gap-2 bg-secondary/10 text-secondary px-4 py-1.5 rounded-full text-xs md:text-sm font-semibold">
+            <span class="w-2 h-2 rounded-full bg-secondary"></span>
+            Fintech Innovation &amp; Speed
+          </div>
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-primary tracking-tight leading-snug">
+            Pioneering the Future of Digital Credit
+          </h2>
+          <p class="text-on-surface-variant leading-relaxed text-base">
+            At <strong>Credify Capital</strong>, we believe that access to credit should be a catalyst for growth, not a hurdle of bureaucracy. Founded as an innovative fintech platform, we bridge the gap between traditional banking stability and the fast-paced demands of modern business. We design custom financial tools that get funding in your hands in minutes, not weeks.
+          </p>
+          <p class="text-on-surface-variant leading-relaxed text-base">
+            Our automated scoring models analyze dynamic data vectors, allowing us to offer unsecured options, flexible repayments, and extremely competitive interest rates across Personal, Business, and Machinery Loans.
+          </p>
+        </div>
+
+        <!-- Core Stats Grid -->
+        <div class="lg:col-span-5 grid grid-cols-2 gap-4">
+          <div class="bg-surface border border-outline-variant/20 p-6 rounded-2xl shadow-sm text-center hover:border-primary/30 transition-colors">
+            <p class="text-3xl sm:text-4xl font-extrabold text-primary mb-1">5 Min</p>
+            <p class="text-xs font-bold uppercase tracking-wider text-secondary">Approval Time</p>
+          </div>
+          <div class="bg-surface border border-outline-variant/20 p-6 rounded-2xl shadow-sm text-center hover:border-primary/30 transition-colors">
+            <p class="text-3xl sm:text-4xl font-extrabold text-primary mb-1">100%</p>
+            <p class="text-xs font-bold uppercase tracking-wider text-secondary">Paperless Portal</p>
+          </div>
+          <div class="bg-surface border border-outline-variant/20 p-6 rounded-2xl shadow-sm text-center hover:border-primary/30 transition-colors">
+            <p class="text-3xl sm:text-4xl font-extrabold text-primary mb-1">50K+</p>
+            <p class="text-xs font-bold uppercase tracking-wider text-secondary">Happy Clients</p>
+          </div>
+          <div class="bg-surface border border-outline-variant/20 p-6 rounded-2xl shadow-sm text-center hover:border-primary/30 transition-colors">
+            <p class="text-3xl sm:text-4xl font-extrabold text-primary mb-1">Flexible</p>
+            <p class="text-xs font-bold uppercase tracking-wider text-secondary">Repay Tenures</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR VALUES SECTION -->
+  <section class="py-16 bg-surface-bright border-t border-b border-outline-variant/20">
+    <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop text-center">
+      <div class="inline-flex items-center gap-2 bg-primary/5 text-primary px-4 py-1.5 rounded-full text-xs font-semibold mb-3">
+        <span class="material-symbols-outlined text-sm">stars</span>
+        What Drives Us
+      </div>
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-primary tracking-tight mb-3">Our Core Values</h2>
+      <p class="text-on-surface-variant text-sm md:text-base max-w-2xl mx-auto mb-12">
+        The principles that guide our day-to-day work, engineering decisions, and client relations.
+      </p>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+        <!-- Value 1 -->
+        <div class="bg-white border border-outline-variant/20 p-6 sm:p-8 rounded-2xl shadow-sm hover:-translate-y-1.5 transition-all duration-300">
+          <div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center text-2xl mb-4">
+            <span class="material-symbols-outlined text-primary text-2xl">handshake</span>
+          </div>
+          <h3 class="text-lg font-bold text-primary mb-2">Absolute Trust</h3>
+          <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+            We maintain transparent policies, zero hidden charges, and clear terms so you are always in complete control of your capital.
+          </p>
+        </div>
+
+        <!-- Value 2 -->
+        <div class="bg-white border border-outline-variant/20 p-6 sm:p-8 rounded-2xl shadow-sm hover:-translate-y-1.5 transition-all duration-300">
+          <div class="w-12 h-12 bg-secondary/10 text-secondary rounded-xl flex items-center justify-center text-2xl mb-4">
+            <span class="material-symbols-outlined text-secondary text-2xl">bolt</span>
+          </div>
+          <h3 class="text-lg font-bold text-primary mb-2">Relentless Speed</h3>
+          <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+            Financial opportunities do not wait. Our digital platform is optimized for quick processing and immediate disbursements.
+          </p>
+        </div>
+
+        <!-- Value 3 -->
+        <div class="bg-white border border-outline-variant/20 p-6 sm:p-8 rounded-2xl shadow-sm hover:-translate-y-1.5 transition-all duration-300">
+          <div class="w-12 h-12 bg-blue-500/10 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-4">
+            <span class="material-symbols-outlined text-blue-600 text-2xl">insights</span>
+          </div>
+          <h3 class="text-lg font-bold text-primary mb-2">Deep Innovation</h3>
+          <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+            We continuously refine our scoring systems, utilizing modern engineering to evaluate eligibility without paperwork hassle.
+          </p>
+        </div>
+
+        <!-- Value 4 -->
+        <div class="bg-white border border-outline-variant/20 p-6 sm:p-8 rounded-2xl shadow-sm hover:-translate-y-1.5 transition-all duration-300">
+          <div class="w-12 h-12 bg-emerald-500/10 text-emerald-600 rounded-xl flex items-center justify-center text-2xl mb-4">
+            <span class="material-symbols-outlined text-emerald-600 text-2xl">favorite</span>
+          </div>
+          <h3 class="text-lg font-bold text-primary mb-2">Client Centricity</h3>
+          <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+            Every product, repayment plan, and UI workflow is constructed to deliver high-quality, transparent, and seamless experiences.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR LEADERSHIP & LOCATIONS -->
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Address and Contact Details -->
+        <div class="lg:col-span-6 space-y-6">
+          <div class="inline-flex items-center gap-2 bg-primary/5 text-primary px-4 py-1.5 rounded-full text-xs font-semibold">
+            <span class="material-symbols-outlined text-sm">apartment</span>
+            Corporate Office
+          </div>
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-primary tracking-tight">Our Headquarters</h2>
+          <p class="text-on-surface-variant text-base leading-relaxed">
+            Credify Capital serves customers nationwide. Our corporate team is situated in Delhi-NCR, bringing institutional credit background to modern digital portals.
+          </p>
+          
+          <div class="bg-surface-bright border border-outline-variant/20 p-6 rounded-2xl space-y-4">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-primary text-xl">location_on</span>
+              </div>
+              <div>
+                <p class="font-bold text-primary text-sm">Office Address</p>
+                <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed mt-0.5">
+                  1107, S3 Tower, Cloud 9, Vaishali, Ghaziabad (NCR), 201010
+                </p>
+              </div>
+            </div>
             
-            <!-- Breadcrumbs -->
-            <div class="flex items-center justify-center md:justify-start gap-2 text-sm text-white/70">
-               <a href="/index.html" class="hover:text-white transition">Home</a>
-               <span class="text-white/40">/</span>
-               <span class="text-white font-semibold">About Us</span>
+            <div class="flex items-start gap-4 pt-3 border-t border-outline-variant/15">
+              <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-primary text-xl">mail</span>
+              </div>
+              <div>
+                <p class="font-bold text-primary text-sm">Official Support Email</p>
+                <p class="text-xs sm:text-sm text-on-surface-variant mt-0.5">
+                  <a href="mailto:info@credifycapital.in" class="hover:text-secondary hover:underline transition">info@credifycapital.in</a>
+                </p>
+              </div>
             </div>
-         </div>
-      </section>
-      <!-- END BANNER -->
-
-      <!-- WHO WE ARE SECTION -->
-      <section class="py-16 bg-white">
-         <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-               
-               <!-- Brand Intro Copy -->
-               <div class="lg:col-span-7 space-y-6">
-                  <div class="inline-flex items-center gap-2 bg-secondary/10 text-secondary px-4 py-1.5 rounded-full text-sm font-semibold">
-                     <span class="w-2 h-2 rounded-full bg-secondary"></span>
-                     Institutional Trust, Startup Speed
-                  </div>
-                  <h2 class="text-3xl md:text-4xl font-bold text-primary tracking-tight">
-                     Pioneering the Future of Digital Credit
-                  </h2>
-                  <p class="text-on-surface-variant leading-relaxed text-base">
-                     At <strong>Credify Capital</strong>, we believe that access to credit should be a catalyst for growth, not a hurdle of bureaucracy. Founded as an innovative fintech platform, we bridge the gap between traditional banking stability and the fast-paced demands of modern business. We design custom financial tools that get funding in your hands in minutes, not weeks.
-                  </p>
-                  <p class="text-on-surface-variant leading-relaxed text-base">
-                     Our automated scoring models analyze data point vectors dynamically, allowing us to offer unsecured options, flexible repayments, and extremely competitive interest rates across Personal, Business, and Machinery Loans.
-                  </p>
-               </div>
-
-               <!-- Core Stats Grid -->
-               <div class="lg:col-span-5 grid grid-cols-2 gap-4">
-                  <div class="bg-surface border border-outline-variant/10 p-6 rounded-2xl shadow-sm text-center">
-                     <p class="text-4xl font-extrabold text-primary mb-2">5 Min</p>
-                     <p class="text-xs font-bold uppercase tracking-wider text-secondary">Approval Time</p>
-                  </div>
-                  <div class="bg-surface border border-outline-variant/10 p-6 rounded-2xl shadow-sm text-center">
-                     <p class="text-4xl font-extrabold text-primary mb-2">100%</p>
-                     <p class="text-xs font-bold uppercase tracking-wider text-secondary">Paperless Portal</p>
-                  </div>
-                  <div class="bg-surface border border-outline-variant/10 p-6 rounded-2xl shadow-sm text-center">
-                     <p class="text-4xl font-extrabold text-primary mb-2">50K+</p>
-                     <p class="text-xs font-bold uppercase tracking-wider text-secondary">Happy Clients</p>
-                  </div>
-                  <div class="bg-surface border border-outline-variant/10 p-6 rounded-2xl shadow-sm text-center">
-                     <p class="text-4xl font-extrabold text-primary mb-2">Flexible</p>
-                     <p class="text-xs font-bold uppercase tracking-wider text-secondary">Repay Tenures</p>
-                  </div>
-               </div>
-
-            </div>
-         </div>
-      </section>
-
-      <!-- OUR VALUES SECTION -->
-      <section class="py-16 bg-surface border-t border-b border-outline-variant/10">
-         <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop text-center">
-            <h2 class="text-3xl font-bold text-primary tracking-tight mb-3">Our Core Values</h2>
-            <p class="text-on-surface-variant text-base max-w-2xl mx-auto mb-12">
-               The principles that guide our day-to-day work, engineering decisions, and client relations.
-            </p>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-               <!-- Value 1 -->
-               <div class="bg-white border border-outline-variant/15 p-8 rounded-2xl shadow-sm hover:translate-y-[-4px] transition-all duration-300">
-                  <div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center text-2xl mx-auto mb-4">
-                     🤝
-                  </div>
-                  <h3 class="text-lg font-bold text-primary mb-2">Absolute Trust</h3>
-                  <p class="text-xs text-on-surface-variant leading-relaxed">
-                     We maintain transparent policies, no hidden charges, and clear terms so you are always in complete control of your capital.
-                  </p>
-               </div>
-
-               <!-- Value 2 -->
-               <div class="bg-white border border-outline-variant/15 p-8 rounded-2xl shadow-sm hover:translate-y-[-4px] transition-all duration-300">
-                  <div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center text-2xl mx-auto mb-4">
-                     ⚡
-                  </div>
-                  <h3 class="text-lg font-bold text-primary mb-2">Relentless Speed</h3>
-                  <p class="text-xs text-on-surface-variant leading-relaxed">
-                     Financial opportunities do not wait. Our digital platform is optimized for sub-5 minute processing and immediate disbursements.
-                  </p>
-               </div>
-
-               <!-- Value 3 -->
-               <div class="bg-white border border-outline-variant/15 p-8 rounded-2xl shadow-sm hover:translate-y-[-4px] transition-all duration-300">
-                  <div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center text-2xl mx-auto mb-4">
-                     🛠️
-                  </div>
-                  <h3 class="text-lg font-bold text-primary mb-2">Deep Innovation</h3>
-                  <p class="text-xs text-on-surface-variant leading-relaxed">
-                     We continuously refine our scoring systems, utilizing clean modern engineering to evaluate eligibility without unnecessary hassle.
-                  </p>
-               </div>
-
-               <!-- Value 4 -->
-               <div class="bg-white border border-outline-variant/15 p-8 rounded-2xl shadow-sm hover:translate-y-[-4px] transition-all duration-300">
-                  <div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center text-2xl mx-auto mb-4">
-                     ❤️
-                  </div>
-                  <h3 class="text-lg font-bold text-primary mb-2">Client Centricity</h3>
-                  <p class="text-xs text-on-surface-variant leading-relaxed">
-                     Every product, repayment plan, and UI layout is constructed purely to deliver high-quality, eye-safe, and breathable experiences.
-                  </p>
-               </div>
+            <div class="flex items-start gap-4 pt-3 border-t border-outline-variant/15">
+              <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-primary text-xl">call</span>
+              </div>
+              <div>
+                <p class="font-bold text-primary text-sm">National Helpline</p>
+                <p class="text-xs sm:text-sm text-on-surface-variant mt-0.5">
+                  <a href="tel:+919931372218" class="hover:text-secondary hover:underline transition">+91 9931372218</a>
+                </p>
+              </div>
             </div>
-         </div>
-      </section>
+          </div>
+        </div>
 
-      <!-- OUR LEADERSHIP & LOCATIONS -->
-      <section class="py-16 bg-white">
-         <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-               
-               <!-- Address and Contact Details -->
-               <div class="lg:col-span-6 space-y-6">
-                  <h2 class="text-3xl font-bold text-primary tracking-tight">Our Headquarters</h2>
-                  <p class="text-on-surface-variant text-base leading-relaxed">
-                     Credify Capital serves customers nationwide. Our corporate team is situated in Delhi-NCR, bringing institutional credit background to modern SaaS portals.
-                  </p>
-                  
-                  <div class="bg-surface border border-outline-variant/10 p-6 rounded-2xl space-y-4">
-                     <div class="flex items-start gap-4">
-                        <span class="text-2xl mt-1">📍</span>
-                        <div>
-                           <p class="font-bold text-primary">Office Address</p>
-                           <p class="text-sm text-on-surface-variant leading-relaxed">
-                              1107, S3 Tower, Cloud 9, Vaishali, Ghaziabad (NCR), 201010
-                           </p>
-                        </div>
-                     </div>
-                     <div class="flex items-start gap-4 pt-3 border-t border-outline-variant/10">
-                        <span class="text-2xl mt-1">✉️</span>
-                        <div>
-                            <p class="font-bold text-primary">Official Support Email</p>
-                            <p class="text-sm text-on-surface-variant"><a href="mailto:info@credifycapital.in" class="hover:underline">info@credifycapital.in</a></p>
-                        </div>
-                     </div>
-                     <div class="flex items-start gap-4 pt-3 border-t border-outline-variant/10">
-                        <span class="text-2xl mt-1">📞</span>
-                        <div>
-                           <p class="font-bold text-primary">National Helpline</p>
-                           <p class="text-sm text-on-surface-variant">+91 9931372218</p>
-                        </div>
-                     </div>
-                  </div>
-               </div>
+        <!-- Interactive Map Frame -->
+        <div class="lg:col-span-6 flex flex-col justify-between">
+          <div class="border border-outline-variant/20 rounded-2xl overflow-hidden shadow-sm h-full min-h-[340px]">
+            <iframe src="https://maps.google.com/maps?q=1107,+S3+Tower,+Cloud+9,+Vaishali,+Ghaziabad,+201010&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=&amp;output=embed" width="100%" height="100%" style="border:0; min-height: 340px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
 
-               <!-- Interactive Map Frame -->
-               <div class="lg:col-span-6 flex flex-col justify-between">
-                  <div class="border border-outline-variant/15 rounded-2xl overflow-hidden shadow-sm h-full min-h-[320px]">
-                     <iframe src="https://maps.google.com/maps?q=1107,+S3+Tower,+Cloud+9,+Vaishali,+Ghaziabad,+201010&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=&amp;output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                  </div>
-               </div>
+      </div>
+    </div>
+  </section>
 
-            </div>
-         </div>
-      </section>
+  <!-- CALL TO ACTION BANNER -->
+  <section class="bg-gradient-to-r from-primary to-[#1c2c56] text-white py-14 px-4 md:px-8 text-center relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.06),transparent)] opacity-50 pointer-events-none"></div>
+    <div class="max-w-4xl mx-auto relative z-10">
+      <h2 class="text-2xl sm:text-3xl font-bold tracking-tight mb-4 text-white">Ready to fuel your journey?</h2>
+      <p class="text-white/85 text-sm md:text-base max-w-xl mx-auto mb-8 font-light">
+        Get fully secure, transparent, and quick credit disbursements matching your specific financial requirements.
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a href="/apply.html" class="bg-secondary text-white px-8 py-3.5 rounded-full font-bold text-sm hover:brightness-110 shadow-lg transition-all transform hover:scale-[1.02] active:scale-95">
+          Apply For Loan
+        </a>
+        <a href="/contact-us.html" class="border border-white/30 text-white px-8 py-3.5 rounded-full font-semibold text-sm hover:bg-white/10 transition-all active:scale-95">
+          Contact Support
+        </a>
+      </div>
+    </div>
+  </section>
 
-      <!-- CALL TO ACTION BANNER -->
-      <section class="bg-gradient-to-r from-primary to-[#1c2c56] text-white py-12 px-4 md:px-8 text-center relative overflow-hidden">
-         <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-secondary/10 via-transparent to-transparent opacity-50"></div>
-         <div class="max-w-4xl mx-auto relative z-10">
-            <h2 class="text-2xl md:text-3xl font-bold tracking-tight mb-4">Ready to fuel your journey?</h2>
-            <p class="text-white/85 text-sm md:text-base max-w-xl mx-auto mb-6">
-               Get fully secure, transparent, and quick credit disbursements matching your specific business requirements.
-            </p>
-            <div class="flex flex-wrap items-center justify-center gap-4">
-               <a href="/apply.html" class="bg-secondary text-white px-8 py-3 rounded-full font-bold text-sm hover:brightness-110 shadow-lg transition-all transform hover:scale-[1.02]">
-                  Apply For Loan
-               </a>
-               <a href="/contact-us.html" class="border border-white/30 text-white px-8 py-3 rounded-full font-semibold text-sm hover:bg-white/10 transition-all">
-                  Contact Support
-               </a>
-            </div>
-         </div>
-      </section>
-<%- include('../partials/footer') %>
+  <%- include('../partials/footer') %>
 </body>
 </html>

@@ -1,5 +1,33 @@
 [
   {
+    "id": "CC-APP-16994",
+    "name": "Vaibhav Thakur",
+    "phone": "8897987789",
+    "email": "vaibhav.tahkur2719@gmail.com",
+    "product": "Business Loan",
+    "amount": 500000,
+    "income": 5000,
+    "city": "ghaziabad",
+    "tenure": "36",
+    "cibil": "710",
+    "emis": 0,
+    "status": "New Lead",
+    "assignedBank": "Unassigned",
+    "bankRM": "",
+    "notes": "Submitted via website form.",
+    "source": "website_direct",
+    "referredByPartnerCode": "",
+    "referredByPartnerName": "",
+    "createdAt": "2026-08-22T08:51:57.433Z",
+    "history": [
+      {
+        "date": "22/8/2026, 2:21:57 pm",
+        "status": "New Lead",
+        "note": "Application registered online."
+      }
+    ]
+  },
+  {
     "id": "CC-APP-8104",
     "name": "Ananya Sharma",
     "phone": "9876543210",
