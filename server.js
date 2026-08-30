@@ -531,6 +531,19 @@ if (isMainModule && process.env.NODE_ENV !== 'test') {
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Credify Capital server running on http://0.0.0.0:${PORT}`);
   });
+
+  // Ensure compatibility if Railway custom domain forwards to port 3000 while PORT is different (e.g. 8080)
+  if (String(PORT) !== '3000') {
+    try {
+      app.listen(3000, '0.0.0.0', () => {
+        console.log('Also listening on backup port 3000');
+      }).on('error', (err) => {
+        if (err.code !== 'EADDRINUSE') console.error('Port 3000 bind error:', err.message);
+      });
+    } catch (e) {
+      // Ignore if already bound
+    }
+  }
 }
 
 export default app;
