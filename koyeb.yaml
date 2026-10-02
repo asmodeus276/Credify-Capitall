@@ -1,0 +1,12 @@
+name: credify-capital
+services:
+  - name: credify-web
+    type: web
+    build_command: npm install && npm run build
+    run_command: npm start
+    ports:
+      - port: 3000
+        path: /
+    env:
+      - key: NODE_ENV
+        value: production
