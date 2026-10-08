@@ -303,10 +303,14 @@ app.post('/api/submit-lead', formLimiter, async (req, res) => {
 
     try {
       if (EMAIL_USER && EMAIL_PASS) {
+        const plainText = `NEW LOAN APPLICATION - CREDIFY CAPITAL\n\nApplication ID: ${leadId}\nName: ${name}\nMobile: +91 ${phone}\nEmail: ${email}\nLoan Type: ${product}\nLoan Amount: ₹${amount ? Number(amount).toLocaleString('en-IN') : 'N/A'}\nMonthly Income: ₹${income ? Number(income).toLocaleString('en-IN') : 'N/A'}\nCity: ${city || 'N/A'}\nTenure: ${tenure ? tenure + ' months' : 'N/A'}\n${isPartnerReferral ? `Referred By Partner: ${referredByPartnerName} (${referredByPartnerCode})\n` : ''}Date: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}\n\nView and manage this application in your Admin CRM Dashboard.`;
+
         await transporter.sendMail({
-          from: `"Credify Capital" <${EMAIL_USER}>`,
+          from: `"Credify Capital Leads" <${EMAIL_USER}>`,
           to: NOTIFY_EMAIL,
+          replyTo: email,
           subject: `🏦 New ${product} Application – ${name} (${leadId})`,
+          text: plainText,
           html: htmlBody
         });
         console.log(`📧 Lead email notification sent for ${leadId} to ${NOTIFY_EMAIL}`);
@@ -375,11 +379,14 @@ app.post('/api/submit-contact', formLimiter, async (req, res) => {
 
     try {
       if (EMAIL_USER && EMAIL_PASS) {
+        const plainText = `NEW CONTACT ENQUIRY - CREDIFY CAPITAL\n\nName: ${first_name} ${last_name || ''}\nEmail: ${email_id}\nCity: ${city || 'N/A'}\nPurpose: ${radios_option_purpose || 'N/A'}\nProduct: ${product_type || 'General'}\n\nMessage:\n${message}\n\nDate: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}`;
+
         await transporter.sendMail({
-          from: `"Credify Capital" <${EMAIL_USER}>`,
+          from: `"Credify Capital Enquiries" <${EMAIL_USER}>`,
           to: NOTIFY_EMAIL,
           replyTo: email_id,
           subject: `💬 ${radios_option_purpose || 'Contact'} from ${first_name} ${last_name || ''} – ${product_type || 'General'}`,
+          text: plainText,
           html: htmlBody
         });
         console.log(`📧 Contact email notification sent to ${NOTIFY_EMAIL}`);
