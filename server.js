@@ -155,22 +155,36 @@ pageRouter.get('*', (req, res, next) => {
 // (Page router will be mounted after API routes below)
 
 // ─── Nodemailer Transporter Setup ───────────────────────────────────────────
+const EMAIL_USER = (process.env.EMAIL_USER || '').trim();
+const EMAIL_PASS = (process.env.EMAIL_PASS || '').replace(/\s+/g, '').replace(/^["']|["']$/g, '');
+const NOTIFY_EMAIL = (process.env.NOTIFY_EMAIL || 'amitkumartrp321@gmail.com').trim();
+
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, // use STARTTLS
+  service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+    user: EMAIL_USER,
+    pass: EMAIL_PASS
   },
-  connectionTimeout: 10000, // 10 seconds
+  connectionTimeout: 10000,
   greetingTimeout: 10000,
-  socketTimeout: 15000,
-  logger: process.env.NODE_ENV !== 'production',
-  debug: process.env.NODE_ENV !== 'production'
+  socketTimeout: 15000
 });
 
-const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || 'amitkumartrp321@gmail.com';
+// Verify email configuration at startup
+if (EMAIL_USER && EMAIL_PASS) {
+  transporter.verify((error) => {
+    if (error) {
+      console.warn('⚠️ Gmail SMTP Verification Warning:', error.message);
+      if (error.code === 'EAUTH') {
+        console.warn('⚠️ Authentication failed. Please check your Google App Password in .env (must be a valid 16-character App Password generated under Google Account > Security > 2-Step Verification > App Passwords).');
+      }
+    } else {
+      console.log(`✅ Gmail SMTP connected successfully (${EMAIL_USER} -> ${NOTIFY_EMAIL})`);
+    }
+  });
+} else {
+  console.warn('⚠️ EMAIL_USER or EMAIL_PASS not configured in .env. Email alerts will be skipped.');
+}
 
 // Rate limiter for form submission APIs
 const formLimiter = rateLimit({
@@ -288,12 +302,15 @@ app.post('/api/submit-lead', formLimiter, async (req, res) => {
     `;
 
     try {
-      await transporter.sendMail({
-        from: `"Credify Capital" <${process.env.EMAIL_USER || 'info@credifycapital.in'}>`,
-        to: NOTIFY_EMAIL,
-        subject: `🏦 New ${product} Application – ${name} (${leadId})`,
-        html: htmlBody
-      });
+      if (EMAIL_USER && EMAIL_PASS) {
+        await transporter.sendMail({
+          from: `"Credify Capital" <${EMAIL_USER}>`,
+          to: NOTIFY_EMAIL,
+          subject: `🏦 New ${product} Application – ${name} (${leadId})`,
+          html: htmlBody
+        });
+        console.log(`📧 Lead email notification sent for ${leadId} to ${NOTIFY_EMAIL}`);
+      }
     } catch (mailErr) {
       console.error('Mail delivery warning (saved to DB):', mailErr.message);
     }
@@ -357,13 +374,16 @@ app.post('/api/submit-contact', formLimiter, async (req, res) => {
     `;
 
     try {
-      await transporter.sendMail({
-        from: `"Credify Capital" <${process.env.EMAIL_USER || 'info@credifycapital.in'}>`,
-        to: NOTIFY_EMAIL,
-        replyTo: email_id,
-        subject: `💬 ${radios_option_purpose || 'Contact'} from ${first_name} ${last_name || ''} – ${product_type || 'General'}`,
-        html: htmlBody
-      });
+      if (EMAIL_USER && EMAIL_PASS) {
+        await transporter.sendMail({
+          from: `"Credify Capital" <${EMAIL_USER}>`,
+          to: NOTIFY_EMAIL,
+          replyTo: email_id,
+          subject: `💬 ${radios_option_purpose || 'Contact'} from ${first_name} ${last_name || ''} – ${product_type || 'General'}`,
+          html: htmlBody
+        });
+        console.log(`📧 Contact email notification sent to ${NOTIFY_EMAIL}`);
+      }
     } catch (mailErr) {
       console.error('Contact mail warning (saved to DB):', mailErr.message);
     }
@@ -398,10 +418,90 @@ app.post('/api/submit-partner', async (req, res) => {
     partners.unshift(newPartner);
     writeDataFile('partners.json', partners);
 
+    // Send Partner Email Notification
+    if (EMAIL_USER && EMAIL_PASS) {
+      const partnerHtml = `
+        <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: white; padding: 24px 32px; border-radius: 12px 12px 0 0;">
+            <h1 style="margin: 0; font-size: 22px;">🤝 New DSA Partner Registration</h1>
+            <p style="margin: 8px 0 0; opacity: 0.85; font-size: 14px;">Credify Capital Partner Portal</p>
+          </div>
+          <div style="background: #f8fafc; padding: 24px 32px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">DSA Code</td><td style="padding: 10px 0; font-weight: 700; color: #142450; font-family: monospace;">${newPartner.dsaCode}</td></tr>
+              <tr style="background: #fff;"><td style="padding: 10px 8px; color: #64748b; font-size: 13px;">Partner Name</td><td style="padding: 10px 8px; font-weight: 600;">${name}</td></tr>
+              <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">Agency / Firm</td><td style="padding: 10px 0;">${agency || 'Individual Consultant'}</td></tr>
+              <tr style="background: #fff;"><td style="padding: 10px 8px; color: #64748b; font-size: 13px;">Mobile</td><td style="padding: 10px 8px;"><a href="tel:+91${mobile}" style="color: #1a3a8a; text-decoration: none;">+91 ${mobile}</a></td></tr>
+              <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">Email</td><td style="padding: 10px 0;">${email ? `<a href="mailto:${email}" style="color: #1a3a8a;">${email}</a>` : 'N/A'}</td></tr>
+              <tr style="background: #fff;"><td style="padding: 10px 8px; color: #64748b; font-size: 13px;">City</td><td style="padding: 10px 8px;">${city || 'N/A'}</td></tr>
+            </table>
+            <p style="margin-top: 20px; font-size: 12px; color: #94a3b8;">Registered on ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</p>
+          </div>
+        </div>
+      `;
+
+      try {
+        await transporter.sendMail({
+          from: `"Credify Capital" <${EMAIL_USER}>`,
+          to: NOTIFY_EMAIL,
+          subject: `🤝 New DSA Partner Registered – ${name} (${newPartner.dsaCode})`,
+          html: partnerHtml
+        });
+        console.log(`📧 Partner registration email sent for ${newPartner.dsaCode} to ${NOTIFY_EMAIL}`);
+      } catch (partnerMailErr) {
+        console.error('Partner mail warning (saved to DB):', partnerMailErr.message);
+      }
+    }
+
     res.json({ success: true, partner: newPartner });
   } catch (err) {
     console.error('Error saving partner:', err);
     res.status(500).json({ success: false, error: 'Failed to register partner.' });
+  }
+});
+
+// ─── API: Test Email Configuration ──────────────────────────────────────────
+app.get('/api/admin/test-email', async (req, res) => {
+  if (!EMAIL_USER || !EMAIL_PASS) {
+    return res.status(400).json({
+      success: false,
+      error: 'EMAIL_USER or EMAIL_PASS is missing in your .env file.'
+    });
+  }
+
+  try {
+    await transporter.verify();
+    const info = await transporter.sendMail({
+      from: `"Credify Capital" <${EMAIL_USER}>`,
+      to: NOTIFY_EMAIL,
+      subject: '✅ Credify Capital - Email Delivery Diagnostic Test',
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;">
+          <h2 style="color: #166534; margin: 0 0 10px;">✅ Gmail SMTP Test Successful</h2>
+          <p style="color: #15803d; margin: 0 0 10px;">Your Gmail credentials and SMTP configuration are working properly!</p>
+          <ul style="color: #374151; font-size: 14px;">
+            <li><strong>Sender (EMAIL_USER):</strong> ${EMAIL_USER}</li>
+            <li><strong>Recipient (NOTIFY_EMAIL):</strong> ${NOTIFY_EMAIL}</li>
+            <li><strong>Timestamp:</strong> ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</li>
+          </ul>
+        </div>
+      `
+    });
+
+    res.json({
+      success: true,
+      message: `Test email successfully delivered to ${NOTIFY_EMAIL}`,
+      messageId: info.messageId
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message,
+      code: err.code || 'UNKNOWN_ERROR',
+      hint: err.code === 'EAUTH'
+        ? 'Authentication failed. Please verify 2-Step Verification is ON in Google Account, then generate a new 16-character App Password at https://myaccount.google.com/apppasswords and update EMAIL_PASS in .env.'
+        : 'Please check your network and Gmail settings.'
+    });
   }
 });
 
