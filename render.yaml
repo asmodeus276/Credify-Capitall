@@ -7,5 +7,15 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: NOTIFY_EMAIL
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASS
+        sync: false
       - key: GEMINI_API_KEY
         sync: false

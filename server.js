@@ -159,31 +159,38 @@ const EMAIL_USER = (process.env.EMAIL_USER || '').trim();
 const EMAIL_PASS = (process.env.EMAIL_PASS || '').replace(/\s+/g, '').replace(/^["']|["']$/g, '');
 const NOTIFY_EMAIL = (process.env.NOTIFY_EMAIL || 'amitkumartrp321@gmail.com').trim();
 
+// Log email config at startup (password masked for security)
+console.log(`📧 Email config: USER=${EMAIL_USER || '(not set)'} | PASS=${EMAIL_PASS ? EMAIL_PASS.slice(0,4) + '****' + EMAIL_PASS.slice(-4) + ' (len=' + EMAIL_PASS.length + ')' : '(not set)'} | NOTIFY=${NOTIFY_EMAIL}`);
+
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
   auth: {
     user: EMAIL_USER,
     pass: EMAIL_PASS
   },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 15000
+  connectionTimeout: 15000,
+  greetingTimeout: 15000,
+  socketTimeout: 20000
 });
 
 // Verify email configuration at startup
 if (EMAIL_USER && EMAIL_PASS) {
   transporter.verify((error) => {
     if (error) {
-      console.warn('⚠️ Gmail SMTP Verification Warning:', error.message);
+      console.error('❌ Gmail SMTP FAILED at startup:', error.code, '-', error.message);
       if (error.code === 'EAUTH') {
-        console.warn('⚠️ Authentication failed. Please check your Google App Password in .env (must be a valid 16-character App Password generated under Google Account > Security > 2-Step Verification > App Passwords).');
+        console.error('❌ EAUTH: App Password is invalid or expired. Go to https://myaccount.google.com/apppasswords and generate a new one.');
+      } else if (error.code === 'ECONNECTION' || error.code === 'ETIMEDOUT') {
+        console.error('❌ Network error: Cannot reach Gmail SMTP. Check if your host allows outbound port 465/587.');
       }
     } else {
-      console.log(`✅ Gmail SMTP connected successfully (${EMAIL_USER} -> ${NOTIFY_EMAIL})`);
+      console.log(`✅ Gmail SMTP ready: ${EMAIL_USER} -> ${NOTIFY_EMAIL}`);
     }
   });
 } else {
-  console.warn('⚠️ EMAIL_USER or EMAIL_PASS not configured in .env. Email alerts will be skipped.');
+  console.error('❌ EMAIL_USER or EMAIL_PASS is missing! Check environment variables. Email alerts will NOT be sent.');
 }
 
 // Rate limiter for form submission APIs
@@ -316,7 +323,8 @@ app.post('/api/submit-lead', formLimiter, async (req, res) => {
         console.log(`📧 Lead email notification sent for ${leadId} to ${NOTIFY_EMAIL}`);
       }
     } catch (mailErr) {
-      console.error('Mail delivery warning (saved to DB):', mailErr.message);
+      console.error(`❌ Lead email FAILED for ${leadId}:`, mailErr.code, '-', mailErr.message);
+      if (mailErr.code === 'EAUTH') console.error('❌ Gmail App Password rejected. Update EMAIL_PASS in Render dashboard.');
     }
 
     res.json({ success: true, message: 'Application submitted successfully.', id: leadId });
@@ -392,7 +400,8 @@ app.post('/api/submit-contact', formLimiter, async (req, res) => {
         console.log(`📧 Contact email notification sent to ${NOTIFY_EMAIL}`);
       }
     } catch (mailErr) {
-      console.error('Contact mail warning (saved to DB):', mailErr.message);
+      console.error('❌ Contact email FAILED:', mailErr.code, '-', mailErr.message);
+      if (mailErr.code === 'EAUTH') console.error('❌ Gmail App Password rejected. Update EMAIL_PASS in Render dashboard.');
     }
 
     res.json({ success: true, message: 'Message sent successfully.' });
@@ -456,7 +465,7 @@ app.post('/api/submit-partner', async (req, res) => {
         });
         console.log(`📧 Partner registration email sent for ${newPartner.dsaCode} to ${NOTIFY_EMAIL}`);
       } catch (partnerMailErr) {
-        console.error('Partner mail warning (saved to DB):', partnerMailErr.message);
+        console.error('❌ Partner email FAILED:', partnerMailErr.code, '-', partnerMailErr.message);
       }
     }
 
@@ -470,14 +479,17 @@ app.post('/api/submit-partner', async (req, res) => {
 // ─── API: Test Email Configuration ──────────────────────────────────────────
 app.get('/api/admin/test-email', async (req, res) => {
   if (!EMAIL_USER || !EMAIL_PASS) {
+    console.error('❌ test-email: EMAIL_USER or EMAIL_PASS missing.');
     return res.status(400).json({
       success: false,
-      error: 'EMAIL_USER or EMAIL_PASS is missing in your .env file.'
+      error: 'EMAIL_USER or EMAIL_PASS is missing in environment variables.'
     });
   }
 
+  console.log(`🔍 test-email: Verifying SMTP for ${EMAIL_USER} (pass len=${EMAIL_PASS.length})...`);
   try {
     await transporter.verify();
+    console.log('✅ test-email: SMTP verify passed. Sending test mail...');
     const info = await transporter.sendMail({
       from: `"Credify Capital" <${EMAIL_USER}>`,
       to: NOTIFY_EMAIL,
@@ -495,19 +507,23 @@ app.get('/api/admin/test-email', async (req, res) => {
       `
     });
 
+    console.log(`✅ test-email: Sent OK! MessageID=${info.messageId}`);
     res.json({
       success: true,
       message: `Test email successfully delivered to ${NOTIFY_EMAIL}`,
       messageId: info.messageId
     });
   } catch (err) {
+    console.error('❌ test-email FAILED:', err.code, '-', err.message);
     res.status(500).json({
       success: false,
       error: err.message,
       code: err.code || 'UNKNOWN_ERROR',
       hint: err.code === 'EAUTH'
-        ? 'Authentication failed. Please verify 2-Step Verification is ON in Google Account, then generate a new 16-character App Password at https://myaccount.google.com/apppasswords and update EMAIL_PASS in .env.'
-        : 'Please check your network and Gmail settings.'
+        ? 'Authentication failed. App Password is invalid/expired. Generate a new one at https://myaccount.google.com/apppasswords and update EMAIL_PASS in Render dashboard.'
+        : err.code === 'ETIMEDOUT' || err.code === 'ECONNECTION'
+          ? 'Cannot connect to Gmail SMTP. Check if your host allows outbound port 465.'
+          : 'Please check your network and Gmail settings.'
     });
   }
 });
