@@ -170,9 +170,10 @@ const EMAIL_PASS = (process.env.EMAIL_PASS || '').replace(/\s+/g, '').replace(/^
 const NOTIFY_EMAIL = (process.env.NOTIFY_EMAIL || 'amitkumartrp321@gmail.com').trim();
 const RESEND_API_KEY = (process.env.RESEND_API_KEY || '').trim();
 const BREVO_API_KEY = (process.env.BREVO_API_KEY || '').trim();
+const WEB3FORMS_KEY = (process.env.WEB3FORMS_KEY || '').trim();
 
 // Log email config at startup (password masked for security)
-console.log(`📧 Email config: USER=${EMAIL_USER || '(not set)'} | PASS=${EMAIL_PASS ? EMAIL_PASS.slice(0,4) + '****' + EMAIL_PASS.slice(-4) + ' (len=' + EMAIL_PASS.length + ')' : '(not set)'} | NOTIFY=${NOTIFY_EMAIL} | RESEND=${RESEND_API_KEY ? 'Configured ✅' : '(not set)'} | BREVO=${BREVO_API_KEY ? 'Configured ✅' : '(not set)'}`);
+console.log(`📧 Email config: USER=${EMAIL_USER || '(not set)'} | PASS=${EMAIL_PASS ? EMAIL_PASS.slice(0,4) + '****' + EMAIL_PASS.slice(-4) + ' (len=' + EMAIL_PASS.length + ')' : '(not set)'} | NOTIFY=${NOTIFY_EMAIL} | RESEND=${RESEND_API_KEY ? 'Configured ✅' : '(not set)'} | BREVO=${BREVO_API_KEY ? 'Configured ✅' : '(not set)'} | WEB3FORMS=${WEB3FORMS_KEY ? 'Configured ✅' : '(not set)'}`);
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -219,7 +220,9 @@ async function sendNotificationEmail({ fromName = 'Credify Capital', subject, te
   // 1. Prioritize Resend HTTP API if configured (Port 443 HTTPS, immune to Render SMTP block)
   if (RESEND_API_KEY) {
     const resendFrom = process.env.RESEND_FROM || 'Credify Capital <onboarding@resend.dev>';
-    const resp = await fetch('https://api.resend.com/emails', {
+    const targetEmail = NOTIFY_EMAIL;
+
+    let resp = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
@@ -227,14 +230,39 @@ async function sendNotificationEmail({ fromName = 'Credify Capital', subject, te
       },
       body: JSON.stringify({
         from: resendFrom,
-        to: [NOTIFY_EMAIL],
+        to: [targetEmail],
         reply_to: replyTo || undefined,
         subject,
         text,
         html
       })
     });
-    const data = await resp.json();
+    let data = await resp.json();
+
+    // If Resend free tier restricts to registered email (unverified custom domain), fall back automatically
+    if (!resp.ok && data.name === 'validation_error' && data.message && data.message.includes('your own email address')) {
+      const match = data.message.match(/\(([^)]+)\)/);
+      const accountOwnerEmail = match ? match[1] : (EMAIL_USER || 'vvg29117@gmail.com');
+      console.warn(`⚠️ Resend test domain in use: Auto-delivering lead to registered account email (${accountOwnerEmail}).`);
+      
+      resp = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${RESEND_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: resendFrom,
+          to: [accountOwnerEmail],
+          reply_to: replyTo || undefined,
+          subject: `[Lead Alert] ${subject}`,
+          text,
+          html
+        })
+      });
+      data = await resp.json();
+    }
+
     if (!resp.ok) {
       throw new Error(`Resend API error (${resp.status}): ${JSON.stringify(data)}`);
     }
