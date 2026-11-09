@@ -2,11 +2,21 @@ import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
+import dns from 'dns';
 import { fileURLToPath } from 'url';
 import helmet from 'helmet';
 import crypto from 'crypto';
 import rateLimit from 'express-rate-limit';
 import nodemailer from 'nodemailer';
+
+// Force IPv4 DNS resolution first to prevent ENETUNREACH errors on cloud platforms like Render
+try {
+  if (dns && dns.setDefaultResultOrder) {
+    dns.setDefaultResultOrder('ipv4first');
+  }
+} catch (e) {
+  // Ignore if unsupported in environment
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -154,36 +164,43 @@ pageRouter.get('*', (req, res, next) => {
 
 // (Page router will be mounted after API routes below)
 
-// ─── Nodemailer Transporter Setup ───────────────────────────────────────────
+// ─── Email Notification Transporter & HTTP API Providers ───────────────────────
 const EMAIL_USER = (process.env.EMAIL_USER || '').trim();
 const EMAIL_PASS = (process.env.EMAIL_PASS || '').replace(/\s+/g, '').replace(/^["']|["']$/g, '');
 const NOTIFY_EMAIL = (process.env.NOTIFY_EMAIL || 'amitkumartrp321@gmail.com').trim();
+const RESEND_API_KEY = (process.env.RESEND_API_KEY || '').trim();
+const BREVO_API_KEY = (process.env.BREVO_API_KEY || '').trim();
 
 // Log email config at startup (password masked for security)
-console.log(`📧 Email config: USER=${EMAIL_USER || '(not set)'} | PASS=${EMAIL_PASS ? EMAIL_PASS.slice(0,4) + '****' + EMAIL_PASS.slice(-4) + ' (len=' + EMAIL_PASS.length + ')' : '(not set)'} | NOTIFY=${NOTIFY_EMAIL}`);
+console.log(`📧 Email config: USER=${EMAIL_USER || '(not set)'} | PASS=${EMAIL_PASS ? EMAIL_PASS.slice(0,4) + '****' + EMAIL_PASS.slice(-4) + ' (len=' + EMAIL_PASS.length + ')' : '(not set)'} | NOTIFY=${NOTIFY_EMAIL} | RESEND=${RESEND_API_KEY ? 'Configured ✅' : '(not set)'} | BREVO=${BREVO_API_KEY ? 'Configured ✅' : '(not set)'}`);
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 465,
   secure: true,
+  family: 4, // Force IPv4 to prevent ENETUNREACH errors on cloud platforms like Render
   auth: {
     user: EMAIL_USER,
     pass: EMAIL_PASS
   },
-  connectionTimeout: 15000,
-  greetingTimeout: 15000,
-  socketTimeout: 20000
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 15000
 });
 
-// Verify email configuration at startup
-if (EMAIL_USER && EMAIL_PASS) {
+// Verify email configuration at startup if using SMTP
+if (RESEND_API_KEY) {
+  console.log(`✅ Resend HTTP API ready to send leads to ${NOTIFY_EMAIL} (bypasses Render SMTP port restrictions).`);
+} else if (BREVO_API_KEY) {
+  console.log(`✅ Brevo HTTP API ready to send leads to ${NOTIFY_EMAIL} (bypasses Render SMTP port restrictions).`);
+} else if (EMAIL_USER && EMAIL_PASS) {
   transporter.verify((error) => {
     if (error) {
       console.error('❌ Gmail SMTP FAILED at startup:', error.code, '-', error.message);
       if (error.code === 'EAUTH') {
-        console.error('❌ EAUTH: App Password is invalid or expired. Go to https://myaccount.google.com/apppasswords and generate a new one.');
-      } else if (error.code === 'ECONNECTION' || error.code === 'ETIMEDOUT') {
-        console.error('❌ Network error: Cannot reach Gmail SMTP. Check if your host allows outbound port 465/587.');
+        console.error('❌ EAUTH: App Password is invalid or incomplete (must be 16 chars). Check EMAIL_PASS in Render dashboard.');
+      } else if (error.code === 'ECONNECTION' || error.code === 'ETIMEDOUT' || error.code === 'ENETUNREACH') {
+        console.error('❌ Network error: Cannot reach Gmail SMTP. Render Free Tier blocks outbound SMTP (ports 25, 465, 587). Consider using RESEND_API_KEY (HTTP API) or upgrading to Render Starter.');
       }
     } else {
       console.log(`✅ Gmail SMTP ready: ${EMAIL_USER} -> ${NOTIFY_EMAIL}`);
@@ -191,6 +208,78 @@ if (EMAIL_USER && EMAIL_PASS) {
   });
 } else {
   console.error('❌ EMAIL_USER or EMAIL_PASS is missing! Check environment variables. Email alerts will NOT be sent.');
+}
+
+/**
+ * Universal email notification sender supporting HTTP APIs (Resend, Brevo)
+ * and standard Gmail SMTP (Nodemailer).
+ * HTTP APIs use HTTPS port 443 which is NEVER blocked by Render Free Tier!
+ */
+async function sendNotificationEmail({ fromName = 'Credify Capital', subject, text, html, replyTo }) {
+  // 1. Prioritize Resend HTTP API if configured (Port 443 HTTPS, immune to Render SMTP block)
+  if (RESEND_API_KEY) {
+    const resendFrom = process.env.RESEND_FROM || 'Credify Capital <onboarding@resend.dev>';
+    const resp = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: resendFrom,
+        to: [NOTIFY_EMAIL],
+        reply_to: replyTo || undefined,
+        subject,
+        text,
+        html
+      })
+    });
+    const data = await resp.json();
+    if (!resp.ok) {
+      throw new Error(`Resend API error (${resp.status}): ${JSON.stringify(data)}`);
+    }
+    return { provider: 'resend', id: data.id };
+  }
+
+  // 2. Brevo HTTP API if configured (Port 443 HTTPS)
+  if (BREVO_API_KEY) {
+    const senderEmail = EMAIL_USER || 'no-reply@credifycapital.in';
+    const resp = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': BREVO_API_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        sender: { name: fromName, email: senderEmail },
+        to: [{ email: NOTIFY_EMAIL }],
+        replyTo: replyTo ? { email: replyTo } : undefined,
+        subject,
+        textContent: text,
+        htmlContent: html
+      })
+    });
+    const data = await resp.json();
+    if (!resp.ok) {
+      throw new Error(`Brevo API error (${resp.status}): ${JSON.stringify(data)}`);
+    }
+    return { provider: 'brevo', id: data.messageId };
+  }
+
+  // 3. Gmail SMTP via Nodemailer (Fallback)
+  if (EMAIL_USER && EMAIL_PASS) {
+    const info = await transporter.sendMail({
+      from: `"${fromName}" <${EMAIL_USER}>`,
+      to: NOTIFY_EMAIL,
+      replyTo: replyTo || undefined,
+      subject,
+      text,
+      html
+    });
+    return { provider: 'smtp', id: info.messageId };
+  }
+
+  throw new Error('No email provider configured. Please set EMAIL_USER & EMAIL_PASS, or set RESEND_API_KEY.');
 }
 
 // Rate limiter for form submission APIs
@@ -309,22 +398,18 @@ app.post('/api/submit-lead', formLimiter, async (req, res) => {
     `;
 
     try {
-      if (EMAIL_USER && EMAIL_PASS) {
-        const plainText = `NEW LOAN APPLICATION - CREDIFY CAPITAL\n\nApplication ID: ${leadId}\nName: ${name}\nMobile: +91 ${phone}\nEmail: ${email}\nLoan Type: ${product}\nLoan Amount: ₹${amount ? Number(amount).toLocaleString('en-IN') : 'N/A'}\nMonthly Income: ₹${income ? Number(income).toLocaleString('en-IN') : 'N/A'}\nCity: ${city || 'N/A'}\nTenure: ${tenure ? tenure + ' months' : 'N/A'}\n${isPartnerReferral ? `Referred By Partner: ${referredByPartnerName} (${referredByPartnerCode})\n` : ''}Date: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}\n\nView and manage this application in your Admin CRM Dashboard.`;
+      const plainText = `NEW LOAN APPLICATION - CREDIFY CAPITAL\n\nApplication ID: ${leadId}\nName: ${name}\nMobile: +91 ${phone}\nEmail: ${email}\nLoan Type: ${product}\nLoan Amount: ₹${amount ? Number(amount).toLocaleString('en-IN') : 'N/A'}\nMonthly Income: ₹${income ? Number(income).toLocaleString('en-IN') : 'N/A'}\nCity: ${city || 'N/A'}\nTenure: ${tenure ? tenure + ' months' : 'N/A'}\n${isPartnerReferral ? `Referred By Partner: ${referredByPartnerName} (${referredByPartnerCode})\n` : ''}Date: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}\n\nView and manage this application in your Admin CRM Dashboard.`;
 
-        await transporter.sendMail({
-          from: `"Credify Capital Leads" <${EMAIL_USER}>`,
-          to: NOTIFY_EMAIL,
-          replyTo: email,
-          subject: `🏦 New ${product} Application – ${name} (${leadId})`,
-          text: plainText,
-          html: htmlBody
-        });
-        console.log(`📧 Lead email notification sent for ${leadId} to ${NOTIFY_EMAIL}`);
-      }
+      const mailRes = await sendNotificationEmail({
+        fromName: 'Credify Capital Leads',
+        subject: `🏦 New ${product} Application – ${name} (${leadId})`,
+        text: plainText,
+        html: htmlBody,
+        replyTo: email
+      });
+      console.log(`📧 Lead email notification sent for ${leadId} via ${mailRes.provider} to ${NOTIFY_EMAIL}`);
     } catch (mailErr) {
-      console.error(`❌ Lead email FAILED for ${leadId}:`, mailErr.code, '-', mailErr.message);
-      if (mailErr.code === 'EAUTH') console.error('❌ Gmail App Password rejected. Update EMAIL_PASS in Render dashboard.');
+      console.error(`❌ Lead email FAILED for ${leadId}:`, mailErr.message);
     }
 
     res.json({ success: true, message: 'Application submitted successfully.', id: leadId });
@@ -386,22 +471,18 @@ app.post('/api/submit-contact', formLimiter, async (req, res) => {
     `;
 
     try {
-      if (EMAIL_USER && EMAIL_PASS) {
-        const plainText = `NEW CONTACT ENQUIRY - CREDIFY CAPITAL\n\nName: ${first_name} ${last_name || ''}\nEmail: ${email_id}\nCity: ${city || 'N/A'}\nPurpose: ${radios_option_purpose || 'N/A'}\nProduct: ${product_type || 'General'}\n\nMessage:\n${message}\n\nDate: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}`;
+      const plainText = `NEW CONTACT ENQUIRY - CREDIFY CAPITAL\n\nName: ${first_name} ${last_name || ''}\nEmail: ${email_id}\nCity: ${city || 'N/A'}\nPurpose: ${radios_option_purpose || 'N/A'}\nProduct: ${product_type || 'General'}\n\nMessage:\n${message}\n\nDate: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}`;
 
-        await transporter.sendMail({
-          from: `"Credify Capital Enquiries" <${EMAIL_USER}>`,
-          to: NOTIFY_EMAIL,
-          replyTo: email_id,
-          subject: `💬 ${radios_option_purpose || 'Contact'} from ${first_name} ${last_name || ''} – ${product_type || 'General'}`,
-          text: plainText,
-          html: htmlBody
-        });
-        console.log(`📧 Contact email notification sent to ${NOTIFY_EMAIL}`);
-      }
+      const mailRes = await sendNotificationEmail({
+        fromName: 'Credify Capital Enquiries',
+        subject: `💬 ${radios_option_purpose || 'Contact'} from ${first_name} ${last_name || ''} – ${product_type || 'General'}`,
+        text: plainText,
+        html: htmlBody,
+        replyTo: email_id
+      });
+      console.log(`📧 Contact email notification sent via ${mailRes.provider} to ${NOTIFY_EMAIL}`);
     } catch (mailErr) {
-      console.error('❌ Contact email FAILED:', mailErr.code, '-', mailErr.message);
-      if (mailErr.code === 'EAUTH') console.error('❌ Gmail App Password rejected. Update EMAIL_PASS in Render dashboard.');
+      console.error('❌ Contact email FAILED:', mailErr.message);
     }
 
     res.json({ success: true, message: 'Message sent successfully.' });
@@ -435,38 +516,17 @@ app.post('/api/submit-partner', async (req, res) => {
     writeDataFile('partners.json', partners);
 
     // Send Partner Email Notification
-    if (EMAIL_USER && EMAIL_PASS) {
-      const partnerHtml = `
-        <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: white; padding: 24px 32px; border-radius: 12px 12px 0 0;">
-            <h1 style="margin: 0; font-size: 22px;">🤝 New DSA Partner Registration</h1>
-            <p style="margin: 8px 0 0; opacity: 0.85; font-size: 14px;">Credify Capital Partner Portal</p>
-          </div>
-          <div style="background: #f8fafc; padding: 24px 32px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px;">
-            <table style="width: 100%; border-collapse: collapse;">
-              <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">DSA Code</td><td style="padding: 10px 0; font-weight: 700; color: #142450; font-family: monospace;">${newPartner.dsaCode}</td></tr>
-              <tr style="background: #fff;"><td style="padding: 10px 8px; color: #64748b; font-size: 13px;">Partner Name</td><td style="padding: 10px 8px; font-weight: 600;">${name}</td></tr>
-              <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">Agency / Firm</td><td style="padding: 10px 0;">${agency || 'Individual Consultant'}</td></tr>
-              <tr style="background: #fff;"><td style="padding: 10px 8px; color: #64748b; font-size: 13px;">Mobile</td><td style="padding: 10px 8px;"><a href="tel:+91${mobile}" style="color: #1a3a8a; text-decoration: none;">+91 ${mobile}</a></td></tr>
-              <tr><td style="padding: 10px 0; color: #64748b; font-size: 13px;">Email</td><td style="padding: 10px 0;">${email ? `<a href="mailto:${email}" style="color: #1a3a8a;">${email}</a>` : 'N/A'}</td></tr>
-              <tr style="background: #fff;"><td style="padding: 10px 8px; color: #64748b; font-size: 13px;">City</td><td style="padding: 10px 8px;">${city || 'N/A'}</td></tr>
-            </table>
-            <p style="margin-top: 20px; font-size: 12px; color: #94a3b8;">Registered on ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</p>
-          </div>
-        </div>
-      `;
-
-      try {
-        await transporter.sendMail({
-          from: `"Credify Capital" <${EMAIL_USER}>`,
-          to: NOTIFY_EMAIL,
-          subject: `🤝 New DSA Partner Registered – ${name} (${newPartner.dsaCode})`,
-          html: partnerHtml
-        });
-        console.log(`📧 Partner registration email sent for ${newPartner.dsaCode} to ${NOTIFY_EMAIL}`);
-      } catch (partnerMailErr) {
-        console.error('❌ Partner email FAILED:', partnerMailErr.code, '-', partnerMailErr.message);
-      }
+    try {
+      const mailRes = await sendNotificationEmail({
+        fromName: 'Credify Capital',
+        subject: `🤝 New DSA Partner Registered – ${name} (${newPartner.dsaCode})`,
+        text: `New DSA Partner Registered: ${name} (${newPartner.dsaCode})\nMobile: ${mobile}\nEmail: ${email || 'N/A'}\nCity: ${city || 'N/A'}`,
+        html: partnerHtml,
+        replyTo: email || undefined
+      });
+      console.log(`📧 Partner registration email sent for ${newPartner.dsaCode} via ${mailRes.provider} to ${NOTIFY_EMAIL}`);
+    } catch (partnerMailErr) {
+      console.error('❌ Partner email FAILED:', partnerMailErr.message);
     }
 
     res.json({ success: true, partner: newPartner });
@@ -478,28 +538,25 @@ app.post('/api/submit-partner', async (req, res) => {
 
 // ─── API: Test Email Configuration ──────────────────────────────────────────
 app.get('/api/admin/test-email', async (req, res) => {
-  if (!EMAIL_USER || !EMAIL_PASS) {
-    console.error('❌ test-email: EMAIL_USER or EMAIL_PASS missing.');
+  if (!RESEND_API_KEY && (!EMAIL_USER || !EMAIL_PASS)) {
+    console.error('❌ test-email: No email credentials configured in environment variables.');
     return res.status(400).json({
       success: false,
-      error: 'EMAIL_USER or EMAIL_PASS is missing in environment variables.'
+      error: 'No email credentials configured. Please set EMAIL_USER & EMAIL_PASS or set RESEND_API_KEY in Render.'
     });
   }
 
-  console.log(`🔍 test-email: Verifying SMTP for ${EMAIL_USER} (pass len=${EMAIL_PASS.length})...`);
+  console.log(`🔍 test-email: Testing email delivery to ${NOTIFY_EMAIL}...`);
   try {
-    await transporter.verify();
-    console.log('✅ test-email: SMTP verify passed. Sending test mail...');
-    const info = await transporter.sendMail({
-      from: `"Credify Capital" <${EMAIL_USER}>`,
-      to: NOTIFY_EMAIL,
+    const mailRes = await sendNotificationEmail({
+      fromName: 'Credify Capital Diagnostic',
       subject: '✅ Credify Capital - Email Delivery Diagnostic Test',
+      text: `Credify Capital Email Delivery Diagnostic Test successful!\nRecipient: ${NOTIFY_EMAIL}\nTimestamp: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}`,
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;">
-          <h2 style="color: #166534; margin: 0 0 10px;">✅ Gmail SMTP Test Successful</h2>
-          <p style="color: #15803d; margin: 0 0 10px;">Your Gmail credentials and SMTP configuration are working properly!</p>
+          <h2 style="color: #166534; margin: 0 0 10px;">✅ Credify Capital - Email Delivery Working!</h2>
+          <p style="color: #15803d; margin: 0 0 10px;">Your notifications are now being delivered successfully to your inbox.</p>
           <ul style="color: #374151; font-size: 14px;">
-            <li><strong>Sender (EMAIL_USER):</strong> ${EMAIL_USER}</li>
             <li><strong>Recipient (NOTIFY_EMAIL):</strong> ${NOTIFY_EMAIL}</li>
             <li><strong>Timestamp:</strong> ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</li>
           </ul>
@@ -507,23 +564,20 @@ app.get('/api/admin/test-email', async (req, res) => {
       `
     });
 
-    console.log(`✅ test-email: Sent OK! MessageID=${info.messageId}`);
+    console.log(`✅ test-email: Sent OK via ${mailRes.provider}! ID=${mailRes.id}`);
     res.json({
       success: true,
-      message: `Test email successfully delivered to ${NOTIFY_EMAIL}`,
-      messageId: info.messageId
+      provider: mailRes.provider,
+      message: `Test email successfully delivered to ${NOTIFY_EMAIL} via ${mailRes.provider}!`,
+      id: mailRes.id
     });
   } catch (err) {
-    console.error('❌ test-email FAILED:', err.code, '-', err.message);
+    console.error('❌ test-email FAILED:', err.message);
     res.status(500).json({
       success: false,
       error: err.message,
-      code: err.code || 'UNKNOWN_ERROR',
-      hint: err.code === 'EAUTH'
-        ? 'Authentication failed. App Password is invalid/expired. Generate a new one at https://myaccount.google.com/apppasswords and update EMAIL_PASS in Render dashboard.'
-        : err.code === 'ETIMEDOUT' || err.code === 'ECONNECTION'
-          ? 'Cannot connect to Gmail SMTP. Check if your host allows outbound port 465.'
-          : 'Please check your network and Gmail settings.'
+      code: err.code || 'DELIVERY_ERROR',
+      hint: 'If seeing Connection Timeout or ENETUNREACH on Render, Render Free Tier blocks outbound SMTP. The fastest permanent fix is getting a free Resend API Key from resend.com and adding RESEND_API_KEY in Render dashboard (uses HTTPS port 443 which is never blocked).'
     });
   }
 });
